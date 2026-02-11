@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checador FXE", "Checador FXE\Checador FXE.csproj", "{1B7610BF-797E-4156-A640-EEBE57839E80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowControls", "..\..\..\Documents\Proyectos\Luz Paulina´s ManageEngine\Flow-ERP\FlowControls\FlowControls.csproj", "{BE8C9E83-83C1-4233-AD7D-DB7950E06BD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flow Common Workcore", "..\..\..\Documents\Proyectos\Luz Paulina´s ManageEngine\Flow-ERP\Flow Common Workcore\Flow Common Workcore.csproj", "{44B46867-DFAA-469F-8E04-C21E74CEE34E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B7610BF-797E-4156-A640-EEBE57839E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B7610BF-797E-4156-A640-EEBE57839E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B7610BF-797E-4156-A640-EEBE57839E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B7610BF-797E-4156-A640-EEBE57839E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE8C9E83-83C1-4233-AD7D-DB7950E06BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE8C9E83-83C1-4233-AD7D-DB7950E06BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE8C9E83-83C1-4233-AD7D-DB7950E06BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE8C9E83-83C1-4233-AD7D-DB7950E06BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B46867-DFAA-469F-8E04-C21E74CEE34E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B46867-DFAA-469F-8E04-C21E74CEE34E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B46867-DFAA-469F-8E04-C21E74CEE34E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B46867-DFAA-469F-8E04-C21E74CEE34E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B03238D2-65D9-40FA-87F1-967B7B1B5999}
+	EndGlobalSection
+EndGlobal

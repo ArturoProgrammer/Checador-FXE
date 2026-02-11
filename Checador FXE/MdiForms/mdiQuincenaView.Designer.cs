@@ -1,0 +1,945 @@
+﻿namespace Checador_FXE.MdiForms
+{
+    partial class mdiQuincenaView
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mdiQuincenaView));
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            TreeNode treeNode1 = new TreeNode("");
+            FlowControls.QuickAccessButton quickAccessButton1 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton2 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton3 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton4 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton5 = new FlowControls.QuickAccessButton();
+            flExtendedTabControl1 = new FlowControls.flExtendedTabControl();
+            pageGeneral = new TabPage();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            panel3 = new Panel();
+            txtAutorizador = new FlowControls.flTextBoxLabelJoint();
+            txtNombreElaborador = new FlowControls.flTextBoxLabelJoint();
+            dateFechaRemitente = new FlowControls.flDateLabelJoint();
+            txtLugarRemitente = new FlowControls.flTextBoxLabelJoint();
+            txtAreaRemitente = new FlowControls.flTextBoxLabelJoint();
+            headerAsistencias = new FlowControls.flLabelHeader();
+            pageParsingResults = new TabPage();
+            splitContainer1 = new SplitContainer();
+            splitContainer2 = new SplitContainer();
+            calendarAsistencias = new FlowControls.flEventCalendar();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            lviewDayEvents = new FlowControls.flCustomListView();
+            colHora = new ColumnHeader();
+            colTipo = new ColumnHeader();
+            imageList1 = new ImageList(components);
+            dateFechaSeleccionada = new FlowControls.flDateLabelJoint();
+            txtEmpleadoSeleccionado = new FlowControls.flTextBoxLabelJoint();
+            lviewRegistros = new ListView();
+            pageCastingSetting = new TabPage();
+            flCheckBoxLabelJoint1 = new FlowControls.flCheckBoxLabelJoint();
+            txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
+            panel1 = new Panel();
+            dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
+            colTurnoNom = new DataGridViewTextBoxColumn();
+            colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioUno_Salida = new DataGridViewTextBoxColumn();
+            colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioDos_Salida = new DataGridViewTextBoxColumn();
+            btnSincronizarAjustes = new FlowControls.flCustomButton();
+            flLabelHeader1 = new FlowControls.flLabelHeader();
+            pageCastingResults = new TabPage();
+            splitResultadosCasting_Background = new SplitContainer();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            txtBusqueda = new FlowControls.flTextBoxLabelJoint();
+            lblTotalDeEmpleados = new FlowControls.flLabelJoint();
+            treePagingResultadosCasting = new FlowControls.flTreeViewPaging();
+            panel2 = new Panel();
+            calendarEmpleadoCasteado = new FlowControls.flEventCalendar();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            flQuickAccessPanel1 = new FlowControls.flQuickAccessPanel();
+            flExtendedTabControl1.SuspendLayout();
+            pageGeneral.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            panel3.SuspendLayout();
+            pageParsingResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).BeginInit();
+            splitContainer2.Panel1.SuspendLayout();
+            splitContainer2.Panel2.SuspendLayout();
+            splitContainer2.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            pageCastingSetting.SuspendLayout();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).BeginInit();
+            pageCastingResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitResultadosCasting_Background).BeginInit();
+            splitResultadosCasting_Background.Panel1.SuspendLayout();
+            splitResultadosCasting_Background.Panel2.SuspendLayout();
+            splitResultadosCasting_Background.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            panel2.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            SuspendLayout();
+            // 
+            // flExtendedTabControl1
+            // 
+            flExtendedTabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            flExtendedTabControl1.CanCloseTabs = false;
+            flExtendedTabControl1.CloseButtonHoverColor = Color.Red;
+            flExtendedTabControl1.ControlBackColor = SystemColors.GradientInactiveCaption;
+            flExtendedTabControl1.Controls.Add(pageGeneral);
+            flExtendedTabControl1.Controls.Add(pageParsingResults);
+            flExtendedTabControl1.Controls.Add(pageCastingSetting);
+            flExtendedTabControl1.Controls.Add(pageCastingResults);
+            flExtendedTabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+            flExtendedTabControl1.ForeSelectionColor = Color.White;
+            flExtendedTabControl1.ForeUnselectedColor = Color.DimGray;
+            flExtendedTabControl1.HoverColor = Color.FromArgb(50, 200, 200, 200);
+            flExtendedTabControl1.ItemSize = new Size(150, 40);
+            flExtendedTabControl1.Location = new Point(3, 42);
+            flExtendedTabControl1.Name = "flExtendedTabControl1";
+            flExtendedTabControl1.SelectedIndex = 0;
+            flExtendedTabControl1.SelectionColor = Color.DeepSkyBlue;
+            flExtendedTabControl1.Size = new Size(827, 475);
+            flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
+            flExtendedTabControl1.TabIndex = 0;
+            flExtendedTabControl1.UnselectionColor = Color.LightGray;
+            // 
+            // pageGeneral
+            // 
+            pageGeneral.BackColor = SystemColors.GradientInactiveCaption;
+            pageGeneral.BorderStyle = BorderStyle.FixedSingle;
+            pageGeneral.Controls.Add(tableLayoutPanel4);
+            pageGeneral.Location = new Point(4, 44);
+            pageGeneral.Name = "pageGeneral";
+            pageGeneral.Size = new Size(819, 427);
+            pageGeneral.TabIndex = 0;
+            pageGeneral.Text = "General";
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 1;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Controls.Add(panel3, 0, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(0, 0);
+            tableLayoutPanel4.Margin = new Padding(0);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 83.1579F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.8421059F));
+            tableLayoutPanel4.Size = new Size(817, 425);
+            tableLayoutPanel4.TabIndex = 1;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(txtAutorizador);
+            panel3.Controls.Add(txtNombreElaborador);
+            panel3.Controls.Add(dateFechaRemitente);
+            panel3.Controls.Add(txtLugarRemitente);
+            panel3.Controls.Add(txtAreaRemitente);
+            panel3.Controls.Add(headerAsistencias);
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(3, 3);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(811, 347);
+            panel3.TabIndex = 0;
+            // 
+            // txtAutorizador
+            // 
+            txtAutorizador.EntryFont = new Font("Consolas", 10F);
+            txtAutorizador.InputContentType = FlowControls.InputMode.GENERAL;
+            txtAutorizador.Label = "Autorizador:";
+            txtAutorizador.Location = new Point(18, 168);
+            txtAutorizador.MinimumSize = new Size(100, 30);
+            txtAutorizador.Name = "txtAutorizador";
+            txtAutorizador.Placeholder = "";
+            txtAutorizador.RootLineColor = Color.Gray;
+            txtAutorizador.Size = new Size(475, 33);
+            txtAutorizador.TabIndex = 6;
+            txtAutorizador.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtAutorizador.TextBoxWidth = 250;
+            txtAutorizador.Value = "";
+            // 
+            // txtNombreElaborador
+            // 
+            txtNombreElaborador.EntryFont = new Font("Consolas", 10F);
+            txtNombreElaborador.InputContentType = FlowControls.InputMode.GENERAL;
+            txtNombreElaborador.Label = "Nombre del elaborador:";
+            txtNombreElaborador.Location = new Point(18, 129);
+            txtNombreElaborador.MinimumSize = new Size(100, 30);
+            txtNombreElaborador.Name = "txtNombreElaborador";
+            txtNombreElaborador.Placeholder = "";
+            txtNombreElaborador.RootLineColor = Color.Gray;
+            txtNombreElaborador.Size = new Size(475, 33);
+            txtNombreElaborador.TabIndex = 5;
+            txtNombreElaborador.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtNombreElaborador.TextBoxWidth = 250;
+            txtNombreElaborador.Value = "";
+            // 
+            // dateFechaRemitente
+            // 
+            dateFechaRemitente.EntryFont = new Font("Consolas", 10F);
+            dateFechaRemitente.Label = "Fecha:";
+            dateFechaRemitente.Location = new Point(424, 90);
+            dateFechaRemitente.MinimumSize = new Size(100, 30);
+            dateFechaRemitente.Name = "dateFechaRemitente";
+            dateFechaRemitente.RootLineColor = Color.Gray;
+            dateFechaRemitente.Size = new Size(206, 33);
+            dateFechaRemitente.TabIndex = 4;
+            dateFechaRemitente.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            dateFechaRemitente.TextBoxWidth = 110;
+            dateFechaRemitente.Value = null;
+            // 
+            // txtLugarRemitente
+            // 
+            txtLugarRemitente.EntryFont = new Font("Consolas", 10F);
+            txtLugarRemitente.InputContentType = FlowControls.InputMode.GENERAL;
+            txtLugarRemitente.Label = "Lugar remitente:";
+            txtLugarRemitente.Location = new Point(18, 90);
+            txtLugarRemitente.MinimumSize = new Size(100, 30);
+            txtLugarRemitente.Name = "txtLugarRemitente";
+            txtLugarRemitente.Placeholder = "";
+            txtLugarRemitente.RootLineColor = Color.Gray;
+            txtLugarRemitente.Size = new Size(374, 33);
+            txtLugarRemitente.TabIndex = 3;
+            txtLugarRemitente.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtLugarRemitente.Value = "";
+            // 
+            // txtAreaRemitente
+            // 
+            txtAreaRemitente.EntryFont = new Font("Consolas", 10F);
+            txtAreaRemitente.InputContentType = FlowControls.InputMode.GENERAL;
+            txtAreaRemitente.Label = "Area remitente:";
+            txtAreaRemitente.Location = new Point(18, 51);
+            txtAreaRemitente.MinimumSize = new Size(100, 30);
+            txtAreaRemitente.Name = "txtAreaRemitente";
+            txtAreaRemitente.Placeholder = "";
+            txtAreaRemitente.RootLineColor = Color.Gray;
+            txtAreaRemitente.Size = new Size(475, 33);
+            txtAreaRemitente.TabIndex = 2;
+            txtAreaRemitente.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtAreaRemitente.TextBoxWidth = 250;
+            txtAreaRemitente.Value = "";
+            // 
+            // headerAsistencias
+            // 
+            headerAsistencias.BackColor = SystemColors.GradientInactiveCaption;
+            headerAsistencias.Dock = DockStyle.Top;
+            headerAsistencias.Font = new Font("Segoe UI", 14F);
+            headerAsistencias.HeaderText = "Propiedades de Formato";
+            headerAsistencias.HeaderTextAlign = ContentAlignment.BottomLeft;
+            headerAsistencias.HeaderTextColor = SystemColors.ControlText;
+            headerAsistencias.LabelImage = (Image)resources.GetObject("headerAsistencias.LabelImage");
+            headerAsistencias.LineColor = Color.Black;
+            headerAsistencias.LineThickness = 1;
+            headerAsistencias.Location = new Point(0, 0);
+            headerAsistencias.MinimumSize = new Size(0, 45);
+            headerAsistencias.Name = "headerAsistencias";
+            headerAsistencias.Padding = new Padding(20, 3, 20, 5);
+            headerAsistencias.Size = new Size(811, 45);
+            headerAsistencias.TabIndex = 1;
+            // 
+            // pageParsingResults
+            // 
+            pageParsingResults.BackColor = SystemColors.GradientInactiveCaption;
+            pageParsingResults.BorderStyle = BorderStyle.FixedSingle;
+            pageParsingResults.Controls.Add(splitContainer1);
+            pageParsingResults.Location = new Point(4, 29);
+            pageParsingResults.Name = "pageParsingResults";
+            pageParsingResults.Size = new Size(192, 67);
+            pageParsingResults.TabIndex = 2;
+            pageParsingResults.Text = "Resultados del Parsing";
+            // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.FixedPanel = FixedPanel.Panel2;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(splitContainer2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(lviewRegistros);
+            splitContainer1.Size = new Size(190, 65);
+            splitContainer1.SplitterDistance = 25;
+            splitContainer1.SplitterWidth = 6;
+            splitContainer1.TabIndex = 0;
+            // 
+            // splitContainer2
+            // 
+            splitContainer2.BorderStyle = BorderStyle.FixedSingle;
+            splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.FixedPanel = FixedPanel.Panel2;
+            splitContainer2.Location = new Point(0, 0);
+            splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            splitContainer2.Panel1.Controls.Add(calendarAsistencias);
+            // 
+            // splitContainer2.Panel2
+            // 
+            splitContainer2.Panel2.BackColor = SystemColors.GradientInactiveCaption;
+            splitContainer2.Panel2.Controls.Add(tableLayoutPanel1);
+            splitContainer2.Size = new Size(190, 25);
+            splitContainer2.SplitterDistance = 25;
+            splitContainer2.SplitterWidth = 6;
+            splitContainer2.TabIndex = 2;
+            // 
+            // calendarAsistencias
+            // 
+            calendarAsistencias.ColorBorde = Color.Gray;
+            calendarAsistencias.ColorDiasSemana = Color.White;
+            calendarAsistencias.ColorDomingos = Color.LightCoral;
+            calendarAsistencias.ColorEncabezado = Color.SteelBlue;
+            calendarAsistencias.ColorEventoPredeterminado = Color.Blue;
+            calendarAsistencias.ColorTextoEncabezado = Color.White;
+            calendarAsistencias.Dock = DockStyle.Fill;
+            calendarAsistencias.FechaActual = new DateOnly(2026, 2, 4);
+            calendarAsistencias.FuenteEventos = new Font("Segoe UI", 8F);
+            calendarAsistencias.Location = new Point(0, 0);
+            calendarAsistencias.MonthNavigation = true;
+            calendarAsistencias.Name = "calendarAsistencias";
+            calendarAsistencias.ShowHolidays = true;
+            calendarAsistencias.ShowMonthHeader = true;
+            calendarAsistencias.Size = new Size(23, 23);
+            calendarAsistencias.TabIndex = 0;
+            calendarAsistencias.Text = "flEventCalendar1";
+            calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(lviewDayEvents, 0, 2);
+            tableLayoutPanel1.Controls.Add(dateFechaSeleccionada, 0, 0);
+            tableLayoutPanel1.Controls.Add(txtEmpleadoSeleccionado, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(157, 23);
+            tableLayoutPanel1.TabIndex = 1;
+            // 
+            // lviewDayEvents
+            // 
+            lviewDayEvents.AlternateRowColor = SystemColors.GradientInactiveCaption;
+            lviewDayEvents.BackColor = SystemColors.GradientActiveCaption;
+            lviewDayEvents.BorderStyle = BorderStyle.None;
+            lviewDayEvents.Columns.AddRange(new ColumnHeader[] { colHora, colTipo });
+            lviewDayEvents.Dock = DockStyle.Fill;
+            lviewDayEvents.Enabled = false;
+            lviewDayEvents.Font = new Font("Segoe UI", 9F);
+            lviewDayEvents.FullRowSelect = true;
+            lviewDayEvents.HeaderBackColor = Color.SteelBlue;
+            lviewDayEvents.HeaderForeColor = SystemColors.ActiveCaptionText;
+            lviewDayEvents.LargeImageList = imageList1;
+            lviewDayEvents.Location = new Point(0, 70);
+            lviewDayEvents.Margin = new Padding(0);
+            lviewDayEvents.Name = "lviewDayEvents";
+            lviewDayEvents.OwnerDraw = true;
+            lviewDayEvents.RowLineColor = Color.SteelBlue;
+            lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
+            lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
+            lviewDayEvents.ShowGridLines = true;
+            lviewDayEvents.Size = new Size(157, 1);
+            lviewDayEvents.SmallImageList = imageList1;
+            lviewDayEvents.TabIndex = 3;
+            lviewDayEvents.UseAlternatingRowColors = true;
+            lviewDayEvents.UseCompatibleStateImageBehavior = false;
+            lviewDayEvents.View = View.Details;
+            // 
+            // colHora
+            // 
+            colHora.Text = "Hora";
+            colHora.Width = 100;
+            // 
+            // colTipo
+            // 
+            colTipo.Text = "Tipo";
+            colTipo.Width = 150;
+            // 
+            // imageList1
+            // 
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName(0, "neutral_object-64.png");
+            imageList1.Images.SetKeyName(1, "neutral_object-2-64.png");
+            // 
+            // dateFechaSeleccionada
+            // 
+            dateFechaSeleccionada.Dock = DockStyle.Fill;
+            dateFechaSeleccionada.Enabled = false;
+            dateFechaSeleccionada.EntryFont = new Font("Consolas", 10F);
+            dateFechaSeleccionada.Label = "Dia:";
+            dateFechaSeleccionada.Location = new Point(0, 0);
+            dateFechaSeleccionada.Margin = new Padding(0, 0, 0, 10);
+            dateFechaSeleccionada.MinimumSize = new Size(100, 30);
+            dateFechaSeleccionada.Name = "dateFechaSeleccionada";
+            dateFechaSeleccionada.RootLineColor = Color.Gray;
+            dateFechaSeleccionada.Size = new Size(157, 30);
+            dateFechaSeleccionada.TabIndex = 1;
+            dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            dateFechaSeleccionada.TextBoxWidth = 120;
+            dateFechaSeleccionada.Value = null;
+            // 
+            // txtEmpleadoSeleccionado
+            // 
+            txtEmpleadoSeleccionado.Dock = DockStyle.Fill;
+            txtEmpleadoSeleccionado.Enabled = false;
+            txtEmpleadoSeleccionado.EntryFont = new Font("Consolas", 9F);
+            txtEmpleadoSeleccionado.InputContentType = FlowControls.InputMode.GENERAL;
+            txtEmpleadoSeleccionado.Label = "Emp.:";
+            txtEmpleadoSeleccionado.Location = new Point(3, 38);
+            txtEmpleadoSeleccionado.MinimumSize = new Size(100, 30);
+            txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
+            txtEmpleadoSeleccionado.Placeholder = "";
+            txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
+            txtEmpleadoSeleccionado.Size = new Size(151, 30);
+            txtEmpleadoSeleccionado.TabIndex = 2;
+            txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtEmpleadoSeleccionado.Value = "";
+            // 
+            // lviewRegistros
+            // 
+            lviewRegistros.BackColor = SystemColors.GradientActiveCaption;
+            lviewRegistros.Dock = DockStyle.Fill;
+            lviewRegistros.LargeImageList = imageList1;
+            lviewRegistros.Location = new Point(0, 0);
+            lviewRegistros.Name = "lviewRegistros";
+            lviewRegistros.Size = new Size(190, 34);
+            lviewRegistros.SmallImageList = imageList1;
+            lviewRegistros.TabIndex = 1;
+            lviewRegistros.UseCompatibleStateImageBehavior = false;
+            lviewRegistros.DoubleClick += lviewRegistros_DoubleClick;
+            // 
+            // pageCastingSetting
+            // 
+            pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
+            pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
+            pageCastingSetting.Controls.Add(flCheckBoxLabelJoint1);
+            pageCastingSetting.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
+            pageCastingSetting.Controls.Add(panel1);
+            pageCastingSetting.Controls.Add(btnSincronizarAjustes);
+            pageCastingSetting.Controls.Add(flLabelHeader1);
+            pageCastingSetting.Location = new Point(4, 44);
+            pageCastingSetting.Name = "pageCastingSetting";
+            pageCastingSetting.Padding = new Padding(3);
+            pageCastingSetting.Size = new Size(819, 427);
+            pageCastingSetting.TabIndex = 3;
+            pageCastingSetting.Text = "Configuracion del Casting";
+            // 
+            // flCheckBoxLabelJoint1
+            // 
+            flCheckBoxLabelJoint1.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
+            flCheckBoxLabelJoint1.Checked = true;
+            flCheckBoxLabelJoint1.Label = "Dias domingos NO laborables:";
+            flCheckBoxLabelJoint1.Location = new Point(23, 376);
+            flCheckBoxLabelJoint1.MinimumSize = new Size(150, 30);
+            flCheckBoxLabelJoint1.Name = "flCheckBoxLabelJoint1";
+            flCheckBoxLabelJoint1.RootLineColor = Color.Gray;
+            flCheckBoxLabelJoint1.Size = new Size(364, 33);
+            flCheckBoxLabelJoint1.TabIndex = 6;
+            // 
+            // txtMaximoRetrasoMinutosPermitidos
+            // 
+            txtMaximoRetrasoMinutosPermitidos.Enabled = false;
+            txtMaximoRetrasoMinutosPermitidos.EntryFont = new Font("Consolas", 10F);
+            txtMaximoRetrasoMinutosPermitidos.Label = "Tiempo maximo de retraso permitido:";
+            txtMaximoRetrasoMinutosPermitidos.Location = new Point(22, 336);
+            txtMaximoRetrasoMinutosPermitidos.MinimumSize = new Size(100, 34);
+            txtMaximoRetrasoMinutosPermitidos.Name = "txtMaximoRetrasoMinutosPermitidos";
+            txtMaximoRetrasoMinutosPermitidos.RootLineColor = Color.Gray;
+            txtMaximoRetrasoMinutosPermitidos.ShowSeconds = false;
+            txtMaximoRetrasoMinutosPermitidos.Size = new Size(365, 34);
+            txtMaximoRetrasoMinutosPermitidos.TabIndex = 5;
+            txtMaximoRetrasoMinutosPermitidos.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtMaximoRetrasoMinutosPermitidos.TextBoxWidth = 75;
+            txtMaximoRetrasoMinutosPermitidos.Value = null;
+            // 
+            // panel1
+            // 
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(dgvTurnosHorarios);
+            panel1.Location = new Point(22, 53);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(634, 261);
+            panel1.TabIndex = 4;
+            // 
+            // dgvTurnosHorarios
+            // 
+            dgvTurnosHorarios.AllowUserToAddRows = false;
+            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvTurnosHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvTurnosHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvTurnosHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
+            dgvTurnosHorarios.BorderStyle = BorderStyle.None;
+            dgvTurnosHorarios.ButtonAddEnabled = true;
+            dgvTurnosHorarios.ButtonEditEnabled = false;
+            dgvTurnosHorarios.ButtonRemoveEnabled = false;
+            dgvTurnosHorarios.ButtonViewEnabled = false;
+            dgvTurnosHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.White;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvTurnosHorarios.Dock = DockStyle.Fill;
+            dgvTurnosHorarios.EnableHeadersVisualStyles = false;
+            dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
+            dgvTurnosHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
+            dgvTurnosHorarios.Location = new Point(0, 0);
+            dgvTurnosHorarios.Margin = new Padding(0);
+            dgvTurnosHorarios.MultiSelect = false;
+            dgvTurnosHorarios.Name = "dgvTurnosHorarios";
+            dgvTurnosHorarios.RowHeadersVisible = false;
+            dgvTurnosHorarios.RowHeadersWidth = 45;
+            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
+            dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvTurnosHorarios.SelectedCellColor = Color.Moccasin;
+            dgvTurnosHorarios.SelectedRowColor = Color.SteelBlue;
+            dgvTurnosHorarios.SelectionForeColor = Color.Black;
+            dgvTurnosHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvTurnosHorarios.Size = new Size(632, 259);
+            dgvTurnosHorarios.TabIndex = 4;
+            // 
+            // colTurnoNom
+            // 
+            colTurnoNom.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colTurnoNom.HeaderText = "Turno No.";
+            colTurnoNom.MinimumWidth = 6;
+            colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 106;
+            // 
+            // colHorarioUno_Entrada
+            // 
+            colHorarioUno_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
+            colHorarioUno_Entrada.MinimumWidth = 6;
+            colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
+            colHorarioUno_Entrada.Width = 122;
+            // 
+            // colHorarioUno_Salida
+            // 
+            colHorarioUno_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
+            colHorarioUno_Salida.MinimumWidth = 6;
+            colHorarioUno_Salida.Name = "colHorarioUno_Salida";
+            colHorarioUno_Salida.Width = 121;
+            // 
+            // colHorarioDos_Entrada
+            // 
+            colHorarioDos_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
+            colHorarioDos_Entrada.MinimumWidth = 6;
+            colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
+            colHorarioDos_Entrada.Width = 127;
+            // 
+            // colHorarioDos_Salida
+            // 
+            colHorarioDos_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
+            colHorarioDos_Salida.MinimumWidth = 6;
+            colHorarioDos_Salida.Name = "colHorarioDos_Salida";
+            colHorarioDos_Salida.Width = 126;
+            // 
+            // btnSincronizarAjustes
+            // 
+            btnSincronizarAjustes.BackColor = SystemColors.ActiveCaption;
+            btnSincronizarAjustes.FlatStyle = FlatStyle.Flat;
+            btnSincronizarAjustes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnSincronizarAjustes.Image = Properties.Resources.sync2_16;
+            btnSincronizarAjustes.Location = new Point(662, 54);
+            btnSincronizarAjustes.Name = "btnSincronizarAjustes";
+            btnSincronizarAjustes.Size = new Size(138, 46);
+            btnSincronizarAjustes.TabIndex = 3;
+            btnSincronizarAjustes.Text = " Sincronizar    Parametros";
+            btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnSincronizarAjustes.UseVisualStyleBackColor = false;
+            btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
+            // 
+            // flLabelHeader1
+            // 
+            flLabelHeader1.BackColor = SystemColors.GradientInactiveCaption;
+            flLabelHeader1.Dock = DockStyle.Top;
+            flLabelHeader1.Font = new Font("Segoe UI", 14F);
+            flLabelHeader1.HeaderText = "Turnos y Horarios";
+            flLabelHeader1.HeaderTextAlign = ContentAlignment.BottomLeft;
+            flLabelHeader1.HeaderTextColor = SystemColors.ControlText;
+            flLabelHeader1.LabelImage = (Image)resources.GetObject("flLabelHeader1.LabelImage");
+            flLabelHeader1.LineColor = Color.Black;
+            flLabelHeader1.LineThickness = 1;
+            flLabelHeader1.Location = new Point(3, 3);
+            flLabelHeader1.MinimumSize = new Size(0, 45);
+            flLabelHeader1.Name = "flLabelHeader1";
+            flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
+            flLabelHeader1.Size = new Size(811, 45);
+            flLabelHeader1.TabIndex = 1;
+            // 
+            // pageCastingResults
+            // 
+            pageCastingResults.BackColor = SystemColors.GradientInactiveCaption;
+            pageCastingResults.BorderStyle = BorderStyle.FixedSingle;
+            pageCastingResults.Controls.Add(splitResultadosCasting_Background);
+            pageCastingResults.Location = new Point(4, 44);
+            pageCastingResults.Name = "pageCastingResults";
+            pageCastingResults.Size = new Size(819, 427);
+            pageCastingResults.TabIndex = 4;
+            pageCastingResults.Text = "Resultados del Casting";
+            // 
+            // splitResultadosCasting_Background
+            // 
+            splitResultadosCasting_Background.Dock = DockStyle.Fill;
+            splitResultadosCasting_Background.FixedPanel = FixedPanel.Panel1;
+            splitResultadosCasting_Background.Location = new Point(0, 0);
+            splitResultadosCasting_Background.Name = "splitResultadosCasting_Background";
+            // 
+            // splitResultadosCasting_Background.Panel1
+            // 
+            splitResultadosCasting_Background.Panel1.Controls.Add(tableLayoutPanel3);
+            // 
+            // splitResultadosCasting_Background.Panel2
+            // 
+            splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
+            splitResultadosCasting_Background.Size = new Size(817, 425);
+            splitResultadosCasting_Background.SplitterDistance = 161;
+            splitResultadosCasting_Background.SplitterWidth = 6;
+            splitResultadosCasting_Background.TabIndex = 0;
+            splitResultadosCasting_Background.SplitterMoved += splitResultadosCasting_Background_SplitterMoved;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            tableLayoutPanel3.ColumnCount = 1;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.Controls.Add(txtBusqueda, 0, 0);
+            tableLayoutPanel3.Controls.Add(lblTotalDeEmpleados, 0, 2);
+            tableLayoutPanel3.Controls.Add(treePagingResultadosCasting, 0, 1);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 3;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
+            tableLayoutPanel3.Size = new Size(161, 425);
+            tableLayoutPanel3.TabIndex = 0;
+            // 
+            // txtBusqueda
+            // 
+            txtBusqueda.Dock = DockStyle.Fill;
+            txtBusqueda.EntryFont = new Font("Consolas", 9F);
+            txtBusqueda.InputContentType = FlowControls.InputMode.GENERAL;
+            txtBusqueda.Label = "Buscar:";
+            txtBusqueda.Location = new Point(4, 4);
+            txtBusqueda.MinimumSize = new Size(100, 30);
+            txtBusqueda.Name = "txtBusqueda";
+            txtBusqueda.Placeholder = "";
+            txtBusqueda.RootLineColor = Color.Gray;
+            txtBusqueda.Size = new Size(153, 30);
+            txtBusqueda.TabIndex = 0;
+            txtBusqueda.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtBusqueda.TextBoxWidth = 175;
+            txtBusqueda.Value = "";
+            txtBusqueda.OnTextChanged += txtBusqueda_OnTextChanged;
+            // 
+            // lblTotalDeEmpleados
+            // 
+            lblTotalDeEmpleados.Dock = DockStyle.Fill;
+            lblTotalDeEmpleados.EntryFont = new Font("Segoe UI", 10F);
+            lblTotalDeEmpleados.InfoLabelFont = new Font("Consolas", 9F);
+            lblTotalDeEmpleados.InfoLabelForeColor = SystemColors.MenuHighlight;
+            lblTotalDeEmpleados.InfoLabelText = "0";
+            lblTotalDeEmpleados.Label = "Total de empledos:";
+            lblTotalDeEmpleados.Location = new Point(4, 394);
+            lblTotalDeEmpleados.MinimumSize = new Size(150, 30);
+            lblTotalDeEmpleados.Name = "lblTotalDeEmpleados";
+            lblTotalDeEmpleados.RootLineColor = Color.Gray;
+            lblTotalDeEmpleados.Size = new Size(153, 30);
+            lblTotalDeEmpleados.TabIndex = 1;
+            // 
+            // treePagingResultadosCasting
+            // 
+            treePagingResultadosCasting.ButtonsBackColor = SystemColors.ActiveCaption;
+            treePagingResultadosCasting.Dock = DockStyle.Fill;
+            treePagingResultadosCasting.EnableDefaultIcons = true;
+            treePagingResultadosCasting.Header = "Empleados Registrados";
+            treePagingResultadosCasting.ItemSize = 34;
+            treePagingResultadosCasting.Location = new Point(4, 38);
+            treePagingResultadosCasting.MinimumSize = new Size(119, 140);
+            treePagingResultadosCasting.Name = "treePagingResultadosCasting";
+            treePagingResultadosCasting.PageSize = 15;
+            treePagingResultadosCasting.SelectedItem = null;
+            treeNode1.Name = "";
+            treeNode1.Text = "";
+            treePagingResultadosCasting.SelectedNode = treeNode1;
+            treePagingResultadosCasting.ShowLines = false;
+            treePagingResultadosCasting.Size = new Size(153, 349);
+            treePagingResultadosCasting.TabIndex = 2;
+            treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
+            treePagingResultadosCasting.VisualizationImageList = imageList1;
+            treePagingResultadosCasting.ItemDoubleClick += treePagingResultadosCasting_ItemDoubleClick;
+            // 
+            // panel2
+            // 
+            panel2.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(calendarEmpleadoCasteado);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(650, 425);
+            panel2.TabIndex = 0;
+            // 
+            // calendarEmpleadoCasteado
+            // 
+            calendarEmpleadoCasteado.ColorBorde = Color.Gray;
+            calendarEmpleadoCasteado.ColorDiasSemana = Color.White;
+            calendarEmpleadoCasteado.ColorDomingos = Color.LightCoral;
+            calendarEmpleadoCasteado.ColorEncabezado = Color.SteelBlue;
+            calendarEmpleadoCasteado.ColorEventoPredeterminado = Color.Blue;
+            calendarEmpleadoCasteado.ColorTextoEncabezado = Color.White;
+            calendarEmpleadoCasteado.Dock = DockStyle.Fill;
+            calendarEmpleadoCasteado.FechaActual = new DateOnly(2026, 2, 4);
+            calendarEmpleadoCasteado.FuenteEventos = new Font("Segoe UI", 8F);
+            calendarEmpleadoCasteado.Location = new Point(0, 0);
+            calendarEmpleadoCasteado.MonthNavigation = true;
+            calendarEmpleadoCasteado.Name = "calendarEmpleadoCasteado";
+            calendarEmpleadoCasteado.ShowHolidays = true;
+            calendarEmpleadoCasteado.ShowMonthHeader = true;
+            calendarEmpleadoCasteado.Size = new Size(648, 423);
+            calendarEmpleadoCasteado.TabIndex = 3;
+            calendarEmpleadoCasteado.Text = "flEventCalendar1";
+            calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(flExtendedTabControl1, 0, 1);
+            tableLayoutPanel2.Controls.Add(flQuickAccessPanel1, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(10, 10);
+            tableLayoutPanel2.Margin = new Padding(10);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 39F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(833, 520);
+            tableLayoutPanel2.TabIndex = 1;
+            // 
+            // flQuickAccessPanel1
+            // 
+            flQuickAccessPanel1.BackColor = SystemColors.GradientInactiveCaption;
+            quickAccessButton1.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton1.BorderLineColor = Color.Silver;
+            quickAccessButton1.BorderLineThickness = 1;
+            quickAccessButton1.FlatStyle = FlatStyle.Flat;
+            quickAccessButton1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton1.ForeColor = SystemColors.ControlText;
+            quickAccessButton1.Image = Properties.Resources.save2_16;
+            quickAccessButton1.Name = "btnGuardar";
+            quickAccessButton1.ShortcutKeys = Keys.Control | Keys.G;
+            quickAccessButton1.Text = "Guardar";
+            quickAccessButton2.BackColor = Color.RosyBrown;
+            quickAccessButton2.BorderLineColor = Color.Silver;
+            quickAccessButton2.BorderLineThickness = 1;
+            quickAccessButton2.FlatStyle = FlatStyle.Flat;
+            quickAccessButton2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton2.ForeColor = SystemColors.ControlText;
+            quickAccessButton2.Image = Properties.Resources.cancel_16;
+            quickAccessButton2.Name = "btnCerrar";
+            quickAccessButton2.Text = "Cerrar";
+            quickAccessButton3.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton3.BorderLineColor = Color.Silver;
+            quickAccessButton3.BorderLineThickness = 1;
+            quickAccessButton3.FlatStyle = FlatStyle.Flat;
+            quickAccessButton3.Font = new Font("Microsoft Sans Serif", 8.25F);
+            quickAccessButton3.ForeColor = SystemColors.ControlText;
+            quickAccessButton3.Image = Properties.Resources.printer_16;
+            quickAccessButton3.Name = "btnImprimir";
+            quickAccessButton3.ShortcutKeys = Keys.Control | Keys.P;
+            quickAccessButton3.Text = "Imprimir";
+            quickAccessButton4.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton4.BorderLineColor = Color.Silver;
+            quickAccessButton4.BorderLineThickness = 1;
+            quickAccessButton4.FlatStyle = FlatStyle.Flat;
+            quickAccessButton4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton4.ForeColor = SystemColors.ControlText;
+            quickAccessButton4.Image = Properties.Resources.pdf3_16;
+            quickAccessButton4.Name = "btnGenerar";
+            quickAccessButton4.ShortcutKeys = Keys.F5;
+            quickAccessButton4.Text = "Generar";
+            quickAccessButton5.BackColor = Color.NavajoWhite;
+            quickAccessButton5.BorderLineColor = Color.Silver;
+            quickAccessButton5.BorderLineThickness = 1;
+            quickAccessButton5.FlatStyle = FlatStyle.Flat;
+            quickAccessButton5.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton5.ForeColor = SystemColors.ControlText;
+            quickAccessButton5.Image = Properties.Resources.play3_16;
+            quickAccessButton5.Name = "btnEjecutar";
+            quickAccessButton5.ShortcutKeys = Keys.Control | Keys.E;
+            quickAccessButton5.Text = "Ejecutar";
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton1);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton2);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton3);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton4);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton5);
+            flQuickAccessPanel1.Dock = DockStyle.Fill;
+            flQuickAccessPanel1.LineColor = Color.Black;
+            flQuickAccessPanel1.LineThickness = 1;
+            flQuickAccessPanel1.Location = new Point(3, 3);
+            flQuickAccessPanel1.MinimumSize = new Size(0, 34);
+            flQuickAccessPanel1.Name = "flQuickAccessPanel1";
+            flQuickAccessPanel1.Size = new Size(827, 34);
+            flQuickAccessPanel1.TabIndex = 1;
+            flQuickAccessPanel1.OnButtonClicked += flQuickAccessPanel1_OnButtonClicked;
+            // 
+            // mdiQuincenaView
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(853, 540);
+            Controls.Add(tableLayoutPanel2);
+            Font = new Font("Segoe UI", 10F);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "mdiQuincenaView";
+            Padding = new Padding(10);
+            Text = "mdiQuincenaView";
+            FormClosing += mdiQuincenaView_FormClosing;
+            Load += mdiQuincenaView_Load;
+            flExtendedTabControl1.ResumeLayout(false);
+            pageGeneral.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            pageParsingResults.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
+            splitContainer2.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            pageCastingSetting.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).EndInit();
+            pageCastingResults.ResumeLayout(false);
+            splitResultadosCasting_Background.Panel1.ResumeLayout(false);
+            splitResultadosCasting_Background.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitResultadosCasting_Background).EndInit();
+            splitResultadosCasting_Background.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private FlowControls.flExtendedTabControl flExtendedTabControl1;
+        private TabPage pageGeneral;
+        private TabPage pageParsingResults;
+        private SplitContainer splitContainer1;
+        private ListView lviewRegistros;
+        private ImageList imageList1;
+        private SplitContainer splitContainer2;
+        private FlowControls.flEventCalendar calendarAsistencias;
+        private TableLayoutPanel tableLayoutPanel1;
+        private FlowControls.flDateLabelJoint dateFechaSeleccionada;
+        private TableLayoutPanel tableLayoutPanel2;
+        private FlowControls.flQuickAccessPanel flQuickAccessPanel1;
+        private TabPage pageCastingSetting;
+        private FlowControls.flLabelHeader flLabelHeader1;
+        private FlowControls.flCustomButton btnSincronizarAjustes;
+        private FlowControls.flExtendedDataGridView dgvTurnosHorarios;
+        private DataGridViewTextBoxColumn colTurnoNom;
+        private DataGridViewTextBoxColumn colHorarioUno_Entrada;
+        private DataGridViewTextBoxColumn colHorarioUno_Salida;
+        private DataGridViewTextBoxColumn colHorarioDos_Entrada;
+        private DataGridViewTextBoxColumn colHorarioDos_Salida;
+        private TabPage pageCastingResults;
+        private SplitContainer splitResultadosCasting_Background;
+        private TableLayoutPanel tableLayoutPanel3;
+        private FlowControls.flTextBoxLabelJoint txtBusqueda;
+        private FlowControls.flLabelJoint lblTotalDeEmpleados;
+        private Panel panel2;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Panel panel3;
+        private FlowControls.flLabelHeader headerAsistencias;
+        private FlowControls.flCustomListView lviewDayEvents;
+        private ColumnHeader colHora;
+        private ColumnHeader colTipo;
+        private FlowControls.flTextBoxLabelJoint txtEmpleadoSeleccionado;
+        public Panel panel1;
+        public FlowControls.flTimeLabelJoint txtMaximoRetrasoMinutosPermitidos;
+        public FlowControls.flTreeViewPaging treePagingResultadosCasting;
+        public FlowControls.flEventCalendar calendarEmpleadoCasteado;
+        public FlowControls.flCheckBoxLabelJoint flCheckBoxLabelJoint1;
+        public FlowControls.flTextBoxLabelJoint txtAreaRemitente;
+        public FlowControls.flTextBoxLabelJoint txtLugarRemitente;
+        public FlowControls.flDateLabelJoint dateFechaRemitente;
+        public FlowControls.flTextBoxLabelJoint txtNombreElaborador;
+        public FlowControls.flTextBoxLabelJoint txtAutorizador;
+    }
+}

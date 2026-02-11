@@ -1,0 +1,45 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Checador_FXE.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TURNOS_HORARIOS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"1":{"primer_horario":{"entrada":800,"salida":1500},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}},"2":{"primer_horario":{"entrada":800,"salida":1300},"segundo_horario":{"entrada":1500,"salida":1700},"tiempo_extra":{"entrada":0,"salida":0}},"3":{"primer_horario":{"entrada":1500,"salida":1700},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}}}</Value>
+    </Setting>
+    <Setting Name="MINUTOS_TOLERANCIA" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="ABRIR_SIEMPRE_AL_GENERAR" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LUGAR_REMITENTE_DEFAULT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hermosillo</Value>
+    </Setting>
+    <Setting Name="DIVISION_REMITENTE_DEFAULT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hermosillo</Value>
+    </Setting>
+    <Setting Name="DISPOSITIVO_DEFAULT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ZKTECO K40 KIT</Value>
+    </Setting>
+    <Setting Name="COLOR_PINCEL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Azul</Value>
+    </Setting>
+    <Setting Name="LOCALIDAD_DEFAULT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Sufragio</Value>
+    </Setting>
+    <Setting Name="SERVER_HOSTNAME" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10.10.129.127</Value>
+    </Setting>
+    <Setting Name="SERVER_USER" Type="System.String" Scope="User">
+      <Value Profile="(Default)">rmt_checador_fxe</Value>
+    </Setting>
+    <Setting Name="SERVER_PASS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F3rr0m3x2026*</Value>
+    </Setting>
+    <Setting Name="SERVER_PORT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">3306</Value>
+    </Setting>
+    <Setting Name="DEFAULT_FILENAME" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Reporte de Asistencias</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
