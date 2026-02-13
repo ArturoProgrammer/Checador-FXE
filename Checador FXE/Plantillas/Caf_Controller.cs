@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.MdiForms;
+using DocumentFormat.OpenXml.Office.CoverPageProps;
 using FlowCommonWorkcore;
 using System;
 using System.CodeDom;
@@ -82,21 +83,59 @@ namespace Checador_FXE.Plantillas
             public string MakeJson() => JsonSerializer.Serialize<ResultadosCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static ResultadosCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ResultadosCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
+        internal class Assets
+        {
+            public static readonly string FILEPATH = $@"assets.json";
+
+            public string Title { get; set; }
+            public Dispositivo Device { get; set; }
+
+            public string MakeJson() => JsonSerializer.Serialize<Assets>(this, options: new JsonSerializerOptions() { WriteIndented = true });
+            public static Assets? Build(string jsonText) => JsonSerializer.Deserialize<Assets>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
         
         public mdiQuincenaView MdiForm { get; set; }
         public GeneralTab General { get; private set; }
         public ConfiguracionCastingTab ConfiguracionCasting { get; private set; }
         public ResultadosCastingTab ResultadosCasting { get; private set; }
         public (string Filename, byte[] Content) SourceFile { get; private set; }
-        public Dispositivo Device { get; private set; }
+        public Assets AssetsFile { get; private set; }
 
 
+        /// <summary>
+        /// Constructor basado en un nuevo proyecto
+        /// </summary>
+        /// <param name="frm"></param>
         public CafProjFile(mdiQuincenaView frm)
         {
             InitializeClass();
 
             this.MdiForm = frm;
+            this.General = new GeneralTab()
+            {
+                AreaRemitente = MdiForm.txtAreaRemitente.Value,
+                LugarRemitente = MdiForm.txtLugarRemitente.Value,
+                Fecha = DateOnly.Parse(MdiForm.dateFechaRemitente.Value!.Value.ToString("d")),
+                NombreElaborador = MdiForm.txtNombreElaborador.Value,
+                Autorizador = MdiForm.txtAutorizador.Value
+            };
+            this.ConfiguracionCasting = new ConfiguracionCastingTab()
+            {
+                TurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
+                TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
+                DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked
+            };
+            this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
+            this.AssetsFile = new Assets()
+            {
+                Title = MdiForm.Text,
+                Device = MdiForm.Report.DeviceModel,
+            };
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>ASIGNA TODOS LOS PARAMETROS DE MANERA DEFAULT</remarks>
         public CafProjFile()
         {
             InitializeClass();
@@ -135,6 +174,8 @@ namespace Checador_FXE.Plantillas
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{ResultadosCastingTab.FILEPATH}' generado con exito...");
                 File.WriteAllBytes($@"{_tempPathDir}\{SourceFile.Filename}", SourceFile.Content);
                 _resp.Log.Add($@"Archivo '{MdiForm.Report.SourcePath}' copiado con exito en '{_tempPathDir}'...");
+                File.WriteAllText($@"{_tempPathDir}\{Assets.FILEPATH}", AssetsFile.MakeJson());
+                _resp.Log.Add($@"Archivo '{Assets.FILEPATH}' generado con exito...");
 
                 // Creamos el archivo comprimido en extension .caf
                 if (File.Exists(filename))
@@ -177,6 +218,7 @@ namespace Checador_FXE.Plantillas
         /// <returns>Response con el objeto CafProjFile reconstruido</returns>
         public static Response<CafProjFile> Build(string filename)
         {
+            #region CODIGO
             Response<CafProjFile> _resp = new Response<CafProjFile>(false, "Iniciando construccion del objeto...", null);
             CafProjFile _obj = new CafProjFile();
 
@@ -200,13 +242,15 @@ namespace Checador_FXE.Plantillas
                 _resp.Log.Add($@"Archivo '{_targetPathDir}\{ResultadosCastingTab.FILEPATH}' leido con exito...");
                 DirectoryInfo di = new DirectoryInfo(_targetPathDir);
                 FileInfo? fi = di.GetFiles().Cast<FileInfo>()
-                                            .Where(f => f.Extension.Equals(".xls"))
+                                            .Where(f => f.Extension.Equals(".xlsx"))
                                             .FirstOrDefault();
                 if (fi is null)
-                    throw new Exception($"No se encontro el archivo de reporte '.xls' en el directorio '{_targetPathDir}'");
+                    throw new Exception($"No se encontro el archivo de reporte '.xlsx' en el directorio '{_targetPathDir}'");
 
                 _obj.SourceFile = (fi.Name, File.ReadAllBytes(fi.FullName));
                 _resp.Log.Add($"Archivo '{fi.Name}' cargado exitosamente...");
+                _obj.AssetsFile = Assets.Build(File.ReadAllText($@"{Assets.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al intentar leer el archivo '{Assets.FILEPATH}'");
+                _resp.Log.Add($@"Archivo '{_targetPathDir}\{Assets.FILEPATH}' leido con exito...");
 
                 // Indicamos la respuesta de la funcion
                 _resp.Success = true;
@@ -229,6 +273,7 @@ namespace Checador_FXE.Plantillas
             }
             
             return _resp;
+            #endregion
         }
     }
 }

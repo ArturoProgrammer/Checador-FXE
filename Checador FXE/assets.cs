@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils.MySQL;
+using FlowControls;
 using ICSharpCode.TextEditor.Actions;
 using iTextSharp.text;
 using MySql.Data.MySqlClient;
@@ -224,7 +225,7 @@ namespace Checador_FXE
         }
 
 
-        internal static string ParseJsonHorariosByDgv(DataGridView dgv)
+        internal static string ParseJsonHorariosByDgv(flExtendedDataGridView dgv)
         {
             List<string> _jsonParts = new List<string>();
             Func<TimeSpan, int> _buildMilitaryTimeString = (TimeSpan time) => int.Parse($"{time.Hours:00}{time.Minutes:00}");
@@ -256,7 +257,7 @@ namespace Checador_FXE
         }
 
 
-        internal static HorarioTurno[] ParseHorariosTurnosByDgv(DataGridView dgv)
+        internal static HorarioTurno[] ParseHorariosTurnosByDgv(flExtendedDataGridView dgv)
         {
             if (IsDgvEmpty(dgv))
                 throw new ArgumentException("No se puede cargar una tabla sin contenido para el parseo de datos.");
@@ -471,10 +472,10 @@ namespace Checador_FXE
         /// <summary>
         /// Constructor para abrir un proyecto mediante su archivo *.caf
         /// </summary>
-        /// <param name="proj"></param>
+        /// <param name="proj">Objeto de proyecto a abrir</param>
         internal ReporteAsistencias(CafProjFile proj)
         {
-
+            throw new NotImplementedException();
         }
 
 

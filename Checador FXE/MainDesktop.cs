@@ -33,7 +33,6 @@ namespace Checador_FXE
             }
 
             ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path, frm_n.Response.Device);
-            int mdiHash = UtilityFunctions.HASHGenerator();
 
             // Early Return para validar que no este abierto actualmente
             string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
@@ -45,9 +44,9 @@ namespace Checador_FXE
             }
 
             // Abrimos el proyecto
-            mdiQuincenaView frm = new mdiQuincenaView(report, this);
+            mdiQuincenaView frm = new mdiQuincenaView(frm_n.Response.Titulo, report, this);
             frm.TopLevel = false;
-            frm.Tag = mdiHash;
+            frm.Tag = UtilityFunctions.HASHGenerator();
             frm.Dock = DockStyle.Fill;
             MDI_PANEL.Controls.Add(frm);
             frm.BringToFront();
@@ -57,7 +56,7 @@ namespace Checador_FXE
             this.treeViewProyectosQuincenas.Nodes.Add(new TreeNode()
             {
                 Text = targetName,
-                Tag = mdiHash
+                Tag = Int32.Parse(frm.Tag.ToString()!)
             });
         }
 
@@ -69,15 +68,13 @@ namespace Checador_FXE
         private void MDI_PANEL_ControlAdded(object sender, ControlEventArgs e)
         {
             this.lblBienvenido.Visible = this.MDI_PANEL.Controls.Cast<Control>()
-                                                    .Where(c => c is not Label)
-                                                    .Count() > 0 ? false : true;
+                                                    .Any(c => c is not Label);
         }
 
         private void MDI_PANEL_ControlRemoved(object sender, ControlEventArgs e)
         {
             this.lblBienvenido.Visible = this.MDI_PANEL.Controls.Cast<Control>()
-                                                    .Where(c => c is not Label)
-                                                    .Count() > 0 ? false : true;
+                                                    .Any(c => c is not Label);
         }
 
         private void propiedadesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -120,6 +117,38 @@ namespace Checador_FXE
             frm.ShowDialog();
         }
 
+
+        /// <summary>
+        /// Metodo que lanza el dialogo de guardado del sistema y retorna la ruta seleccionada
+        /// </summary>
+        /// <returns></returns>
+        string _CommonSaveDialog()
+        {
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                dialog.Filter = $"{CafProjFile.FileExtensionName} (*.{CafProjFile.FileExtension}) | *.{CafProjFile.FileExtension}";
+                dialog.InitialDirectory = CafProjFile.DefaultProjFilePath;
+                dialog.RestoreDirectory = true;
+
+                if (dialog.ShowDialog() != DialogResult.OK)
+                    return "-1";
+
+                return dialog.FileName;
+            }
+        }
+
+        /// <summary>
+        /// Metodo de guardado del archivo de proyecto
+        /// </summary>
+        /// <param name="path"></param>
+        void _CommonSaveMethod(string path)
+        {
+            Response funcResp = actualView!.ActualCafProject.Save(path);
+
+            string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;
+            Program.WriteStatus(funcResp.Success, resultText);
+        }
+
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO: Tarea en ticket ##100187##
@@ -151,7 +180,7 @@ namespace Checador_FXE
                     }
 
                     // Abrimos el MDI
-                    mdiQuincenaView frm = new mdiQuincenaView(report, this, _proj, dialog.FileName);
+                    mdiQuincenaView frm = new mdiQuincenaView(_proj.AssetsFile.Title, report, this, _proj, dialog.FileName);
                     frm.TopLevel = false;
                     frm.Tag = UtilityFunctions.HASHGenerator();
                     frm.Dock = DockStyle.Fill;
@@ -204,29 +233,6 @@ namespace Checador_FXE
                 return;
 
             _CommonSaveMethod(targetPath);
-        }
-
-        string _CommonSaveDialog()
-        {
-            using (SaveFileDialog dialog = new SaveFileDialog())
-            {
-                dialog.Filter = $"{CafProjFile.FileExtensionName} (*.{CafProjFile.FileExtension}) | *.{CafProjFile.FileExtension}";
-                dialog.InitialDirectory = CafProjFile.DefaultProjFilePath;
-                dialog.RestoreDirectory = true;
-
-                if (dialog.ShowDialog() != DialogResult.OK)
-                    return "-1";
-
-                return dialog.FileName;
-            }
-        }
-
-        void _CommonSaveMethod(string path)
-        {
-            Response funcResp = actualView!.ActualCafProject.Save(path);
-
-            string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;
-            Program.WriteStatus(funcResp.Success, resultText);
         }
     }
 }

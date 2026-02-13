@@ -29,21 +29,42 @@ namespace Checador_FXE.MdiForms
         internal CafProjFile ActualCafProject { get; set; }
         internal string ProjectFullname { get; set; } = "-1";
 
-        internal mdiQuincenaView(ReporteAsistencias rpt, MainDesktop mdiParent)
+        /// <summary>
+        /// Constructor para opcion: "Nuevo proyecto"
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="rpt"></param>
+        /// <param name="mdiParent"></param>
+        internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent)
         {
             InitializeComponent();
-            Report = rpt;
-            LegacyParent = mdiParent;
+            this.Text = title;
+            this.Report = rpt;
+            this.LegacyParent = mdiParent;
+         
+            LoadAllData();
+
+            this.ActualCafProject = new CafProjFile(this); // Creamos el objeto de proyecto
         }
 
-        internal mdiQuincenaView(ReporteAsistencias rpt, MainDesktop mdiParent, CafProjFile projCaf, string projFullname)
+        /// <summary>
+        /// Constructor para opcion: "Abrir proyecto"
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="rpt"></param>
+        /// <param name="mdiParent"></param>
+        /// <param name="projCaf"></param>
+        /// <param name="projFullname"></param>
+        internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent, CafProjFile projCaf, string projFullname)
         {
             InitializeComponent();
-            Report = rpt;
-            LegacyParent = mdiParent;
-            projCaf.MdiForm = this;
-            ActualCafProject = projCaf;
-            ProjectFullname = projFullname;
+            this.Text = title;
+            this.Report = rpt;
+            this.LegacyParent = mdiParent;
+            projCaf.MdiForm = this; this.ActualCafProject = projCaf;
+            this.ProjectFullname = projFullname;
+
+            LoadAllData();
         }
 
         Action<DataGridView> loadTurnosBySettings = (dgv) =>
@@ -63,6 +84,10 @@ namespace Checador_FXE.MdiForms
 
         void LoadAllData()
         {
+            // Cargamos los valores en la visualizacion
+            this.calendarAsistencias.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
+            this.calendarEmpleadoCasteado.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
+
             // Cargamos los valores de las propiedades
             this.txtAreaRemitente.Value = "";
             this.txtLugarRemitente.Value = Properties.Settings.Default.LUGAR_REMITENTE_DEFAULT;
@@ -81,22 +106,17 @@ namespace Checador_FXE.MdiForms
             }
 
             // Cargamos las configuraciones de horario que usaremos
-            loadTurnosBySettings(this.dgvTurnosHorarios);
+            loadTurnosBySettings(this.dgvTurnosHorarios);   // TODO: ESTO ENTRA EN CONFLICTO CON LA FUNCION DE ABRIR, ASI QUE HAY QUE REFORMULARLO
             // Cargamos el tiempo maximo de retraso permitido
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
+
+            // Ejecuciones requeridas
+            this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
+            this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
         }
 
         private void mdiQuincenaView_Load(object sender, EventArgs e)
         {
-            /* 
-             * Cargamos los valores en la visualizacion
-             * */
-            this.calendarAsistencias.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
-            this.calendarEmpleadoCasteado.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
-            LoadAllData();
-            this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
-            this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
-
             this.splitContainer2.SplitterDistance = 570;
             this.splitContainer1.SplitterDistance = 280;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
@@ -124,9 +144,7 @@ namespace Checador_FXE.MdiForms
             }
 
             foreach (DateTime i in diasAsistidos)
-            {
                 this.calendarAsistencias.AddEvent(DateOnly.Parse(i.ToString("d")), "Registró", Color.Red);
-            }
 
             this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.Text;
 
@@ -175,7 +193,7 @@ namespace Checador_FXE.MdiForms
             }
             catch (Exception ex)
             {
-                Program.WriteStatus(false, $"{ex.Message}", $"{ex}");
+                Program.WriteStatus(false, "Error inesperado", $"{ex.Message}", $"{ex}");
             }
         }
 
@@ -188,7 +206,7 @@ namespace Checador_FXE.MdiForms
             {
                 case "btnGuardar":
                     // TODO: METODO DE GUARDADO DEL PROYECTO
-                    Program.WriteStatus(false, $"Funcion no implementada aun!", $"Funcion no implementada aun!");
+                    Program.WriteStatus(false, "Error inesperado", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
                     break;
                 case "btnCerrar":
                     if (MessageBox.Show("¿Seguro que deseas salir sin guardar los cambios previamente?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
@@ -200,7 +218,7 @@ namespace Checador_FXE.MdiForms
                     this.Close(); // Cerramos
                     break;
                 case "btnImprimir":
-                    Program.WriteStatus(false, $"Funcion no implementada aun!", $"Funcion no implementada aun!");
+                    Program.WriteStatus(false, "Error inesperado", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
                     break;
                 case "btnGenerar":
                     #region CODIGO
@@ -386,7 +404,7 @@ namespace Checador_FXE.MdiForms
             catch (Exception ex)
             {
                 //path = { "-1" };
-                Program.WriteStatus(false, $"Ha ocurrido un error inesperado! {ex.Message}", ex.ToString());
+                Program.WriteStatus(false, "Error inesperado", $"Ha ocurrido un error inesperado! {ex.Message}", ex.ToString());
             }
 
             return path;
@@ -432,7 +450,7 @@ namespace Checador_FXE.MdiForms
             }
             catch (Exception ex)
             {
-                Program.WriteStatus(false, $"{ex.Message}", $"{ex}");
+                Program.WriteStatus(false, "Error inesperado", $"{ex.Message}", $"{ex}");
             }
         }
 
@@ -509,7 +527,7 @@ namespace Checador_FXE.MdiForms
             }
             catch (Exception ex)
             {
-                Program.WriteStatus(false, $"{ex.Message}", $"{ex}");
+                Program.WriteStatus(false, "Error inesperado", $"{ex.Message}", $"{ex}");
             }
         }
 

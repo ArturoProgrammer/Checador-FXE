@@ -13,7 +13,7 @@ namespace Checador_FXE
 {
     internal partial class frmNuevoProyecto : Form
     {
-        public (string Path, Dispositivo Device) Response;
+        public (string Titulo, string Path, Dispositivo Device) Response;
 
         public frmNuevoProyecto()
         {
@@ -26,7 +26,7 @@ namespace Checador_FXE
             this.cboxModeloDispositivo.Items.AddRange(DispositivoExtensions.GetSupportedModels());
             this.cboxModeloDispositivo.Value = Properties.Settings.Default.DISPOSITIVO_DEFAULT; // Seleccionamos el dispositivo por default
 
-            this.btnExaminar.Focus();
+            this.txtTitulo.Focus();
         }
 
         private void btnExaminar_Click(object sender, EventArgs e)
@@ -65,7 +65,9 @@ namespace Checador_FXE
         void ValidateClauses()
         {
             bool flag = false;
-            if (!String.IsNullOrEmpty(this.txtRutaArchivo.Value.Trim()) && !this.cboxModeloDispositivo.IsNonSelectedTextSelected)
+            if (!String.IsNullOrEmpty(this.txtTitulo.Value.Trim()) && 
+                !String.IsNullOrEmpty(this.txtRutaArchivo.Value.Trim()) && 
+                !this.cboxModeloDispositivo.IsNonSelectedTextSelected)
             {
                 flag = true;
             }
@@ -84,7 +86,7 @@ namespace Checador_FXE
             if (this.DialogResult != DialogResult.OK)
                 return;
 
-            Response = (this.txtRutaArchivo.Value, DispositivoExtensions.Parse(this.cboxModeloDispositivo.Value));
+            Response = (this.txtTitulo.Value.Trim(), this.txtRutaArchivo.Value, DispositivoExtensions.Parse(this.cboxModeloDispositivo.Value));
         }
 
         private void cboxModeloDispositivo_OnSelectedIndexChanged(object sender, EventArgs e)

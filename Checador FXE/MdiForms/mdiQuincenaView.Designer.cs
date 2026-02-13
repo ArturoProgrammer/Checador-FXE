@@ -63,7 +63,7 @@
             txtEmpleadoSeleccionado = new FlowControls.flTextBoxLabelJoint();
             lviewRegistros = new ListView();
             pageCastingSetting = new TabPage();
-            flCheckBoxLabelJoint1 = new FlowControls.flCheckBoxLabelJoint();
+            chckDomingosNoLaborables = new FlowControls.flCheckBoxLabelJoint();
             txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
             panel1 = new Panel();
             dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
@@ -358,7 +358,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(157, 23);
+            tableLayoutPanel1.Size = new Size(159, 23);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -382,7 +382,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(157, 1);
+            lviewDayEvents.Size = new Size(159, 1);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -418,7 +418,7 @@
             dateFechaSeleccionada.MinimumSize = new Size(100, 30);
             dateFechaSeleccionada.Name = "dateFechaSeleccionada";
             dateFechaSeleccionada.RootLineColor = Color.Gray;
-            dateFechaSeleccionada.Size = new Size(157, 30);
+            dateFechaSeleccionada.Size = new Size(159, 30);
             dateFechaSeleccionada.TabIndex = 1;
             dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
             dateFechaSeleccionada.TextBoxWidth = 120;
@@ -436,7 +436,7 @@
             txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
             txtEmpleadoSeleccionado.Placeholder = "";
             txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
-            txtEmpleadoSeleccionado.Size = new Size(151, 30);
+            txtEmpleadoSeleccionado.Size = new Size(153, 30);
             txtEmpleadoSeleccionado.TabIndex = 2;
             txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtEmpleadoSeleccionado.Value = "";
@@ -448,7 +448,7 @@
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(190, 34);
+            lviewRegistros.Size = new Size(190, 36);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
@@ -458,7 +458,7 @@
             // 
             pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
-            pageCastingSetting.Controls.Add(flCheckBoxLabelJoint1);
+            pageCastingSetting.Controls.Add(chckDomingosNoLaborables);
             pageCastingSetting.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
             pageCastingSetting.Controls.Add(panel1);
             pageCastingSetting.Controls.Add(btnSincronizarAjustes);
@@ -470,17 +470,17 @@
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
-            // flCheckBoxLabelJoint1
+            // chckDomingosNoLaborables
             // 
-            flCheckBoxLabelJoint1.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
-            flCheckBoxLabelJoint1.Checked = true;
-            flCheckBoxLabelJoint1.Label = "Dias domingos NO laborables:";
-            flCheckBoxLabelJoint1.Location = new Point(23, 376);
-            flCheckBoxLabelJoint1.MinimumSize = new Size(150, 30);
-            flCheckBoxLabelJoint1.Name = "flCheckBoxLabelJoint1";
-            flCheckBoxLabelJoint1.RootLineColor = Color.Gray;
-            flCheckBoxLabelJoint1.Size = new Size(364, 33);
-            flCheckBoxLabelJoint1.TabIndex = 6;
+            chckDomingosNoLaborables.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
+            chckDomingosNoLaborables.Checked = true;
+            chckDomingosNoLaborables.Label = "Dias domingos NO laborables:";
+            chckDomingosNoLaborables.Location = new Point(23, 376);
+            chckDomingosNoLaborables.MinimumSize = new Size(150, 30);
+            chckDomingosNoLaborables.Name = "chckDomingosNoLaborables";
+            chckDomingosNoLaborables.RootLineColor = Color.Gray;
+            chckDomingosNoLaborables.Size = new Size(364, 33);
+            chckDomingosNoLaborables.TabIndex = 6;
             // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
@@ -639,9 +639,9 @@
             pageCastingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingResults.BorderStyle = BorderStyle.FixedSingle;
             pageCastingResults.Controls.Add(splitResultadosCasting_Background);
-            pageCastingResults.Location = new Point(4, 44);
+            pageCastingResults.Location = new Point(4, 29);
             pageCastingResults.Name = "pageCastingResults";
-            pageCastingResults.Size = new Size(819, 427);
+            pageCastingResults.Size = new Size(192, 67);
             pageCastingResults.TabIndex = 4;
             pageCastingResults.Text = "Resultados del Casting";
             // 
@@ -659,7 +659,7 @@
             // splitResultadosCasting_Background.Panel2
             // 
             splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
-            splitResultadosCasting_Background.Size = new Size(817, 425);
+            splitResultadosCasting_Background.Size = new Size(190, 65);
             splitResultadosCasting_Background.SplitterDistance = 161;
             splitResultadosCasting_Background.SplitterWidth = 6;
             splitResultadosCasting_Background.TabIndex = 0;
@@ -681,7 +681,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
-            tableLayoutPanel3.Size = new Size(161, 425);
+            tableLayoutPanel3.Size = new Size(161, 65);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // txtBusqueda
@@ -710,7 +710,7 @@
             lblTotalDeEmpleados.InfoLabelForeColor = SystemColors.MenuHighlight;
             lblTotalDeEmpleados.InfoLabelText = "0";
             lblTotalDeEmpleados.Label = "Total de empledos:";
-            lblTotalDeEmpleados.Location = new Point(4, 394);
+            lblTotalDeEmpleados.Location = new Point(4, 34);
             lblTotalDeEmpleados.MinimumSize = new Size(150, 30);
             lblTotalDeEmpleados.Name = "lblTotalDeEmpleados";
             lblTotalDeEmpleados.RootLineColor = Color.Gray;
@@ -733,7 +733,7 @@
             treeNode1.Text = "";
             treePagingResultadosCasting.SelectedNode = treeNode1;
             treePagingResultadosCasting.ShowLines = false;
-            treePagingResultadosCasting.Size = new Size(153, 349);
+            treePagingResultadosCasting.Size = new Size(153, 140);
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
@@ -746,7 +746,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(650, 425);
+            panel2.Size = new Size(25, 65);
             panel2.TabIndex = 0;
             // 
             // calendarEmpleadoCasteado
@@ -765,7 +765,7 @@
             calendarEmpleadoCasteado.Name = "calendarEmpleadoCasteado";
             calendarEmpleadoCasteado.ShowHolidays = true;
             calendarEmpleadoCasteado.ShowMonthHeader = true;
-            calendarEmpleadoCasteado.Size = new Size(648, 423);
+            calendarEmpleadoCasteado.Size = new Size(23, 63);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
             calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
@@ -912,7 +912,6 @@
         private TabPage pageCastingSetting;
         private FlowControls.flLabelHeader flLabelHeader1;
         private FlowControls.flCustomButton btnSincronizarAjustes;
-        private FlowControls.flExtendedDataGridView dgvTurnosHorarios;
         private DataGridViewTextBoxColumn colTurnoNom;
         private DataGridViewTextBoxColumn colHorarioUno_Entrada;
         private DataGridViewTextBoxColumn colHorarioUno_Salida;
@@ -935,11 +934,12 @@
         public FlowControls.flTimeLabelJoint txtMaximoRetrasoMinutosPermitidos;
         public FlowControls.flTreeViewPaging treePagingResultadosCasting;
         public FlowControls.flEventCalendar calendarEmpleadoCasteado;
-        public FlowControls.flCheckBoxLabelJoint flCheckBoxLabelJoint1;
+        public FlowControls.flCheckBoxLabelJoint chckDomingosNoLaborables;
         public FlowControls.flTextBoxLabelJoint txtAreaRemitente;
         public FlowControls.flTextBoxLabelJoint txtLugarRemitente;
         public FlowControls.flDateLabelJoint dateFechaRemitente;
         public FlowControls.flTextBoxLabelJoint txtNombreElaborador;
         public FlowControls.flTextBoxLabelJoint txtAutorizador;
+        public FlowControls.flExtendedDataGridView dgvTurnosHorarios;
     }
 }

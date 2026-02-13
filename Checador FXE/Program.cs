@@ -45,13 +45,24 @@ namespace Checador_FXE
         /// </summary>
         /// <param name="Status"></param>
         /// <param name="Text"></param>
-        internal static void WriteStatus(bool Status, string Text, string ErrorStack)
+        internal static void WriteStatus(bool Status, string Text, string ErrorMessage, string ErrorStack)
         {
             if (lblStatus == null || lblOperation == null)
                 return;
 
             _writeStatusCommon(Status, Text);
-            MessageBox.Show(ErrorStack, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            System.Diagnostics.Debug.WriteLine($@"
+
+*** ============ [ERROR INESPERADO] ============ ***
+    {Text}
+
+    ERROR MESSAGE: {ErrorMessage}
+
+    ERROR STACK: {ErrorStack}
+====================================================
+
+");
+            MessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -114,7 +125,7 @@ namespace Checador_FXE
                 // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GRÁFICA
                 //
                 AppDomain.CurrentDomain.UnhandledException += (object s, UnhandledExceptionEventArgs e) => {
-                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", ((Exception)e.ExceptionObject).Message);
+                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", ((Exception)e.ExceptionObject).Message, ((Exception)e.ExceptionObject).ToString());
                 };
 
                 //
@@ -122,7 +133,7 @@ namespace Checador_FXE
                 //
                 Application.ThreadException += (object s, ThreadExceptionEventArgs e) =>
                 {
-                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", e.Exception.Message);
+                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", e.Exception.Message, e.Exception.ToString());
                 };
 
                 //
