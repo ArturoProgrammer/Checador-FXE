@@ -1,6 +1,9 @@
 ﻿using Checador_FXE.MdiForms;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
 using FlowCommonWorkcore;
+using FlowControls;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -80,7 +83,36 @@ namespace Checador_FXE.Plantillas
              *       
              * */
 
-            public string MakeJson() => JsonSerializer.Serialize<ResultadosCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
+            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; set; }
+
+            public flTreeViewPaging DataSourceControl { get; }
+
+            public ResultadosCastingTab(flTreeViewPaging pagingView)
+            {
+                this.DataSourceControl = pagingView;
+            }
+
+            public string MakeJson()
+            {
+                //string jsonText = JsonSerializer.Serialize<ResultadosCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
+
+                Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _array = new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
+                MessageBox.Show(DataSourceControl.Items.Count.ToString());
+                foreach (InteropGenericObject obj in DataSourceControl.Items)
+                {
+                    /*
+                    Dictionary<string, string> item = new Dictionary<string, string>() {
+                        { "" }
+                    };
+                    */
+                    MessageBox.Show(obj.ObjectTitle);
+
+                    //MessageBox.Show(JsonSerializer.Serialize<InteropGenericObject>(obj, options: new JsonSerializerOptions() { WriteIndented = true }));
+                }
+
+                //return jsonText;
+                return "";
+            }
             public static ResultadosCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ResultadosCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
         internal class Assets
@@ -125,6 +157,7 @@ namespace Checador_FXE.Plantillas
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
                 DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked
             };
+            this.ResultadosCasting = new ResultadosCastingTab(MdiForm.treePagingResultadosCasting);
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
             this.AssetsFile = new Assets()
             {

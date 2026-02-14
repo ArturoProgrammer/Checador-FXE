@@ -36,6 +36,7 @@
             nuevoToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             guardarToolStripMenuItem = new ToolStripMenuItem();
+            guardarComoToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             propiedadesToolStripMenuItem = new ToolStripMenuItem();
             verToolStripMenuItem = new ToolStripMenuItem();
@@ -53,7 +54,6 @@
             imageList1 = new ImageList(components);
             MDI_PANEL = new Panel();
             lblBienvenido = new Label();
-            guardarComoToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             STATUS_BAR.SuspendLayout();
             flCustomToolStrip1.SuspendLayout();
@@ -85,7 +85,6 @@
             // 
             // abrirToolStripMenuItem
             // 
-            abrirToolStripMenuItem.Enabled = false;
             abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             abrirToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.A;
             abrirToolStripMenuItem.Size = new Size(198, 24);
@@ -112,6 +111,14 @@
             guardarToolStripMenuItem.Size = new Size(198, 24);
             guardarToolStripMenuItem.Text = "Guardar";
             guardarToolStripMenuItem.Click += guardarToolStripMenuItem_Click;
+            // 
+            // guardarComoToolStripMenuItem
+            // 
+            guardarComoToolStripMenuItem.Enabled = false;
+            guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
+            guardarComoToolStripMenuItem.Size = new Size(198, 24);
+            guardarComoToolStripMenuItem.Text = "Guardar como...";
+            guardarComoToolStripMenuItem.Click += guardarComoToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
@@ -277,14 +284,6 @@
             lblBienvenido.Text = "Bienvenido";
             lblBienvenido.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // guardarComoToolStripMenuItem
-            // 
-            guardarComoToolStripMenuItem.Enabled = false;
-            guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            guardarComoToolStripMenuItem.Size = new Size(198, 24);
-            guardarComoToolStripMenuItem.Text = "Guardar como...";
-            guardarComoToolStripMenuItem.Click += guardarComoToolStripMenuItem_Click;
-            // 
             // MainDesktop
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -339,8 +338,8 @@
         private ImageList imageList1;
         private ToolStripLabel toolStripLabel1;
         private ToolStripMenuItem editorDePersonalToolStripMenuItem;
-        private ToolStripMenuItem guardarToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem guardarComoToolStripMenuItem;
+        public ToolStripMenuItem guardarToolStripMenuItem;
+        public ToolStripMenuItem guardarComoToolStripMenuItem;
     }
 }

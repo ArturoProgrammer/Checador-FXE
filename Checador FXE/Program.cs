@@ -76,30 +76,21 @@ namespace Checador_FXE
 
             try
             {
-                //if (File.Exists(resourcePath))
-                //    return;
-
-                //MessageBox.Show($"Iniciando la descarga del recurso: '{resourceName.name}'");
-
                 // Validamos la existencia del nombre del recurso en el gestor del recursos
                 var rm = Properties.Resources.ResourceManager;
                 string[] resNames = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true)
                                     .OfType<System.Collections.DictionaryEntry>()
                                     .Select(de => de.Key.ToString())
                                     .ToArray();
-                //MessageBox.Show($"*{resourceName.name}* \n\n {String.Join("\n", resNames)}\n\n---[ {(resNames.Contains(resourceName.name) ? "SI" : "NO")} CONTIENE EL RECURSO ]---");
 
                 if (resNames == null || !resNames.Contains(resourceName.name))
                     return;
-
-                //MessageBox.Show("Descargando...");
 
                 using (FileStream fs = new FileStream(resourcePath, FileMode.Create, FileAccess.Write))
                 {
                     byte[] resourceBytes = (byte[])Properties.Resources.ResourceManager.GetObject(resourceName.name)!;
                     fs.Write(resourceBytes, 0, resourceBytes.Length);
                 }
-                //MessageBox.Show($"Recurso '{resourceName.name}' descargado con exito en: '{resourcePath}'");
             }
             catch (Exception ex) 
             {

@@ -1,7 +1,9 @@
 using Checador_FXE.MdiForms;
 using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
+using Org.BouncyCastle.Pqc.Crypto.Falcon;
 using System.Security.Cryptography;
+using ZstdSharp.Unsafe;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Checador_FXE
@@ -58,6 +60,8 @@ namespace Checador_FXE
                 Text = targetName,
                 Tag = Int32.Parse(frm.Tag.ToString()!)
             });
+
+            this.actualView = frm;
         }
 
         private void MainDesktop_Load(object sender, EventArgs e)
@@ -67,14 +71,22 @@ namespace Checador_FXE
 
         private void MDI_PANEL_ControlAdded(object sender, ControlEventArgs e)
         {
-            this.lblBienvenido.Visible = this.MDI_PANEL.Controls.Cast<Control>()
-                                                    .Any(c => c is not Label);
+            bool _flag = this.MDI_PANEL.Controls.Cast<Control>()
+                                                .Any(c => c is not Label);
+            this.lblBienvenido.Visible = !_flag;
+
+            this.guardarToolStripMenuItem.Enabled = _flag;
+            this.guardarComoToolStripMenuItem.Visible = _flag;
         }
 
         private void MDI_PANEL_ControlRemoved(object sender, ControlEventArgs e)
         {
-            this.lblBienvenido.Visible = this.MDI_PANEL.Controls.Cast<Control>()
-                                                    .Any(c => c is not Label);
+            bool _flag = this.MDI_PANEL.Controls.Cast<Control>()
+                                                .Any(c => c is not Label);
+            this.lblBienvenido.Visible = !_flag;
+
+            this.guardarToolStripMenuItem.Enabled = _flag;
+            this.guardarComoToolStripMenuItem.Visible = _flag;
         }
 
         private void propiedadesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -194,6 +206,8 @@ namespace Checador_FXE
                         Text = targetName,
                         Tag = Int32.Parse(frm.Tag.ToString()!)
                     });
+
+                    this.actualView = frm;
                 }
 
                 string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;

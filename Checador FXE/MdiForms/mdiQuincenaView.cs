@@ -110,13 +110,22 @@ namespace Checador_FXE.MdiForms
             // Cargamos el tiempo maximo de retraso permitido
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
 
-            // Ejecuciones requeridas
+            /*
+             * SE MUEVE AL METODO LOAD DEL FORMULARIO DEBIDO A ERRORES DE INVOKE, YA QUE SE ESTABAN
+             * INTENTANDO ACCEDER A RECURSOS QUE AUN NO ERAN CREADOS
+             * 
+            //Ejecuciones requeridas
             this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
             this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
+            */
         }
 
         private void mdiQuincenaView_Load(object sender, EventArgs e)
         {
+            // Ejecuciones requeridas
+            this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
+            this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
+
             this.splitContainer2.SplitterDistance = 570;
             this.splitContainer1.SplitterDistance = 280;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
@@ -206,19 +215,19 @@ namespace Checador_FXE.MdiForms
             {
                 case "btnGuardar":
                     // TODO: METODO DE GUARDADO DEL PROYECTO
-                    Program.WriteStatus(false, "Error inesperado", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
+                    this.LegacyParent.guardarToolStripMenuItem.PerformClick();
                     break;
                 case "btnCerrar":
                     if (MessageBox.Show("¿Seguro que deseas salir sin guardar los cambios previamente?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                         return;
 
                     // Guardamos
-                    // TODO: METODO DE GUARDADO DEL PROYECTO
+                    this.LegacyParent.guardarToolStripMenuItem.PerformClick();
 
                     this.Close(); // Cerramos
                     break;
                 case "btnImprimir":
-                    Program.WriteStatus(false, "Error inesperado", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
+                    Program.WriteStatus(false, "Proximamente", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
                     break;
                 case "btnGenerar":
                     #region CODIGO
@@ -246,10 +255,7 @@ namespace Checador_FXE.MdiForms
                     #endregion
                     break;
                 case "btnEjecutar":
-                    //
-                    // Ejecutamos el proceso de generacion de informe
-                    //
-                    #region
+                    #region Ejecutamos el proceso de generacion de informe
                     // Primero debemos validar que la configuracion de turnos y horarios se encuentre vacia
                     if (Utils.IsDgvEmpty(this.dgvTurnosHorarios))
                         break;
@@ -416,7 +422,7 @@ namespace Checador_FXE.MdiForms
         /// <param name="pdf_path"></param>
         void PrintReport(string pdf_path)
         {
-
+            throw new NotImplementedException();
         }
 
         private void btnSincronizarAjustes_Click(object sender, EventArgs e)

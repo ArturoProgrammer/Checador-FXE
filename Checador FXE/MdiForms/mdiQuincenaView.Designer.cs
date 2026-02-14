@@ -358,7 +358,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(159, 23);
+            tableLayoutPanel1.Size = new Size(157, 23);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -382,7 +382,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(159, 1);
+            lviewDayEvents.Size = new Size(157, 1);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -418,7 +418,7 @@
             dateFechaSeleccionada.MinimumSize = new Size(100, 30);
             dateFechaSeleccionada.Name = "dateFechaSeleccionada";
             dateFechaSeleccionada.RootLineColor = Color.Gray;
-            dateFechaSeleccionada.Size = new Size(159, 30);
+            dateFechaSeleccionada.Size = new Size(157, 30);
             dateFechaSeleccionada.TabIndex = 1;
             dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
             dateFechaSeleccionada.TextBoxWidth = 120;
@@ -436,7 +436,7 @@
             txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
             txtEmpleadoSeleccionado.Placeholder = "";
             txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
-            txtEmpleadoSeleccionado.Size = new Size(153, 30);
+            txtEmpleadoSeleccionado.Size = new Size(151, 30);
             txtEmpleadoSeleccionado.TabIndex = 2;
             txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtEmpleadoSeleccionado.Value = "";
@@ -448,7 +448,7 @@
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(190, 36);
+            lviewRegistros.Size = new Size(190, 34);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
@@ -463,10 +463,10 @@
             pageCastingSetting.Controls.Add(panel1);
             pageCastingSetting.Controls.Add(btnSincronizarAjustes);
             pageCastingSetting.Controls.Add(flLabelHeader1);
-            pageCastingSetting.Location = new Point(4, 44);
+            pageCastingSetting.Location = new Point(4, 29);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(819, 427);
+            pageCastingSetting.Size = new Size(192, 67);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
@@ -631,7 +631,7 @@
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(811, 45);
+            flLabelHeader1.Size = new Size(184, 45);
             flLabelHeader1.TabIndex = 1;
             // 
             // pageCastingResults
