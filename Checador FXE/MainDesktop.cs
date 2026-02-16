@@ -153,12 +153,14 @@ namespace Checador_FXE
         /// Metodo de guardado del archivo de proyecto
         /// </summary>
         /// <param name="path"></param>
-        void _CommonSaveMethod(string path)
+        bool _CommonSaveMethod(string path)
         {
             Response funcResp = actualView!.ActualCafProject.Save(path);
 
             string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;
             Program.WriteStatus(funcResp.Success, resultText);
+
+            return funcResp.Success;
         }
 
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -173,7 +175,7 @@ namespace Checador_FXE
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                Response<CafProjFile> funcResp = CafProjFile.Build(dialog.FileName);
+                Response<CafProjFile> funcResp = CafProjFile.Build(dialog.FileName, ShowObjectLog: true);
 
                 if (funcResp.Success)
                 {
@@ -229,7 +231,7 @@ namespace Checador_FXE
             if (targetPath == "-1")
                 return;
 
-            _CommonSaveMethod(targetPath);
+            actualView.SavedFlag = _CommonSaveMethod(targetPath);
         }
 
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -246,7 +248,7 @@ namespace Checador_FXE
             if (targetPath == "-1")
                 return;
 
-            _CommonSaveMethod(targetPath);
+            actualView.SavedFlag = _CommonSaveMethod(targetPath);
         }
     }
 }

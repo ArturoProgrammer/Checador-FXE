@@ -475,10 +475,26 @@ namespace Checador_FXE
         /// <param name="proj">Objeto de proyecto a abrir</param>
         internal ReporteAsistencias(CafProjFile proj)
         {
-            throw new NotImplementedException();
+            string path = $@"{proj.TempDir}\{proj.SourceFile.Filename}";
+
+            var parser = proj.AssetsFile.Device switch
+            {
+                Dispositivo.ZKTECO_K40_KIT => READER_ZK_TECO_K40(path),
+                Dispositivo.ZKTECO_K40 => READER_ZK_TECO_K40(path),
+                _ => throw new IndexOutOfRangeException($"No se encuentra en la lista de dispositivos admitidos al elemento '{proj.AssetsFile.Device.GetText()}'!")
+            };
+
+            if (!parser.Status)
+                return;
+
+            Chequeos = parser.Chequeos;
+            Turnos = parser.RelacionTurnos;
+            ReportPeriod = parser.PeriodTime;
+            DeviceModel = proj.AssetsFile.Device;
+            SourcePath = path;
         }
 
-
+        
 
         /// <summary>
         /// Lector e interprete del formato

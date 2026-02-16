@@ -5,6 +5,7 @@ using FlowCommonWorkcore;
 using FlowControls;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +29,8 @@ namespace Checador_FXE.MdiForms
         internal MainDesktop LegacyParent { get; }
         internal CafProjFile ActualCafProject { get; set; }
         internal string ProjectFullname { get; set; } = "-1";
+
+        bool projByCafOpened = false;
 
         /// <summary>
         /// Constructor para opcion: "Nuevo proyecto"
@@ -58,6 +61,8 @@ namespace Checador_FXE.MdiForms
         internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent, CafProjFile projCaf, string projFullname)
         {
             InitializeComponent();
+            projByCafOpened = true;
+
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
@@ -122,13 +127,13 @@ namespace Checador_FXE.MdiForms
 
         private void mdiQuincenaView_Load(object sender, EventArgs e)
         {
-            // Ejecuciones requeridas
-            this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
-            this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
-
             this.splitContainer2.SplitterDistance = 570;
             this.splitContainer1.SplitterDistance = 280;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
+
+            // Ejecuciones requeridas
+            this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
+            this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
         }
 
         ListViewItem actualSelectedEmpleado = null;
@@ -206,6 +211,11 @@ namespace Checador_FXE.MdiForms
             }
         }
 
+        /// <summary>
+        /// Bandera para saber si el archivo esta guardado
+        /// </summary>
+        internal bool SavedFlag = false;
+
         private void flQuickAccessPanel1_OnButtonClicked(object sender, ButtonClickedEventArgs e)
         {
             /* 
@@ -214,17 +224,25 @@ namespace Checador_FXE.MdiForms
             switch (e.Button.Name)
             {
                 case "btnGuardar":
-                    // TODO: METODO DE GUARDADO DEL PROYECTO
+                    SavedFlag = false;
                     this.LegacyParent.guardarToolStripMenuItem.PerformClick();
                     break;
                 case "btnCerrar":
-                    if (MessageBox.Show("¿Seguro que deseas salir sin guardar los cambios previamente?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                        return;
+                    DialogResult d_r = MessageBox.Show("¿Deseas salir sin guardar los cambios realizados?", "Confirmacion", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (d_r == DialogResult.No)
+                    {
+                        SavedFlag = false;
+                        this.LegacyParent.guardarToolStripMenuItem.PerformClick(); // Guardamos
 
-                    // Guardamos
-                    this.LegacyParent.guardarToolStripMenuItem.PerformClick();
-
-                    this.Close(); // Cerramos
+                        if (SavedFlag)
+                            this.Close();
+                    } else if (d_r == DialogResult.Yes)
+                    {
+                        this.Close(); // Solo salimos
+                    } else
+                    {
+                        return; // Cancelamos la operacion
+                    }
                     break;
                 case "btnImprimir":
                     Program.WriteStatus(false, "Proximamente", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
@@ -260,7 +278,7 @@ namespace Checador_FXE.MdiForms
                     if (Utils.IsDgvEmpty(this.dgvTurnosHorarios))
                         break;
 
-                    Program.WriteStatus(true, "Iniciando procesmiendo de casting...");
+                    Program.WriteStatus(true, "Iniciando procesamiendo del casting...");
                     PairEmpleado_FechaAsistencia = null;    // Establecemos este valor default para evitar conflictos
 
                     // Obtiene el tiempo de entrada maximo
@@ -307,8 +325,6 @@ namespace Checador_FXE.MdiForms
                                 _diasAsistenciaPair.Add(DateOnly.FromDateTime(dia), a);
                             }
 
-                            //MessageBox.Show(JsonConvert.SerializeObject(_diasAsistenciaPair, Newtonsoft.Json.Formatting.Indented));
-
                             /* 
                              * HACK: Aqui se debe de añadir la evaluacion de los dias trabajados
                              * */
@@ -318,34 +334,41 @@ namespace Checador_FXE.MdiForms
                         return _registro;
                     };
 
-                    Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = BuildPeriodTimeList();
+                    Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
 
-                    #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
-                    HorarioTurno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
-
-                    foreach (var i in Report.Chequeos)
+                    if (!projByCafOpened) 
                     {
-                        string empleado = i.Key;
+                        #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
+                        HorarioTurno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
 
-                        foreach (Checada j in i.Value)
+                        foreach (var i in Report.Chequeos)
                         {
-                            DateOnly today = DateOnly.Parse(j.Fecha.ToString("d"));
-                            int turnOfToday = _GetTurn(Report.Turnos, today, empleado);
+                            string empleado = i.Key;
 
-                            if (turnOfToday == -1)
-                                throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
+                            foreach (Checada j in i.Value)
+                            {
+                                DateOnly today = DateOnly.Parse(j.Fecha.ToString("d"));
+                                int turnOfToday = _GetTurn(Report.Turnos, today, empleado);
 
-                            TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<HorarioTurno>()
-                                                                            .Where(h => h.ID == turnOfToday)
-                                                                            .Select(t => t.PrimerHorario.Entrada)
-                                                                            .FirstOrDefault());
-                            //
-                            // CON ESTA LINEA NOSOTROS LO QUE HACEMOS ES SABER SI TUVO UN RETARDO O UNA ASISTENCIA
-                            //
-                            _PeriodoCasteado[empleado][today] = _IsARetardEntry(TimeSpan.Parse($"{j.Fecha.Hour:00}:{j.Fecha.Minute:00}"), limiteEntrada) ? TipoAsistencia.RETARDO : TipoAsistencia.FALTA;
+                                if (turnOfToday == -1)
+                                    throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
+
+                                TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<HorarioTurno>()
+                                                                                .Where(h => h.ID == turnOfToday)
+                                                                                .Select(t => t.PrimerHorario.Entrada)
+                                                                                .FirstOrDefault());
+                                //
+                                // CON ESTA LINEA NOSOTROS LO QUE HACEMOS ES SABER SI TUVO UN RETARDO O UNA ASISTENCIA
+                                //
+                                _PeriodoCasteado[empleado][today] = _IsARetardEntry(TimeSpan.Parse($"{j.Fecha.Hour:00}:{j.Fecha.Minute:00}"), limiteEntrada) ? TipoAsistencia.RETARDO : TipoAsistencia.FALTA;
+                            }
                         }
+                        #endregion
                     }
-                    #endregion
+                    else
+                    {
+                        //MessageBox.Show($"{projByCafOpened}\n{_PeriodoCasteado.Keys.Count}");
+                    }
 
                     Program.WriteStatus(true, "Procesando resultados en interfaz...");
 
@@ -358,9 +381,7 @@ namespace Checador_FXE.MdiForms
                     List<InteropGenericObject> _list = new List<InteropGenericObject>();
 
                     foreach (string empleado in _PeriodoCasteado.Keys)
-                    {
                         _list.Add(InteropGenericObject.Compatibilize(empleado, "", _PeriodoCasteado[empleado], new HexaHash().ToString(), 1, 1));
-                    }
 
                     PairEmpleado_FechaAsistencia = _PeriodoCasteado;
                     CASTING_RESULT = _list;
@@ -544,17 +565,13 @@ namespace Checador_FXE.MdiForms
              * */
             foreach (TreeNode i in LegacyParent.treeViewProyectosQuincenas.Nodes)
             {
-                if (i.Tag.ToString().Equals(this.Tag.ToString()))
+                if (i.Tag.ToString()!.Equals(this.Tag!.ToString()))
                 {
                     LegacyParent.treeViewProyectosQuincenas.Nodes.Remove(i);
+                    Program.WriteStatus(true, $"Vista de '{ProjectFullname}' cerrada!");
                     break;
                 }
             }
-        }
-
-        private void treePagingResultadosCasting_SelectionChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void splitResultadosCasting_Background_SplitterMoved(object sender, SplitterEventArgs e)

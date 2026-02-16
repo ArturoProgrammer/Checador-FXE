@@ -2,11 +2,13 @@
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
+using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 using FlowCommonWorkcore;
 using FlowControls;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -74,46 +76,116 @@ namespace Checador_FXE.Plantillas
         {
             public static readonly string FILEPATH = @"data\resultados_casting.json";
 
-            /* 
-             * TODO: ver la manera de que se guarden los resultados del casting tomando en cuenta
-             *       que posiblemente ya se realizaron modificaciones previas.
-             *       Posiblemente la idea sea una estructura de tipo de datos de diccionario, en
-             *       donde la clave sera el nombre o numero de empleado y el valor los eventos en
-             *       el calendario de ese empleado
-             *       
-             * */
+            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; private set; }
 
-            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; set; }
+            public ResultadosCastingTab() { }
 
-            public flTreeViewPaging DataSourceControl { get; }
-
-            public ResultadosCastingTab(flTreeViewPaging pagingView)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pagingView">Origen de datos de donde obtendremos los resultados</param>
+            /// <returns></returns>
+            /// <exception cref="Exception"></exception>
+            public string MakeJson(flTreeViewPaging pagingView)
             {
-                this.DataSourceControl = pagingView;
-            }
-
-            public string MakeJson()
-            {
-                //string jsonText = JsonSerializer.Serialize<ResultadosCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
-
                 Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _array = new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
-                MessageBox.Show(DataSourceControl.Items.Count.ToString());
-                foreach (InteropGenericObject obj in DataSourceControl.Items)
-                {
-                    /*
-                    Dictionary<string, string> item = new Dictionary<string, string>() {
-                        { "" }
-                    };
-                    */
-                    MessageBox.Show(obj.ObjectTitle);
+                List<string> _nodes = new List<string>();
 
-                    //MessageBox.Show(JsonSerializer.Serialize<InteropGenericObject>(obj, options: new JsonSerializerOptions() { WriteIndented = true }));
+                foreach (InteropGenericObject obj in pagingView.Items)
+                {
+                    _array.Add(obj.ObjectTitle, new Dictionary<DateOnly, TipoAsistencia>());    // Añadimos al diccionario los pares
+
+                    Dictionary<DateOnly, TipoAsistencia> _objTag = (obj.GenericObject as Dictionary<DateOnly, TipoAsistencia>) ?? throw new Exception("Error inesperado al parseo del objeto!");
+                    _array[obj.ObjectTitle] = _objTag;
+
+                    List<string> _Lines = new List<string>();
+                    foreach (DateOnly dia in _array[obj.ObjectTitle].Keys)
+                    {
+                        _Lines.Add($@"""{dia.ToString("yyyy-MM-dd")}"" : ""{_array[obj.ObjectTitle][dia].GetText()}""");
+                    }
+
+                    _nodes.Add($@"""{obj.ObjectTitle}"" : {{
+    {String.Join(",\n", _Lines)}
+}}");
+                }
+                return $@"{{ 
+    {String.Join(",\n", _nodes)} 
+}}";
+            }
+            public static ResultadosCastingTab? Build(string jsonText)
+            {
+                if (string.IsNullOrWhiteSpace(jsonText))
+                    throw new ArgumentException("El JSON de entrada está vacío.", nameof(jsonText));
+
+                // 1) Deserializar el JSON a: Empleado -> (Fecha(string) -> TextoAsistencia(string))
+                Dictionary<string, Dictionary<string, string>>? plano;
+                try
+                {
+                    plano = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(
+                        jsonText,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                    );
+                }
+                catch (JsonException jex)
+                {
+                    throw new ArgumentException("El JSON proporcionado no tiene el formato esperado.", jex);
                 }
 
-                //return jsonText;
-                return "";
+                if (plano is null)
+                    throw new ArgumentException("El JSON se deserializó a null (estructura no compatible).", nameof(jsonText));
+
+                // 2) Construir la estructura destino: Empleado -> (Fecha(DateOnly) -> TipoAsistencia)
+                var resultado = new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
+
+                foreach (var empleadoKvp in plano)
+                {
+                    var empleado = empleadoKvp.Key ?? string.Empty;
+                    var fechasTexto = empleadoKvp.Value ?? new Dictionary<string, string>();
+
+                    var mapaFechas = new Dictionary<DateOnly, TipoAsistencia>();
+
+                    foreach (var fechaAsistencia in fechasTexto)
+                    {
+                        var fechaStr = fechaAsistencia.Key;
+                        var asistenciaTexto = fechaAsistencia.Value ?? string.Empty;
+
+                        // Parse de fecha con formato fijo "yyyy-MM-dd"
+                        if (!DateOnly.TryParseExact(
+                                fechaStr,
+                                "yyyy-MM-dd",
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None,
+                                out var fecha))
+                        {
+                            // Si la fecha no es válida, se omite este par
+                            continue;
+                        }
+
+                        // Parse del texto al enum (usa tu extensión; si no encuentra, devuelve FALTA)
+                        var tipo = TipoAsistenciaExtensions.Parse(asistenciaTexto);
+
+                        // Insertar (si hay repetidas, se sobreescribe la última)
+                        mapaFechas[fecha] = tipo;
+                    }
+
+                    // Sólo agregar si hay al menos una fecha válida
+                    if (mapaFechas.Count > 0)
+                        resultado[empleado] = mapaFechas;
+                }
+
+                // === En este punto 'resultado' contiene el diccionario reconstruido ===
+                // Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> resultado
+
+                // Tú te encargas de mapearlo a 'ResultadosCastingTab' si así lo requieres.
+                // Por ejemplo, podrías almacenarlo en una propiedad interna de ResultadosCastingTab,
+                // o convertirlo a otro modelo. Aquí retornamos null, como acordamos.
+                ResultadosCastingTab _obj = new ResultadosCastingTab()
+                {
+                    PeriodoCasteado = resultado,
+                };
+
+                return _obj;
             }
-            public static ResultadosCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ResultadosCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
         internal class Assets
         {
@@ -132,6 +204,10 @@ namespace Checador_FXE.Plantillas
         public ResultadosCastingTab ResultadosCasting { get; private set; }
         public (string Filename, byte[] Content) SourceFile { get; private set; }
         public Assets AssetsFile { get; private set; }
+        /// <summary>
+        /// Directorio de archivos temporales
+        /// </summary>
+        public string TempDir { get; private set; }
 
 
         /// <summary>
@@ -157,7 +233,7 @@ namespace Checador_FXE.Plantillas
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
                 DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked
             };
-            this.ResultadosCasting = new ResultadosCastingTab(MdiForm.treePagingResultadosCasting);
+            this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
             this.AssetsFile = new Assets()
             {
@@ -203,12 +279,14 @@ namespace Checador_FXE.Plantillas
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{GeneralTab.FILEPATH}' generado con exito...");
                 File.WriteAllText($@"{_tempPathDir}\{ConfiguracionCastingTab.FILEPATH}", ConfiguracionCasting.MakeJson());
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{ConfiguracionCastingTab.FILEPATH}' generado con exito...");
-                File.WriteAllText($@"{_tempPathDir}\{ResultadosCastingTab.FILEPATH}", ResultadosCasting.MakeJson());
+                File.WriteAllText($@"{_tempPathDir}\{ResultadosCastingTab.FILEPATH}", ResultadosCasting.MakeJson(MdiForm.treePagingResultadosCasting));
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{ResultadosCastingTab.FILEPATH}' generado con exito...");
                 File.WriteAllBytes($@"{_tempPathDir}\{SourceFile.Filename}", SourceFile.Content);
                 _resp.Log.Add($@"Archivo '{MdiForm.Report.SourcePath}' copiado con exito en '{_tempPathDir}'...");
                 File.WriteAllText($@"{_tempPathDir}\{Assets.FILEPATH}", AssetsFile.MakeJson());
                 _resp.Log.Add($@"Archivo '{Assets.FILEPATH}' generado con exito...");
+                TempDir = _tempPathDir;
+                _resp.Log.Add($"Propedad 'TempDir' : '{_tempPathDir}' asignado...");
 
                 // Creamos el archivo comprimido en extension .caf
                 if (File.Exists(filename))
@@ -249,7 +327,7 @@ namespace Checador_FXE.Plantillas
         /// </summary>
         /// <param name="filename">Ruta del archivo .caf</param>
         /// <returns>Response con el objeto CafProjFile reconstruido</returns>
-        public static Response<CafProjFile> Build(string filename)
+        public static Response<CafProjFile> Build(string filename, bool ShowObjectLog = false)
         {
             #region CODIGO
             Response<CafProjFile> _resp = new Response<CafProjFile>(false, "Iniciando construccion del objeto...", null);
@@ -258,8 +336,10 @@ namespace Checador_FXE.Plantillas
             string _targetPathDir = $@"{CafProjFile.PathTempFile}\{new FileInfo(filename).Name.Replace(CafProjFile.FileExtension, "")}";
 
             // Verificamos la existencia del directorio temporal
-            if (!Directory.Exists(_targetPathDir))
-                Directory.CreateDirectory(_targetPathDir);
+            if (Directory.Exists(_targetPathDir))
+                Directory.Delete(_targetPathDir, recursive: true);
+
+            Directory.CreateDirectory(_targetPathDir);
 
             try
             {
@@ -282,8 +362,10 @@ namespace Checador_FXE.Plantillas
 
                 _obj.SourceFile = (fi.Name, File.ReadAllBytes(fi.FullName));
                 _resp.Log.Add($"Archivo '{fi.Name}' cargado exitosamente...");
-                _obj.AssetsFile = Assets.Build(File.ReadAllText($@"{Assets.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al intentar leer el archivo '{Assets.FILEPATH}'");
+                _obj.AssetsFile = Assets.Build(File.ReadAllText($@"{_targetPathDir}\{Assets.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al intentar leer el archivo '{Assets.FILEPATH}'");
                 _resp.Log.Add($@"Archivo '{_targetPathDir}\{Assets.FILEPATH}' leido con exito...");
+                _obj.TempDir = _targetPathDir;
+                _resp.Log.Add($"Propedad 'TempDir' : '{_targetPathDir}' asignado...");
 
                 // Indicamos la respuesta de la funcion
                 _resp.Success = true;
@@ -300,11 +382,15 @@ namespace Checador_FXE.Plantillas
             finally
             {
                 // Una vez terminado, eliminamos la carpeta temporal del directorio
+                /*
                 if (Directory.Exists(_targetPathDir))
                     Directory.Delete(_targetPathDir, true);
                 _resp.Log.Add($"Residuos de '{_targetPathDir}' eliminados con exito...");
+                */
             }
-            
+
+            if (ShowObjectLog) MessageBox.Show(_resp.GetBuildedLog());
+
             return _resp;
             #endregion
         }
