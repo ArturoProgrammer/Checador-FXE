@@ -44,7 +44,7 @@ namespace Checador_FXE.MdiForms
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
-         
+
             LoadAllData();
 
             this.ActualCafProject = new CafProjFile(this); // Creamos el objeto de proyecto
@@ -130,6 +130,22 @@ namespace Checador_FXE.MdiForms
             this.splitContainer2.SplitterDistance = 570;
             this.splitContainer1.SplitterDistance = 280;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
+
+            #region Coloreamos los dias del reporte en ambos EventCalendar
+            Color BG_C = Color.Moccasin;
+
+            List<DateOnly> rptDays = new List<DateOnly>();
+            DateOnly start = DateOnly.Parse(this.Report.ReportPeriod.Start.ToString("yyyy-MM-dd"));
+            DateOnly end = DateOnly.Parse(this.Report.ReportPeriod.End.ToString("yyyy-MM-dd"));
+
+            for (DateOnly i = start; i <= end; i = i.AddDays(1))
+            {
+                rptDays.Add(i);
+            }
+
+            this.calendarAsistencias.PaintDay(rptDays.ToArray(), BG_C);
+            this.calendarEmpleadoCasteado.PaintDay(rptDays.ToArray(), BG_C);
+            #endregion
 
             // Ejecuciones requeridas
             this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
@@ -228,6 +244,7 @@ namespace Checador_FXE.MdiForms
                     this.LegacyParent.guardarToolStripMenuItem.PerformClick();
                     break;
                 case "btnCerrar":
+                    #region CODIGO
                     DialogResult d_r = MessageBox.Show("¿Deseas salir sin guardar los cambios realizados?", "Confirmacion", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                     if (d_r == DialogResult.No)
                     {
@@ -243,6 +260,7 @@ namespace Checador_FXE.MdiForms
                     {
                         return; // Cancelamos la operacion
                     }
+                    #endregion
                     break;
                 case "btnImprimir":
                     Program.WriteStatus(false, "Proximamente", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
@@ -336,7 +354,7 @@ namespace Checador_FXE.MdiForms
 
                     Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
 
-                    if (!projByCafOpened) 
+                    if (!projByCafOpened)
                     {
                         #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
                         HorarioTurno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
@@ -364,10 +382,6 @@ namespace Checador_FXE.MdiForms
                             }
                         }
                         #endregion
-                    }
-                    else
-                    {
-                        //MessageBox.Show($"{projByCafOpened}\n{_PeriodoCasteado.Keys.Count}");
                     }
 
                     Program.WriteStatus(true, "Procesando resultados en interfaz...");
@@ -417,7 +431,7 @@ namespace Checador_FXE.MdiForms
 
             try
             {
-                path = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia, new ReportProperties(
+                path = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia!, new ReportProperties(
                         this.txtAreaRemitente.Value,
                         this.txtLugarRemitente.Value,
                         DateOnly.FromDateTime(this.dateFechaRemitente.Value.HasValue ? this.dateFechaRemitente.Value.Value : DateTime.Now),
@@ -457,6 +471,18 @@ namespace Checador_FXE.MdiForms
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
         }
 
+        /// <summary>
+        /// Funcion encargada de obtener el color para el texto segun tipo de asistencia
+        /// </summary>
+        Func<TipoAsistencia, Color> setColorOfAsistencia = (TipoAsistencia t) => t switch
+        {
+            TipoAsistencia.FALTA => Color.FromKnownColor(KnownColor.IndianRed),
+            TipoAsistencia.VACACIONES => Color.FromKnownColor(KnownColor.Blue),
+            TipoAsistencia.ASISTENCIA => Color.FromKnownColor(KnownColor.DarkGreen),
+            TipoAsistencia.RETARDO => Color.OrangeRed,
+            _ => Color.FromKnownColor(KnownColor.ActiveCaptionText)
+        };
+
         private void treePagingResultadosCasting_ItemDoubleClick(object sender, ItemClickEventArgs e)
         {
             /* 
@@ -468,9 +494,8 @@ namespace Checador_FXE.MdiForms
             try
             {
                 foreach (DateOnly dia in registros.Keys)
-                {
-                    this.calendarEmpleadoCasteado.AddEvent(dia, (registros[dia] is TipoAsistencia.NINGUNO ? "" : registros[dia].GetText()), Color.FromKnownColor(KnownColor.ActiveCaptionText));
-                }
+                    this.calendarEmpleadoCasteado.AddEvent(dia, (registros[dia] is TipoAsistencia.NINGUNO ? "" : registros[dia].GetText()), setColorOfAsistencia(registros[dia]));
+
                 ACTUAL_EMPLEADO_SELECCIONADO = e.Node.Text;
 
                 Program.WriteStatus(true, "Registros el empleado cargados!");
@@ -548,9 +573,7 @@ namespace Checador_FXE.MdiForms
                 Dictionary<DateOnly, TipoAsistencia> _registros = iop.GenericObject as Dictionary<DateOnly, TipoAsistencia>;
 
                 foreach (DateOnly dia in _registros.Keys)
-                {
-                    this.calendarEmpleadoCasteado.AddEvent(dia, (_registros[dia] is TipoAsistencia.NINGUNO ? "" : _registros[dia].GetText()), Color.FromKnownColor(KnownColor.ActiveCaptionText));
-                }
+                    this.calendarEmpleadoCasteado.AddEvent(dia, (_registros[dia] is TipoAsistencia.NINGUNO ? "" : _registros[dia].GetText()), setColorOfAsistencia(_registros[dia]));
             }
             catch (Exception ex)
             {

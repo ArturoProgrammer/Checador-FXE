@@ -358,7 +358,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(157, 23);
+            tableLayoutPanel1.Size = new Size(159, 23);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -382,7 +382,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(157, 1);
+            lviewDayEvents.Size = new Size(159, 1);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -418,7 +418,7 @@
             dateFechaSeleccionada.MinimumSize = new Size(100, 30);
             dateFechaSeleccionada.Name = "dateFechaSeleccionada";
             dateFechaSeleccionada.RootLineColor = Color.Gray;
-            dateFechaSeleccionada.Size = new Size(157, 30);
+            dateFechaSeleccionada.Size = new Size(159, 30);
             dateFechaSeleccionada.TabIndex = 1;
             dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
             dateFechaSeleccionada.TextBoxWidth = 120;
@@ -436,7 +436,7 @@
             txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
             txtEmpleadoSeleccionado.Placeholder = "";
             txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
-            txtEmpleadoSeleccionado.Size = new Size(151, 30);
+            txtEmpleadoSeleccionado.Size = new Size(153, 30);
             txtEmpleadoSeleccionado.TabIndex = 2;
             txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtEmpleadoSeleccionado.Value = "";
@@ -448,7 +448,7 @@
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(190, 34);
+            lviewRegistros.Size = new Size(190, 36);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
@@ -792,6 +792,7 @@
             quickAccessButton1.BackColor = SystemColors.ActiveCaption;
             quickAccessButton1.BorderLineColor = Color.Silver;
             quickAccessButton1.BorderLineThickness = 1;
+            quickAccessButton1.Enabled = true;
             quickAccessButton1.FlatStyle = FlatStyle.Flat;
             quickAccessButton1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             quickAccessButton1.ForeColor = SystemColors.ControlText;
@@ -802,6 +803,7 @@
             quickAccessButton2.BackColor = Color.RosyBrown;
             quickAccessButton2.BorderLineColor = Color.Silver;
             quickAccessButton2.BorderLineThickness = 1;
+            quickAccessButton2.Enabled = true;
             quickAccessButton2.FlatStyle = FlatStyle.Flat;
             quickAccessButton2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             quickAccessButton2.ForeColor = SystemColors.ControlText;
@@ -811,6 +813,7 @@
             quickAccessButton3.BackColor = SystemColors.ActiveCaption;
             quickAccessButton3.BorderLineColor = Color.Silver;
             quickAccessButton3.BorderLineThickness = 1;
+            quickAccessButton3.Enabled = false;
             quickAccessButton3.FlatStyle = FlatStyle.Flat;
             quickAccessButton3.Font = new Font("Microsoft Sans Serif", 8.25F);
             quickAccessButton3.ForeColor = SystemColors.ControlText;
@@ -821,6 +824,7 @@
             quickAccessButton4.BackColor = SystemColors.ActiveCaption;
             quickAccessButton4.BorderLineColor = Color.Silver;
             quickAccessButton4.BorderLineThickness = 1;
+            quickAccessButton4.Enabled = true;
             quickAccessButton4.FlatStyle = FlatStyle.Flat;
             quickAccessButton4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             quickAccessButton4.ForeColor = SystemColors.ControlText;
@@ -831,6 +835,7 @@
             quickAccessButton5.BackColor = Color.NavajoWhite;
             quickAccessButton5.BorderLineColor = Color.Silver;
             quickAccessButton5.BorderLineThickness = 1;
+            quickAccessButton5.Enabled = true;
             quickAccessButton5.FlatStyle = FlatStyle.Flat;
             quickAccessButton5.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             quickAccessButton5.ForeColor = SystemColors.ControlText;

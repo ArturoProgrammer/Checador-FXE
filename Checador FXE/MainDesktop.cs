@@ -76,7 +76,7 @@ namespace Checador_FXE
             this.lblBienvenido.Visible = !_flag;
 
             this.guardarToolStripMenuItem.Enabled = _flag;
-            this.guardarComoToolStripMenuItem.Visible = _flag;
+            this.guardarComoToolStripMenuItem.Enabled = _flag;
         }
 
         private void MDI_PANEL_ControlRemoved(object sender, ControlEventArgs e)
@@ -86,7 +86,7 @@ namespace Checador_FXE
             this.lblBienvenido.Visible = !_flag;
 
             this.guardarToolStripMenuItem.Enabled = _flag;
-            this.guardarComoToolStripMenuItem.Visible = _flag;
+            this.guardarComoToolStripMenuItem.Enabled = _flag;
         }
 
         private void propiedadesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -175,7 +175,7 @@ namespace Checador_FXE
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                Response<CafProjFile> funcResp = CafProjFile.Build(dialog.FileName, ShowObjectLog: true);
+                Response<CafProjFile> funcResp = CafProjFile.Build(dialog.FileName, ShowObjectLog: false);
 
                 if (funcResp.Success)
                 {
