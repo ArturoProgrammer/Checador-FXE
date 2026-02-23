@@ -1,25 +1,8 @@
 ﻿using Checador_FXE.Plantillas;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office2016.Excel;
 using FlowCommonWorkcore;
 using FlowControls;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Generators;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-using System.DirectoryServices.ActiveDirectory;
-using System.Drawing;
-using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Automation;
-using System.Windows.Forms;
 
 namespace Checador_FXE.MdiForms
 {
@@ -439,8 +422,6 @@ namespace Checador_FXE.MdiForms
                         this.txtAutorizador.Value
                     ));
                 Program.WriteStatus(true, $"Informes PDF ({path.Length}), listos...");
-
-                // TODO: AÑADIMOS UNA FUNCION PARA EN CASO DE QUE SEA MAS DE UN ARCHIVO PDF GENERADO, UNIRLOS EN UNO SOLO?
             }
             catch (Exception ex)
             {

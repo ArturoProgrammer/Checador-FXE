@@ -30,10 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCrudEmpleados));
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             flCustomToolStrip1 = new FlowControls.flCustomToolStrip();
             toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
@@ -43,7 +43,9 @@
             flCustomToolStripSeparator1 = new FlowControls.flCustomToolStripSeparator();
             lblLocalidadDefaultActualmente = new ToolStripLabel();
             toolStripLabel2 = new ToolStripLabel();
-            dgvAjustesHorarios = new FlowControls.flExtendedDataGridView();
+            toolStripDropDownButton1 = new ToolStripDropDownButton();
+            exportarParaConfiguracionToolStripMenuItem = new ToolStripMenuItem();
+            dgvAjustesEmpleados = new FlowControls.flExtendedDataGridView();
             colImageIcon = new DataGridViewTextBoxColumn();
             colNumEmpleado = new DataGridViewTextBoxColumn();
             colNombres = new DataGridViewTextBoxColumn();
@@ -53,10 +55,8 @@
             colDivision = new DataGridViewTextBoxColumn();
             colLocalidad = new DataGridViewTextBoxColumn();
             imageList1 = new ImageList(components);
-            toolStripDropDownButton1 = new ToolStripDropDownButton();
-            exportarParaConfiguracionToolStripMenuItem = new ToolStripMenuItem();
             flCustomToolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvAjustesEmpleados).BeginInit();
             SuspendLayout();
             // 
             // flCustomToolStrip1
@@ -67,7 +67,7 @@
             flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, flCustomToolStripSeparator2, cboxLocalidadSeleccionada, btnEstablecerSeleccion, flCustomToolStripSeparator1, lblLocalidadDefaultActualmente, toolStripLabel2, toolStripDropDownButton1 });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(881, 30);
+            flCustomToolStrip1.Size = new Size(852, 30);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
@@ -84,6 +84,7 @@
             // toolStripButton2
             // 
             toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton2.Enabled = false;
             toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
             toolStripButton2.ImageTransparentColor = Color.Magenta;
             toolStripButton2.Name = "toolStripButton2";
@@ -108,6 +109,7 @@
             cboxLocalidadSeleccionada.Name = "cboxLocalidadSeleccionada";
             cboxLocalidadSeleccionada.Size = new Size(200, 30);
             cboxLocalidadSeleccionada.SelectedIndexChanged += cboxLocalidadSeleccionada_SelectedIndexChanged;
+            cboxLocalidadSeleccionada.Click += cboxLocalidadSeleccionada_Click;
             // 
             // btnEstablecerSeleccion
             // 
@@ -116,7 +118,7 @@
             btnEstablecerSeleccion.ImageTransparentColor = Color.Magenta;
             btnEstablecerSeleccion.Name = "btnEstablecerSeleccion";
             btnEstablecerSeleccion.Size = new Size(25, 27);
-            btnEstablecerSeleccion.Text = "toolStripButton3";
+            btnEstablecerSeleccion.Text = "Establecer como default";
             btnEstablecerSeleccion.Click += btnEstablecerSeleccion_Click;
             // 
             // flCustomToolStripSeparator1
@@ -145,62 +147,83 @@
             toolStripLabel2.Size = new Size(112, 27);
             toolStripLabel2.Text = "Localidad Default:";
             // 
-            // dgvAjustesHorarios
+            // toolStripDropDownButton1
             // 
-            dgvAjustesHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle5.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle5.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle5.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
-            dgvAjustesHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvAjustesHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
-            dgvAjustesHorarios.BorderStyle = BorderStyle.None;
-            dgvAjustesHorarios.ButtonAddEnabled = true;
-            dgvAjustesHorarios.ButtonEditEnabled = false;
-            dgvAjustesHorarios.ButtonRemoveEnabled = false;
-            dgvAjustesHorarios.ButtonViewEnabled = false;
-            dgvAjustesHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle6.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle6.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            dgvAjustesHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAjustesHorarios.Columns.AddRange(new DataGridViewColumn[] { colImageIcon, colNumEmpleado, colNombres, colApellidos, colPuesto, colRegion, colDivision, colLocalidad });
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.White;
-            dataGridViewCellStyle7.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle7.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle7.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle7.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvAjustesHorarios.DefaultCellStyle = dataGridViewCellStyle7;
-            dgvAjustesHorarios.Dock = DockStyle.Fill;
-            dgvAjustesHorarios.EnableHeadersVisualStyles = false;
-            dgvAjustesHorarios.GridColor = Color.FromArgb(210, 210, 210);
-            dgvAjustesHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvAjustesHorarios.Location = new Point(0, 30);
-            dgvAjustesHorarios.Margin = new Padding(0);
-            dgvAjustesHorarios.MultiSelect = false;
-            dgvAjustesHorarios.Name = "dgvAjustesHorarios";
-            dgvAjustesHorarios.RowHeadersVisible = false;
-            dgvAjustesHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle8.SelectionBackColor = Color.Orange;
-            dgvAjustesHorarios.RowsDefaultCellStyle = dataGridViewCellStyle8;
-            dgvAjustesHorarios.SelectedCellColor = Color.Moccasin;
-            dgvAjustesHorarios.SelectedRowColor = Color.SteelBlue;
-            dgvAjustesHorarios.SelectionForeColor = Color.Black;
-            dgvAjustesHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAjustesHorarios.Size = new Size(881, 384);
-            dgvAjustesHorarios.TabIndex = 4;
-            dgvAjustesHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
-            dgvAjustesHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
-            dgvAjustesHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
+            toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] { exportarParaConfiguracionToolStripMenuItem });
+            toolStripDropDownButton1.Image = Properties.Resources.toolbox;
+            toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
+            toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            toolStripDropDownButton1.Size = new Size(32, 27);
+            toolStripDropDownButton1.Text = "Herramientas";
+            // 
+            // exportarParaConfiguracionToolStripMenuItem
+            // 
+            exportarParaConfiguracionToolStripMenuItem.Image = Properties.Resources.exportar_16;
+            exportarParaConfiguracionToolStripMenuItem.Name = "exportarParaConfiguracionToolStripMenuItem";
+            exportarParaConfiguracionToolStripMenuItem.Size = new Size(255, 24);
+            exportarParaConfiguracionToolStripMenuItem.Text = "Exportar para configuracion...";
+            exportarParaConfiguracionToolStripMenuItem.Click += exportarParaConfiguracionToolStripMenuItem_Click;
+            // 
+            // dgvAjustesEmpleados
+            // 
+            dgvAjustesEmpleados.AllowUserToAddRows = false;
+            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvAjustesEmpleados.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvAjustesEmpleados.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvAjustesEmpleados.BackgroundColor = SystemColors.GradientActiveCaption;
+            dgvAjustesEmpleados.BorderStyle = BorderStyle.None;
+            dgvAjustesEmpleados.ButtonAddEnabled = true;
+            dgvAjustesEmpleados.ButtonEditEnabled = false;
+            dgvAjustesEmpleados.ButtonRemoveEnabled = false;
+            dgvAjustesEmpleados.ButtonViewEnabled = false;
+            dgvAjustesEmpleados.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvAjustesEmpleados.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvAjustesEmpleados.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvAjustesEmpleados.Columns.AddRange(new DataGridViewColumn[] { colImageIcon, colNumEmpleado, colNombres, colApellidos, colPuesto, colRegion, colDivision, colLocalidad });
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.White;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvAjustesEmpleados.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvAjustesEmpleados.Dock = DockStyle.Fill;
+            dgvAjustesEmpleados.EnableHeadersVisualStyles = false;
+            dgvAjustesEmpleados.GridColor = Color.FromArgb(210, 210, 210);
+            dgvAjustesEmpleados.LabelCounterForeColor = SystemColors.ButtonFace;
+            dgvAjustesEmpleados.Location = new Point(0, 30);
+            dgvAjustesEmpleados.Margin = new Padding(0);
+            dgvAjustesEmpleados.MultiSelect = false;
+            dgvAjustesEmpleados.Name = "dgvAjustesEmpleados";
+            dgvAjustesEmpleados.RowHeadersVisible = false;
+            dgvAjustesEmpleados.RowHeadersWidth = 45;
+            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
+            dgvAjustesEmpleados.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvAjustesEmpleados.SelectedCellColor = Color.Moccasin;
+            dgvAjustesEmpleados.SelectedRowColor = Color.SteelBlue;
+            dgvAjustesEmpleados.SelectionForeColor = Color.Black;
+            dgvAjustesEmpleados.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAjustesEmpleados.Size = new Size(852, 414);
+            dgvAjustesEmpleados.TabIndex = 4;
+            dgvAjustesEmpleados.OnAddClick += dgvAjustesHorarios_OnAddClick;
+            dgvAjustesEmpleados.CellEndEdit += dgvAjustesEmpleados_CellEndEdit;
+            dgvAjustesEmpleados.CellEnter += dgvAjustesEmpleados_CellEnter;
+            dgvAjustesEmpleados.CellValidating += dgvAjustesEmpleados_CellValidating;
+            dgvAjustesEmpleados.RowValidating += dgvAjustesHorarios_RowValidating;
+            dgvAjustesEmpleados.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             // 
             // colImageIcon
             // 
@@ -282,30 +305,12 @@
             imageList1.TransparentColor = Color.Transparent;
             imageList1.Images.SetKeyName(0, "solicitud-32.png");
             // 
-            // toolStripDropDownButton1
-            // 
-            toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripDropDownButton1.DropDownItems.AddRange(new ToolStripItem[] { exportarParaConfiguracionToolStripMenuItem });
-            toolStripDropDownButton1.Image = Properties.Resources.toolbox;
-            toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
-            toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(32, 27);
-            toolStripDropDownButton1.Text = "Herramientas";
-            // 
-            // exportarParaConfiguracionToolStripMenuItem
-            // 
-            exportarParaConfiguracionToolStripMenuItem.Image = Properties.Resources.exportar_16;
-            exportarParaConfiguracionToolStripMenuItem.Name = "exportarParaConfiguracionToolStripMenuItem";
-            exportarParaConfiguracionToolStripMenuItem.Size = new Size(255, 24);
-            exportarParaConfiguracionToolStripMenuItem.Text = "Exportar para configuracion...";
-            exportarParaConfiguracionToolStripMenuItem.Click += exportarParaConfiguracionToolStripMenuItem_Click;
-            // 
             // frmCrudEmpleados
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(881, 414);
-            Controls.Add(dgvAjustesHorarios);
+            ClientSize = new Size(852, 444);
+            Controls.Add(dgvAjustesEmpleados);
             Controls.Add(flCustomToolStrip1);
             MinimumSize = new Size(675, 372);
             Name = "frmCrudEmpleados";
@@ -314,7 +319,7 @@
             Load += frmCrudEmpleados_Load;
             flCustomToolStrip1.ResumeLayout(false);
             flCustomToolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvAjustesEmpleados).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -324,7 +329,7 @@
         private ToolStripButton toolStripButton1;
         private ToolStripButton toolStripButton2;
         private ToolStripButton btnEstablecerSeleccion;
-        private FlowControls.flExtendedDataGridView dgvAjustesHorarios;
+        private FlowControls.flExtendedDataGridView dgvAjustesEmpleados;
         private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator2;
         private ToolStripComboBox cboxLocalidadSeleccionada;
         private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator1;

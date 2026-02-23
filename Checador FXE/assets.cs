@@ -1160,6 +1160,35 @@ namespace Checador_FXE
     }
 }
 
+public enum GridCells
+{
+    ICON,
+    NO_EMP,
+    NOMBRE,
+    APELLIDOS,
+    PUESTO,
+    REGION,
+    DIVISION,
+    LOCALIDAD
+}
+
+public static class GridCellsExtension
+{
+
+    public static int GetIndex(this GridCells gc) => gc switch
+    {
+        GridCells.ICON => 0,
+        GridCells.NO_EMP => 1,
+        GridCells.NOMBRE => 2,
+        GridCells.APELLIDOS => 3,
+        GridCells.PUESTO => 4,
+        GridCells.REGION => 5,
+        GridCells.DIVISION => 6,
+        GridCells.LOCALIDAD => 7,
+        _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
+    };
+}
+
 public static class SingleInstance
 {
     /// <summary>

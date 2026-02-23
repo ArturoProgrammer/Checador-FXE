@@ -165,7 +165,6 @@ namespace Checador_FXE
 
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Tarea en ticket ##100187##
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
                 dialog.Filter = $"{CafProjFile.FileExtensionName} (*.{CafProjFile.FileExtension}) | *.{CafProjFile.FileExtension}";
@@ -219,7 +218,6 @@ namespace Checador_FXE
 
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Tarea en ticket ##100187##
             if (actualView is null)
             {
                 Program.WriteStatus(false, $"Error inesperado. No se puede guardar cuando la vista actual es null");
@@ -236,7 +234,6 @@ namespace Checador_FXE
 
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Tarea en ticket ##100187##
             if (actualView is null)
             {
                 Program.WriteStatus(false, $"Error inesperado. No se puede guardar cuando la vista actual es null");
