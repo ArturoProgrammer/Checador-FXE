@@ -1,13 +1,6 @@
 ﻿using Checador_FXE.Plantillas;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using FlowControls.Utils;
+using SpreadsheetLight;
 
 namespace Checador_FXE
 {
@@ -20,6 +13,7 @@ namespace Checador_FXE
 
         private void btnCerrar_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -42,6 +36,7 @@ namespace Checador_FXE
                     this.txtRutaIngreso.Value = ofd.FileName;
                 }
             }
+            ValidateClauses();
         }
 
         private void btnExaminarDestino_Click(object sender, EventArgs e)
@@ -57,14 +52,48 @@ namespace Checador_FXE
 
                 this.txtRutaIngreso.Value = dialog.FileName;
             }
+            ValidateClauses();
         }
 
-        enum Fields 
+        enum Fields
         {
-            
+            [ControlValidateAttrib("txtRutaIngreso", ControlField.FLTEXTBOXLABELJOINT)]
+            Origen,
+            [ControlValidateAttrib("txtRutaDestino", ControlField.FLTEXTBOXLABELJOINT)]
+            Destino
         }
 
         void ValidateClauses()
+        {
+            Multivalidator mv = new Multivalidator(this);
+
+            bool origen = mv.Validate<Fields>(Fields.Origen, new[] { ValidationParams.NOT_EMPTY_ENTRY }).Success;
+            bool destino = mv.Validate<Fields>(Fields.Destino, new[] { ValidationParams.NOT_EMPTY_ENTRY }).Success;
+
+            this.btnAceptar.Enabled = origen && destino;
+        }
+
+        private void btnAceptar_Click(object sender, EventArgs e)
+        {
+            // Iniciamos el proceso de llenado del archivo de configuracion
+            try
+            {
+                using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value))
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrio un error al procesar el archivo de plantilla. {ex.Message}\n{ex}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void frmExportadorDeConfiguracion_Load(object sender, EventArgs e)
         {
 
         }

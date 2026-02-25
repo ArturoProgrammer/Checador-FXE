@@ -49,13 +49,14 @@ namespace Checador_FXE
             btnAceptar.FlatStyle = FlatStyle.Flat;
             btnAceptar.Font = new Font("Segoe UI", 10F);
             btnAceptar.Image = Properties.Resources.check;
-            btnAceptar.Location = new Point(360, 278);
+            btnAceptar.Location = new Point(362, 278);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(98, 29);
             btnAceptar.TabIndex = 9;
             btnAceptar.Text = " Aceptar";
             btnAceptar.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAceptar.UseVisualStyleBackColor = false;
+            btnAceptar.Click += btnAceptar_Click;
             // 
             // btnCerrar
             // 
@@ -79,7 +80,7 @@ namespace Checador_FXE
             txtRutaIngreso.EntryFont = new Font("Consolas", 9F);
             txtRutaIngreso.InputContentType = InputMode.GENERAL;
             txtRutaIngreso.Label = "Origen:";
-            txtRutaIngreso.Location = new Point(28, 72);
+            txtRutaIngreso.Location = new Point(28, 63);
             txtRutaIngreso.MinimumSize = new Size(79, 28);
             txtRutaIngreso.Name = "txtRutaIngreso";
             txtRutaIngreso.Placeholder = "";
@@ -96,7 +97,7 @@ namespace Checador_FXE
             btnExaminarIngreso.FlatStyle = FlatStyle.Flat;
             btnExaminarIngreso.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminarIngreso.Image = Properties.Resources.buscar_16;
-            btnExaminarIngreso.Location = new Point(508, 74);
+            btnExaminarIngreso.Location = new Point(508, 64);
             btnExaminarIngreso.Name = "btnExaminarIngreso";
             btnExaminarIngreso.Size = new Size(52, 25);
             btnExaminarIngreso.TabIndex = 12;
@@ -109,7 +110,7 @@ namespace Checador_FXE
             btnExaminarDestino.FlatStyle = FlatStyle.Flat;
             btnExaminarDestino.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminarDestino.Image = Properties.Resources.buscar_16;
-            btnExaminarDestino.Location = new Point(508, 111);
+            btnExaminarDestino.Location = new Point(508, 101);
             btnExaminarDestino.Name = "btnExaminarDestino";
             btnExaminarDestino.Size = new Size(52, 25);
             btnExaminarDestino.TabIndex = 14;
@@ -122,7 +123,7 @@ namespace Checador_FXE
             txtRutaDestino.EntryFont = new Font("Consolas", 9F);
             txtRutaDestino.InputContentType = InputMode.GENERAL;
             txtRutaDestino.Label = "Destino:";
-            txtRutaDestino.Location = new Point(28, 109);
+            txtRutaDestino.Location = new Point(28, 100);
             txtRutaDestino.MinimumSize = new Size(79, 28);
             txtRutaDestino.Name = "txtRutaDestino";
             txtRutaDestino.Placeholder = "";
@@ -138,7 +139,7 @@ namespace Checador_FXE
             rtxtResumenOperacion.Enabled = false;
             rtxtResumenOperacion.EntryFont = new Font("Consolas", 9F);
             rtxtResumenOperacion.Label = "Resumen:";
-            rtxtResumenOperacion.Location = new Point(28, 148);
+            rtxtResumenOperacion.Location = new Point(28, 139);
             rtxtResumenOperacion.MinimumSize = new Size(100, 30);
             rtxtResumenOperacion.Name = "rtxtResumenOperacion";
             rtxtResumenOperacion.Placeholder = "Escribe aqui...";
@@ -185,6 +186,7 @@ namespace Checador_FXE
             Name = "frmExportadorDeConfiguracion";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Exportar Configuracion";
+            Load += frmExportadorDeConfiguracion_Load;
             ResumeLayout(false);
         }
 
