@@ -12,13 +12,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
     <PackageReference Include="iTextSharp" Version="5.4.5" />
     <PackageReference Include="MySql.Data" Version="9.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="SpreadsheetLight" Version="3.5.0" />
+    <PackageReference Include="SpreadsheetLight.Fork" Version="3.5.0" />
   </ItemGroup>
 
   <ItemGroup>

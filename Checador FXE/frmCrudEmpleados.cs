@@ -159,7 +159,8 @@ namespace Checador_FXE
         private void exportarParaConfiguracionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO: Tarea en ticket ##100183##
-            frmExportadorDeConfiguracion frm = new frmExportadorDeConfiguracion();
+            string loc = this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!;
+            frmExportadorDeConfiguracion frm = new frmExportadorDeConfiguracion(Empleado.GetAll(loc).Object, loc);
             frm.ShowDialog();
         }
 

@@ -6,9 +6,12 @@ namespace Checador_FXE
 {
     public partial class frmExportadorDeConfiguracion : Form
     {
+        Empleado[] empleados;
+
         public frmExportadorDeConfiguracion(Empleado[] data, string localidadOrigen)
         {
             InitializeComponent();
+            empleados = data;
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)
@@ -34,6 +37,7 @@ namespace Checador_FXE
                     }
 
                     this.txtRutaIngreso.Value = ofd.FileName;
+                    this.txtRutaDestino.Value = $"{ofd.FileName.Replace(".xlsx", "_updated.xlsx")}";
                 }
             }
             ValidateClauses();
@@ -50,7 +54,7 @@ namespace Checador_FXE
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                this.txtRutaIngreso.Value = dialog.FileName;
+                this.txtRutaDestino.Value = dialog.FileName;
             }
             ValidateClauses();
         }
@@ -73,29 +77,213 @@ namespace Checador_FXE
             this.btnAceptar.Enabled = origen && destino;
         }
 
+        enum WriteMode
+        {
+            OVERWRITE_ALL,
+            UPDATE_AND_ALL,
+            ADD_INEXISTENTS
+        }
+
+        WriteMode getWriteMode() => this.rbtnlistModoDeEscritura.SelectedIndex switch
+        {
+            0 => WriteMode.OVERWRITE_ALL,   // ELIMINA TODO EL CONTENIDO Y ESCRIBE DEL NUEVO
+            1 => WriteMode.UPDATE_AND_ALL, // ACTUALIZA LOS EXISTENTES Y AÑADE LOS NUEVOS
+            2 => WriteMode.ADD_INEXISTENTS,   // AÑADE SOLAMENTE LOS INEXISTENTES
+            _ => throw new IndexOutOfRangeException()
+        };
+
+        string getWriteModeDescription(WriteMode mode) => mode switch
+        {
+            WriteMode.OVERWRITE_ALL => "Sobrescribir todo el contenido de la plantilla y escribir la nueva informacion (RECOMENDADO PARA PRIMERA VEZ)",
+            WriteMode.UPDATE_AND_ALL => "Actualizar los empleados existentes en la plantilla y añadir los nuevos empleados que no se encuentren en la plantilla",
+            WriteMode.ADD_INEXISTENTS => "Añadir solamente los empleados que no se encuentren en la plantilla (RECOMENDADO PARA ACTUALIZACIONES POSTERIORES)",
+            _ => throw new IndexOutOfRangeException()
+        };
+
         private void btnAceptar_Click(object sender, EventArgs e)
         {
             // Iniciamos el proceso de llenado del archivo de configuracion
+            bool OPERATION_FLAG = false;
+
             try
             {
-                using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value))
+                this.Cursor = Cursors.WaitCursor;
+                string sheet = "Ajuste de Turnos";
+                
+                using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value, sheet))
                 {
-
+                    MessageBox.Show("aqui 1");
+                    MessageBox.Show(sl.GetCellValueAsString(6,2));
+                    MessageBox.Show("aqui 2");
                 }
+
+                using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value, sheet))
+                {
+                    (char NumEmp, char Nombre, char Area) columns = ('A', 'B', 'C');
+                    int FIRST_ROW = 6;
+
+                    //
+                    // TODO: Ticket de tarea ##100197##; MODOS DE ESCRITURA DE EXPORTACION
+                    //
+
+                    // Declaraciones "globales"
+                    bool emptyRowFound = false;
+                    int ACTUAL_ROW = 0;
+
+                    switch (getWriteMode())
+                    {
+                        case WriteMode.OVERWRITE_ALL:
+                            #region
+                            if (MessageBox.Show("Este modo ELIMINARA TODOS los usuarios para escribir los nuevos. ¿Estas seguro que deseas continuar?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                                break;
+
+                            // Eliminamos todas las filas con informacion
+                            ACTUAL_ROW = FIRST_ROW;
+                            while (!emptyRowFound)
+                            {
+                                if (String.IsNullOrWhiteSpace(sl.GetCellValueAsString(ACTUAL_ROW, Utils.GetColumnInt(columns.NumEmp.ToString())).Trim()))
+                                {
+                                    emptyRowFound = true;
+                                    break;
+                                }
+
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.NumEmp.ToString()), "");
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Nombre.ToString()), "");
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Area.ToString()), "");
+                                ACTUAL_ROW++;
+                            }
+
+                            ACTUAL_ROW = FIRST_ROW;
+                            // Escribimos todo el contenido nuevo
+                            foreach (Empleado _e in empleados)
+                            {
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.NumEmp.ToString()), _e.NoEmp);
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Nombre.ToString()), _e.Nombres);
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Area.ToString()), _e.Area);
+                                ACTUAL_ROW++;
+                            }
+
+                            OPERATION_FLAG = true;
+                            #endregion
+                            break;
+                        case WriteMode.UPDATE_AND_ALL:
+                            #region
+                            List<(Empleado Emp, bool Listo)> ArrayEmpleados = new List<(Empleado Emp, bool Listo)>();
+                            foreach (Empleado _e in empleados)
+                                ArrayEmpleados.Add((_e, false));
+
+                            // Actualizamos primero los existentes
+                            ACTUAL_ROW = FIRST_ROW;
+                            while (!emptyRowFound)
+                            {
+                                string numEmpInCell = sl.GetCellValueAsString(ACTUAL_ROW, Utils.GetColumnInt(columns.NumEmp.ToString())).Trim();
+                                if (String.IsNullOrWhiteSpace(numEmpInCell))
+                                {
+                                    emptyRowFound = true;
+                                    break;
+                                }
+
+                                Empleado empToUpdate = ArrayEmpleados.Where(e => e.Emp.NoEmp.Equals(numEmpInCell)).Select(e => e.Emp).FirstOrDefault();
+                                if (empToUpdate != null)
+                                {
+                                    sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Nombre.ToString()), empToUpdate.Nombres);
+                                    sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Area.ToString()), empToUpdate.Area);
+                                    // Marcamos el empleado como actualizado para no añadirlo despues
+                                    int index = ArrayEmpleados.FindIndex(e => e.Emp.NoEmp.Equals(numEmpInCell));
+                                    ArrayEmpleados[index] = (ArrayEmpleados[index].Emp, true);
+                                }
+                                ACTUAL_ROW++;
+                            }
+
+                            // Añadimos los faltantes
+                            foreach ((Empleado Emp, bool Listo) _e in ArrayEmpleados)
+                            {
+                                if (_e.Listo)
+                                    continue;
+
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.NumEmp.ToString()), _e.Emp.NoEmp);
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Nombre.ToString()), _e.Emp.Nombres);
+                                sl.SetCellValue(ACTUAL_ROW, Utils.GetColumnInt(columns.Area.ToString()), _e.Emp.Area);
+                                ACTUAL_ROW++;
+                            }
+
+                            OPERATION_FLAG = true;
+                            #endregion
+                            break;
+                        case WriteMode.ADD_INEXISTENTS:
+                            #region
+                            List<int> faltantes = new List<int>();  // Indices en el array de los empleados que no se encuentran en la plantilla
+
+                            // Validamos primero los empleados que ya estan
+                            for (int i = 0; i < empleados.Length; i++)
+                            {
+                                Empleado actEmp = empleados[i];
+                                int actRow = FIRST_ROW + i;
+
+                                if (empleados.Cast<Empleado>().Any(e => e.NoEmp.Equals(sl.GetCellValueAsString(actRow, Utils.GetColumnInt(columns.NumEmp.ToString())))))
+                                    continue;
+                                faltantes.Add(i);
+                            }
+
+                            // Detectamos la ultima fila con datos para no sobreescribir informacion
+                            int EMPTY_ROW = FIRST_ROW;
+                            while (!emptyRowFound)
+                            {
+                                if (String.IsNullOrWhiteSpace(sl.GetCellValueAsString(EMPTY_ROW, Utils.GetColumnInt(columns.NumEmp.ToString())).Trim()))
+                                {
+                                    emptyRowFound = true;
+                                    break;
+                                }
+
+                                EMPTY_ROW++;
+                            }
+
+                            // Ingresamos los faltantes apartir del lugar inexistente
+                            int ROW_TO_WRITE = EMPTY_ROW;
+                            foreach (int i in faltantes)
+                            {
+                                Empleado actEmp = empleados[i];
+                                sl.SetCellValue(ROW_TO_WRITE, Utils.GetColumnInt(columns.NumEmp.ToString()), actEmp.NoEmp); // Numero de empleado
+                                sl.SetCellValue(ROW_TO_WRITE, Utils.GetColumnInt(columns.Nombre.ToString()), actEmp.Nombres); // Nombre
+                                sl.SetCellValue(ROW_TO_WRITE, Utils.GetColumnInt(columns.Area.ToString()), actEmp.Area); // Area
+                                ROW_TO_WRITE++;
+                            }
+
+                            OPERATION_FLAG = true;
+                            #endregion
+                            break;
+                        default:
+                            throw new IndexOutOfRangeException("El modo de escritura seleccionado no es valido.");
+                    }
+
+
+                    if (OPERATION_FLAG)
+                        sl.SaveAs(this.txtRutaDestino.Value);  // Guardamos el documento editado una vez finalizado el proceso
+                }
+
+                MessageBox.Show(OPERATION_FLAG ? "Operacion finalizada con exito!" : "Operacion finalizada");
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrio un error al procesar el archivo de plantilla. {ex.Message}\n{ex}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show($"Ocurrio un error al procesar el archivo de plantilla. {ex.Message}\n\nAsegurate de que el archivo no se encuentre abierto por otro programa!\n\n\n{ex}",
+                                "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void frmExportadorDeConfiguracion_Load(object sender, EventArgs e)
         {
+            this.rtxtExplicacionDelModo.Text = getWriteModeDescription(getWriteMode());
+        }
 
+        private void rbtnlistModoDeEscritura_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.rtxtExplicacionDelModo.Text = getWriteModeDescription(getWriteMode());
         }
     }
 }

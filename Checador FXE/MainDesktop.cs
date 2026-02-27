@@ -211,8 +211,7 @@ namespace Checador_FXE
                     this.actualView = frm;
                 }
 
-                string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;
-                Program.WriteStatus(funcResp.Success, resultText);
+                Program.WriteStatus(funcResp.Success, funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message);
             }
         }
 

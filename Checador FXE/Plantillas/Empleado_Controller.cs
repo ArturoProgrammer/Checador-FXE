@@ -23,6 +23,9 @@ namespace Checador_FXE.Plantillas
         [ParamSqlKey("@Puesto")]
         [ColumnSqlName("puesto")]
         public string Puesto { get; set; }
+        [ParamSqlKey("@Area")]
+        [ColumnSqlName("area")]
+        public string Area { get; set; } = "UdA";   // TODO: Ticket de tarea ##100196##
         [ParamSqlKey("@Region")]
         [ColumnSqlName("region")]
         public string Region { get; set; }
@@ -32,7 +35,6 @@ namespace Checador_FXE.Plantillas
         [ParamSqlKey("@Localidad")]
         [ColumnSqlName("localidad")]
         public string Localidad { get; set; }
-
 
         public Empleado() { }
 
