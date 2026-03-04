@@ -186,6 +186,7 @@ namespace Checador_FXE
             rbtnlistModoDeEscritura.ListBackColor = SystemColors.GradientInactiveCaption;
             rbtnlistModoDeEscritura.Location = new Point(646, 71);
             rbtnlistModoDeEscritura.Margin = new Padding(3, 6, 3, 6);
+            rbtnlistModoDeEscritura.MinimumSize = new Size(150, 100);
             rbtnlistModoDeEscritura.Name = "rbtnlistModoDeEscritura";
             rbtnlistModoDeEscritura.RadioListWidth = 200;
             rbtnlistModoDeEscritura.RootLineColor = Color.Gray;

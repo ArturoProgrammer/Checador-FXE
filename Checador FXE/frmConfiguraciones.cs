@@ -1,19 +1,8 @@
-﻿using Checador_FXE.Plantillas;
-using FlowCommonWorkcore.SqlUtils.MySQL;
+﻿using FlowCommonWorkcore.SqlUtils.MySQL;
 using MySql.Data.MySqlClient;
-using Mysqlx.Expr;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Media.Animation;
+using FlowControls;
+using FlowControls.Utils;
 
 namespace Checador_FXE
 {
@@ -26,6 +15,12 @@ namespace Checador_FXE
 
         private void frmConfiguraciones_Load(object sender, EventArgs e)
         {
+            /*
+             * Establecemos por seguridad una contraseña para las opciones de configuracion de
+             * conexion al servidor
+             */
+            this.flTabMenuControl1.SetPrivateTab("tabServidor", new flTabMenuControl.AuthConfig("F3rr0m3x1c0"));
+
             //
             // GENERAL
             //
@@ -132,10 +127,16 @@ namespace Checador_FXE
 
         enum Fields
         {
-            
-            TIEMPO_MAXIMO_RETRASO, DISPOSITIVO_DEFAULT, COLOR_PINCEL, NOMBRE_ARCHIVO, LOCALIDAD_DEFAULT,
+            #region
+            [ControlValidateAttrib("txtMaximoRetrasoMinutosPermitidos", ControlField.FLTEXTBOXLABELJOINT)]
+            TIEMPO_MAXIMO_RETRASO, 
+            DISPOSITIVO_DEFAULT, COLOR_PINCEL, NOMBRE_ARCHIVO, LOCALIDAD_DEFAULT,
+
+            // Pestaña de ajustes
             AJUSTES_HORARIO,
+
             DIRECCION_SERVIDOR, USUARIO_SERVIDOR, PASS_SERVIDOR, PUERTO_SERVIDOR
+            #endregion
         }
 
         void MultiValidator()

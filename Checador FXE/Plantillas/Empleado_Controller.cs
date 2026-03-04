@@ -120,6 +120,7 @@ namespace Checador_FXE.Plantillas
                 ("@Region", Region),
                 ("@Division", Division),
                 ("@Localidad", Localidad),
+                ("@Area", Area)
             };
             _resp.Log.Add("Parametros construidos...");
 

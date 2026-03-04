@@ -128,6 +128,7 @@ namespace Checador_FXE
                     Region = r.Cells[GridCells.REGION.GetIndex()].Value?.ToString() ?? "",
                     Division = r.Cells[GridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
                     Localidad = r.Cells[GridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
+                    Area = "UdA"
                 };
 
                 emp.Save(ShowObjectLog: false);

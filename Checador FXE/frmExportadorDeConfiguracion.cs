@@ -279,6 +279,9 @@ namespace Checador_FXE
         private void frmExportadorDeConfiguracion_Load(object sender, EventArgs e)
         {
             this.rtxtExplicacionDelModo.Text = getWriteModeDescription(getWriteMode());
+
+            MessageBox.Show("Funcion inhabiltada temporalmente por bugs en funcionalidad", "Funcion Inhabilitada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            this.Close();
         }
 
         private void rbtnlistModoDeEscritura_OnSelectedIndexChanged(object sender, EventArgs e)
