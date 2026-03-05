@@ -249,7 +249,7 @@ namespace Checador_FXE.MdiForms
                     Program.WriteStatus(false, "Proximamente", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
                     break;
                 case "btnGenerar":
-                    #region CODIGO
+                    #region CODIGO PARA INVOCACION DE FUNCION DE GENERACION PDF
                     string[] paths = GeneratePdf($@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\{Properties.Settings.Default.DEFAULT_FILENAME}.pdf");
 
                     if (paths.Length > 0 && paths[0] == "-1")
@@ -282,7 +282,8 @@ namespace Checador_FXE.MdiForms
                     Program.WriteStatus(true, "Iniciando procesamiendo del casting...");
                     PairEmpleado_FechaAsistencia = null;    // Establecemos este valor default para evitar conflictos
 
-                    // Obtiene el tiempo de entrada maximo
+                    #region HELPERS DE CODIGO
+                    // Obtiene el tiempo de entrada maximo permitido para la asistencia
                     Func<TimeSpan, TimeSpan> _GetMaximumTime = (TimeSpan entradaNormal) => entradaNormal.Add(new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0));
 
                     // Obtiene el turno correspondiente del dia y el usuario indicado
@@ -334,6 +335,7 @@ namespace Checador_FXE.MdiForms
 
                         return _registro;
                     };
+                    #endregion
 
                     Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
 

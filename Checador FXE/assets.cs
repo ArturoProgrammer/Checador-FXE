@@ -501,7 +501,11 @@ namespace Checador_FXE
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        (bool Status, Dictionary<string, List<(DateOnly Day, int TurnNumber)>> RelacionTurnos, Dictionary<string, Checada[]> Chequeos, (DateTime Start, DateTime End) PeriodTime) READER_ZK_TECO_K40(string path)
+        private (bool Status, 
+                Dictionary<string, List<(DateOnly Day, int TurnNumber)>> RelacionTurnos, 
+                Dictionary<string, Checada[]> Chequeos, 
+                (DateTime Start, DateTime End) PeriodTime) 
+        READER_ZK_TECO_K40(string path)
         {
             /* 
              * ESTA FUNCION LEE LOS REPORTES DE EMPLEADOS GENERADOS POR LOS MODELOS
@@ -619,7 +623,6 @@ namespace Checador_FXE
                 #region ANALISIS DE HOJA DE ASISTENCIAS
                 using (SLDocument sl = new SLDocument(path, SHEET_ASISTENCIAS_NAME))
                 {
-
                     while (true)
                     {
                         /* 

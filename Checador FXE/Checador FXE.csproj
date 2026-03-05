@@ -13,8 +13,16 @@
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <Platforms>AnyCPU;x64</Platforms>
-	  
-	  
+	
+	<VersionPrefix>1.0.1</VersionPrefix>
+	<VersionSuffix>beta</VersionSuffix>
+	<AssemblyVersion>1.0.1</AssemblyVersion>
+	<InformationalVersion>1.0.1.20260305-beta-dev</InformationalVersion>
+	<Copyright>Arturo Venegas IDC</Copyright>
+
+	<NeutralLanguage>es-MX</NeutralLanguage>
+	<RepositoryType>git</RepositoryType>
+	<RepositoryUrl>https://github.com/ArturoProgrammer/Checador-FXE</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

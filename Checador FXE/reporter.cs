@@ -230,7 +230,7 @@ namespace Checador_FXE
                         File.Delete(targetPath);
                     }
 
-                    // ✅ Guardamos el contenido del MemoryStream en el archivo
+                    // Guardamos el contenido del MemoryStream en el archivo
                     File.WriteAllBytes(targetPath, ms.ToArray());
                     File.SetAttributes(targetPath, File.GetAttributes(targetPath) | FileAttributes.ReadOnly);   // Establecemos la propiedad de solo lectura
                 }
