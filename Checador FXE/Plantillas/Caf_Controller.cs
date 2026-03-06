@@ -19,9 +19,6 @@ using ZstdSharp.Unsafe;
 
 namespace Checador_FXE.Plantillas
 {
-    //
-    // TODO: Archivo de proyecto. Ticket: ##100185##
-    //
     /// <summary>
     /// Archivo de proyecto para la aplicacion
     /// </summary>
@@ -173,12 +170,6 @@ namespace Checador_FXE.Plantillas
                         resultado[empleado] = mapaFechas;
                 }
 
-                // === En este punto 'resultado' contiene el diccionario reconstruido ===
-                // Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> resultado
-
-                // Tú te encargas de mapearlo a 'ResultadosCastingTab' si así lo requieres.
-                // Por ejemplo, podrías almacenarlo en una propiedad interna de ResultadosCastingTab,
-                // o convertirlo a otro modelo. Aquí retornamos null, como acordamos.
                 ResultadosCastingTab _obj = new ResultadosCastingTab()
                 {
                     PeriodoCasteado = resultado,

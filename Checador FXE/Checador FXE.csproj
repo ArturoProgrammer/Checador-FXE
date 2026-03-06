@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
-    <PackageReference Include="FlowCommonWorkcore" Version="1.0.1" />
+    <PackageReference Include="FlowCommonWorkcore" Version="1.0.2" />
     <PackageReference Include="FlowControls" Version="1.0.15.3" />
     <PackageReference Include="iTextSharp" Version="5.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
