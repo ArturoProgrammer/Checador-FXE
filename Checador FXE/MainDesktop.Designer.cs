@@ -72,7 +72,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, verToolStripMenuItem, editorDePersonalToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1107, 28);
+            menuStrip1.Size = new Size(1107, 31);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -80,14 +80,14 @@
             // 
             archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { abrirToolStripMenuItem, nuevoToolStripMenuItem, toolStripSeparator1, guardarToolStripMenuItem, guardarComoToolStripMenuItem, toolStripSeparator2, propiedadesToolStripMenuItem });
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
-            archivoToolStripMenuItem.Size = new Size(71, 24);
+            archivoToolStripMenuItem.Size = new Size(81, 27);
             archivoToolStripMenuItem.Text = "Archivo";
             // 
             // abrirToolStripMenuItem
             // 
             abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             abrirToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.A;
-            abrirToolStripMenuItem.Size = new Size(198, 24);
+            abrirToolStripMenuItem.Size = new Size(224, 28);
             abrirToolStripMenuItem.Text = "Abrir";
             abrirToolStripMenuItem.Click += abrirToolStripMenuItem_Click;
             // 
@@ -95,20 +95,20 @@
             // 
             nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
             nuevoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            nuevoToolStripMenuItem.Size = new Size(198, 24);
+            nuevoToolStripMenuItem.Size = new Size(224, 28);
             nuevoToolStripMenuItem.Text = "Nuevo";
             nuevoToolStripMenuItem.Click += nuevoToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(195, 6);
+            toolStripSeparator1.Size = new Size(221, 6);
             // 
             // guardarToolStripMenuItem
             // 
             guardarToolStripMenuItem.Enabled = false;
             guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            guardarToolStripMenuItem.Size = new Size(198, 24);
+            guardarToolStripMenuItem.Size = new Size(224, 28);
             guardarToolStripMenuItem.Text = "Guardar";
             guardarToolStripMenuItem.Click += guardarToolStripMenuItem_Click;
             // 
@@ -116,20 +116,20 @@
             // 
             guardarComoToolStripMenuItem.Enabled = false;
             guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            guardarComoToolStripMenuItem.Size = new Size(198, 24);
+            guardarComoToolStripMenuItem.Size = new Size(224, 28);
             guardarComoToolStripMenuItem.Text = "Guardar como...";
             guardarComoToolStripMenuItem.Click += guardarComoToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(195, 6);
+            toolStripSeparator2.Size = new Size(221, 6);
             // 
             // propiedadesToolStripMenuItem
             // 
             propiedadesToolStripMenuItem.Image = Properties.Resources.settings2;
             propiedadesToolStripMenuItem.Name = "propiedadesToolStripMenuItem";
-            propiedadesToolStripMenuItem.Size = new Size(198, 24);
+            propiedadesToolStripMenuItem.Size = new Size(224, 28);
             propiedadesToolStripMenuItem.Text = "Propiedades";
             propiedadesToolStripMenuItem.Click += propiedadesToolStripMenuItem_Click;
             // 
@@ -137,13 +137,14 @@
             // 
             verToolStripMenuItem.Enabled = false;
             verToolStripMenuItem.Name = "verToolStripMenuItem";
-            verToolStripMenuItem.Size = new Size(42, 24);
+            verToolStripMenuItem.Size = new Size(49, 27);
             verToolStripMenuItem.Text = "Ver";
             // 
             // editorDePersonalToolStripMenuItem
             // 
+            editorDePersonalToolStripMenuItem.Enabled = false;
             editorDePersonalToolStripMenuItem.Name = "editorDePersonalToolStripMenuItem";
-            editorDePersonalToolStripMenuItem.Size = new Size(141, 24);
+            editorDePersonalToolStripMenuItem.Size = new Size(162, 27);
             editorDePersonalToolStripMenuItem.Text = "Editor de Personal";
             editorDePersonalToolStripMenuItem.Click += editorDePersonalToolStripMenuItem_Click;
             // 
@@ -151,29 +152,29 @@
             // 
             STATUS_BAR.ImageScalingSize = new Size(18, 18);
             STATUS_BAR.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, lblStatusText, lblOperationText });
-            STATUS_BAR.Location = new Point(0, 640);
+            STATUS_BAR.Location = new Point(0, 636);
             STATUS_BAR.Name = "STATUS_BAR";
             STATUS_BAR.RenderMode = ToolStripRenderMode.ManagerRenderMode;
-            STATUS_BAR.Size = new Size(1107, 22);
+            STATUS_BAR.Size = new Size(1107, 26);
             STATUS_BAR.TabIndex = 2;
             STATUS_BAR.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(12, 17);
+            toolStripStatusLabel1.Size = new Size(13, 20);
             toolStripStatusLabel1.Text = " ";
             // 
             // lblStatusText
             // 
             lblStatusText.Name = "lblStatusText";
-            lblStatusText.Size = new Size(35, 17);
+            lblStatusText.Size = new Size(40, 20);
             lblStatusText.Text = "Listo";
             // 
             // lblOperationText
             // 
             lblOperationText.Name = "lblOperationText";
-            lblOperationText.Size = new Size(139, 17);
+            lblOperationText.Size = new Size(156, 20);
             lblOperationText.Text = "Preparado para iniciar";
             // 
             // flCustomToolStrip1
@@ -183,16 +184,16 @@
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
             flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel1, toolStrpBtnNuevo, toolStrpBtnAbrir });
-            flCustomToolStrip1.Location = new Point(0, 28);
+            flCustomToolStrip1.Location = new Point(0, 31);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(1107, 25);
+            flCustomToolStrip1.Size = new Size(1107, 26);
             flCustomToolStrip1.TabIndex = 3;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
             // toolStripLabel1
             // 
             toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new Size(13, 22);
+            toolStripLabel1.Size = new Size(15, 23);
             toolStripLabel1.Text = " ";
             // 
             // toolStrpBtnNuevo
@@ -201,7 +202,7 @@
             toolStrpBtnNuevo.Image = Properties.Resources.nuevo_documento;
             toolStrpBtnNuevo.ImageTransparentColor = Color.Magenta;
             toolStrpBtnNuevo.Name = "toolStrpBtnNuevo";
-            toolStrpBtnNuevo.Size = new Size(25, 22);
+            toolStrpBtnNuevo.Size = new Size(29, 23);
             toolStrpBtnNuevo.Text = "Nuevo";
             toolStrpBtnNuevo.Click += toolStrpBtnNuevo_Click;
             // 
@@ -212,7 +213,7 @@
             toolStrpBtnAbrir.Image = Properties.Resources.open;
             toolStrpBtnAbrir.ImageTransparentColor = Color.Magenta;
             toolStrpBtnAbrir.Name = "toolStrpBtnAbrir";
-            toolStrpBtnAbrir.Size = new Size(25, 22);
+            toolStrpBtnAbrir.Size = new Size(29, 23);
             toolStrpBtnAbrir.Text = "Abrir";
             toolStrpBtnAbrir.Click += toolStrpBtnAbrir_Click;
             // 
@@ -286,7 +287,7 @@
             // 
             // MainDesktop
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientActiveCaption;
             ClientSize = new Size(1107, 662);

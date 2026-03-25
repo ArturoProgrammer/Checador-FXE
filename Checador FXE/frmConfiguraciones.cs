@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System.ComponentModel;
 using FlowControls;
 using FlowControls.Utils;
+using FlowControls.Security;
 
 namespace Checador_FXE
 {
@@ -15,11 +16,12 @@ namespace Checador_FXE
 
         private void frmConfiguraciones_Load(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             /*
              * Establecemos por seguridad una contraseña para las opciones de configuracion de
              * conexion al servidor
              */
-            this.flTabMenuControl1.SetPrivateTab("tabServidor", new flTabMenuControl.AuthConfig("F3rr0m3x1c0"));
+            this.flTabMenuControl1.SetPrivateTab("tabServidor", new PasswordAuthPolicy("F3rr0m3x1c0"));
 
             //
             // GENERAL
@@ -30,7 +32,8 @@ namespace Checador_FXE
             this.cboxColorPincel.Value = Properties.Settings.Default.COLOR_PINCEL;
             this.txtNombreArchivoDefecto.Value = Properties.Settings.Default.DEFAULT_FILENAME;
 
-            this.cboxLocalidadEstablecida.Items.AddRange(Utils.GetLocalidadesDisponibles());
+            //this.cboxLocalidadEstablecida.Items.AddRange(Utils.GetLocalidadesDisponibles());
+            this.cboxLocalidadEstablecida.Items.AddRange(new[] { "Hermosillo", "Nogales", "Sufragio" });
             this.cboxLocalidadEstablecida.Value = Properties.Settings.Default.LOCALIDAD_DEFAULT;
 
             //
@@ -45,6 +48,8 @@ namespace Checador_FXE
             this.txtUsuarioServidor.Value = Properties.Settings.Default.SERVER_USER;
             this.txtPassServidor.Value = Properties.Settings.Default.SERVER_PASS;
             this.txtPuerto.Value = Properties.Settings.Default.SERVER_PORT;
+
+            this.Cursor = Cursors.Default;
         }
 
         void _LoadHorariosFromJson(string text)

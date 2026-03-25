@@ -130,8 +130,8 @@ namespace Checador_FXE
                 //
                 // NOS ASEGURAMOS DE QUE LOS RECURSOS CORRESPONDIENTES EXISTAN EN EL DIRECTORIO
                 //
-                _DownloadResource(FORMATO_ASIST_1_PROPS);
-                _DownloadResource(FORMATO_ASIST_2_PROPS);
+                //_DownloadResource(FORMATO_ASIST_1_PROPS);
+                //_DownloadResource(FORMATO_ASIST_2_PROPS);
 
                 MainDesktop _mainDesktop = new MainDesktop();
                 Application.Run(_mainDesktop);

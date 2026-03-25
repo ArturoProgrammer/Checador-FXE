@@ -83,7 +83,7 @@
             btnAceptar.FlatStyle = FlatStyle.Flat;
             btnAceptar.Font = new Font("Segoe UI", 10F);
             btnAceptar.Image = Properties.Resources.check;
-            btnAceptar.Location = new Point(329, 217);
+            btnAceptar.Location = new Point(329, 271);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(98, 29);
             btnAceptar.TabIndex = 7;
@@ -99,7 +99,7 @@
             btnCerrar.FlatStyle = FlatStyle.Flat;
             btnCerrar.Font = new Font("Segoe UI", 10F);
             btnCerrar.Image = Properties.Resources.cancel_16;
-            btnCerrar.Location = new Point(442, 217);
+            btnCerrar.Location = new Point(442, 271);
             btnCerrar.Name = "btnCerrar";
             btnCerrar.Size = new Size(98, 29);
             btnCerrar.TabIndex = 8;
@@ -116,7 +116,7 @@
             groupBox1.Controls.Add(cboxModeloDispositivo);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(528, 199);
+            groupBox1.Size = new Size(528, 237);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Propiedades";
@@ -143,7 +143,7 @@
             label1.ForeColor = Color.IndianRed;
             label1.Location = new Point(6, 150);
             label1.Name = "label1";
-            label1.Size = new Size(516, 31);
+            label1.Size = new Size(516, 70);
             label1.TabIndex = 6;
             label1.Text = "** ADVERTENCIA: Selecciona el modelo de dispositivo correcto con el que se genero el reporte de chequeos para procesar el documento correctamente con el algoritmo correspondiente.";
             // 
@@ -162,10 +162,10 @@
             // 
             // frmNuevoProyecto
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(552, 258);
+            ClientSize = new Size(552, 312);
             Controls.Add(btnExaminar);
             Controls.Add(groupBox1);
             Controls.Add(btnAceptar);

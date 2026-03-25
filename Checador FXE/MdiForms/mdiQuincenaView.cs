@@ -1,6 +1,7 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
 using FlowControls;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 
@@ -377,7 +378,7 @@ namespace Checador_FXE.MdiForms
                     this.txtBusqueda.Value = "";
                     this.treePagingResultadosCasting.Items.Clear();
 
-                    List<InteropGenericObject> _list = new List<InteropGenericObject>();
+                    ObservableCollection<InteropGenericObject> _list = new ObservableCollection<InteropGenericObject>();
 
                     foreach (string empleado in _PeriodoCasteado.Keys)
                         _list.Add(InteropGenericObject.Compatibilize(empleado, "", _PeriodoCasteado[empleado], new HexaHash().ToString(), 1, 1));
@@ -398,7 +399,7 @@ namespace Checador_FXE.MdiForms
         /// <summary>
         /// LISTA DE CASTING ORIGINAL
         /// </summary>
-        List<InteropGenericObject> CASTING_RESULT = new List<InteropGenericObject>();
+        ObservableCollection<InteropGenericObject> CASTING_RESULT = new ObservableCollection<InteropGenericObject>();
         /// <summary>
         /// Direccion que relacionada:
         /// Empleado -> (Fecha -> Tipo de asistencia en la fecha)
@@ -498,7 +499,11 @@ namespace Checador_FXE.MdiForms
             List<InteropGenericObject> _list = CASTING_RESULT.Cast<InteropGenericObject>()
                                                             .Where(i => i.ObjectTitle.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
                                                             .ToList();
-            this.treePagingResultadosCasting.Items = _list;
+            ObservableCollection<InteropGenericObject> _readyList = new ObservableCollection<InteropGenericObject>();
+            foreach (InteropGenericObject i in _list)
+                _readyList.Add(i);
+
+            this.treePagingResultadosCasting.Items = _readyList;
         }
 
         private void calendarEmpleadoCasteado_OnDayDoubleClick(object sender, DayCalendarEventArgs e)

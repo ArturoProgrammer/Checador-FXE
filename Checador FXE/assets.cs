@@ -403,6 +403,7 @@ namespace Checador_FXE
             catch (Exception ex)
             {
                 MessageBox.Show("Ocurrió un error al cargar el listado de las localidades disponibles.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                localidades.AddRange(new[] { "Hermosillo", "Sufragio", "Nogales" });
             }
             finally
             {
