@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
-    <PackageReference Include="FlowCommonWorkcore" Version="1.0.2" />
+    <PackageReference Include="FlowCommonWorkcore" Version="1.0.3" />
     <PackageReference Include="FlowControls" Version="1.0.15.8" />
     <PackageReference Include="iTextSharp" Version="5.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
@@ -35,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="frmCrudRelacionHorarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

@@ -181,18 +181,18 @@ namespace Checador_FXE
                                 // Escribimos el horario del empleado
                                 Func<List<(DateOnly, int)>, int, TimeSpan> _GetWorkTimeSchedule = delegate (List<(DateOnly fecha, int turno)> turnos, int tipo)
                                 {
-                                    (TimeSpan entrada, TimeSpan salida) t = (TimeSpan.Zero, TimeSpan.Zero);
+                                    Horario t = new Horario();
 
                                     foreach (var i in turnos)
                                     {
                                         if (i.turno == 0)
                                             continue;
 
-                                        t = HorarioTurno.GetInOutTimes(i.turno);
+                                        t = Turno.GetInOutTimes(i.turno);
                                         break;
                                     }
 
-                                    return tipo == 0 ? t.entrada : t.salida;
+                                    return tipo == 0 ? t.Entrada : t.Entrada;
                                 };
 
                                 TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos[empName], 0);

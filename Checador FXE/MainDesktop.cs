@@ -124,9 +124,7 @@ namespace Checador_FXE
 
         private void editorDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Abrimos el editor de personal
-            frmCrudEmpleados frm = new frmCrudEmpleados();
-            frm.ShowDialog();
+            
         }
 
 
@@ -182,7 +180,7 @@ namespace Checador_FXE
 
                     // El primer argumento es la ubicacion del archivo .xls a cargar en el reporte
                     ReporteAsistencias report = new ReporteAsistencias(_proj);
-                    
+
                     // Early Return para validar que no este abierto actualmente
                     string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
                     string[] nodesTexts = this.treeViewProyectosQuincenas.Nodes.Cast<TreeNode>().Select(n => n.Text.Trim()).ToArray();
@@ -245,6 +243,20 @@ namespace Checador_FXE
                 return;
 
             actualView.SavedFlag = _CommonSaveMethod(targetPath);
+        }
+
+        private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Abrimos el editor de personal
+            frmCrudEmpleados frm = new frmCrudEmpleados();
+            frm.ShowDialog();
+        }
+
+        private void relacionDeHorariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Abrimos el editor de horarios
+            frmCrudRelacionHorarios frm = new frmCrudRelacionHorarios();
+            frm.ShowDialog();
         }
     }
 }

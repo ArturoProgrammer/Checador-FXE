@@ -1,29 +1,16 @@
 ﻿using Checador_FXE.Plantillas;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
-using DocumentFormat.OpenXml.Office2013.Excel;
-using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils.MySQL;
 using FlowControls;
-using ICSharpCode.TextEditor.Actions;
 using iTextSharp.text;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json.Linq;
 using SpreadsheetLight;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
+using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using ZstdSharp.Unsafe;
 
 namespace Checador_FXE
 {
@@ -182,15 +169,13 @@ namespace Checador_FXE
         {
             List<string> models = new List<string>();
             foreach (Dispositivo device in Enum.GetValues(typeof(Dispositivo)))
-            {
                 models.Add(device.GetText());
-            }
 
             return models.ToArray();
         }
     }
 
-    internal class Utils
+    internal static class Utils
     {
         internal static BaseColor GetBaseColorByName(string bc_name) => bc_name.Trim().ToUpper() switch
         {
@@ -224,13 +209,16 @@ namespace Checador_FXE
             }
         }
 
+        // TODO: LOS TURNOS YA NO SE GUARDARAN EN LAS PROPIEDADES, AHORA SERA EN LA BASE DE DATOS LOCAL
+        internal static int[] GetHorarios() => Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS)
+                                                    .Cast<Turno>().Select(t => t.ID).ToArray();                                            
 
         internal static string ParseJsonHorariosByDgv(flExtendedDataGridView dgv)
         {
             List<string> _jsonParts = new List<string>();
             Func<TimeSpan, int> _buildMilitaryTimeString = (TimeSpan time) => int.Parse($"{time.Hours:00}{time.Minutes:00}");
 
-            foreach (HorarioTurno i in ParseHorariosTurnosByDgv(dgv))
+            foreach (Turno i in ParseHorariosTurnosByDgv(dgv))
             {
                 string words = $@"""{i.ID}"" : {{
     ""primer_horario"" : 
@@ -249,7 +237,6 @@ namespace Checador_FXE
         ""salida"" : {_buildMilitaryTimeString(i.TiempoExtra.Salida)}
     }}
 }}";
-
                 _jsonParts.Add(words);
             }
 
@@ -257,12 +244,12 @@ namespace Checador_FXE
         }
 
 
-        internal static HorarioTurno[] ParseHorariosTurnosByDgv(flExtendedDataGridView dgv)
+        internal static Turno[] ParseHorariosTurnosByDgv(flExtendedDataGridView dgv)
         {
             if (IsDgvEmpty(dgv))
                 throw new ArgumentException("No se puede cargar una tabla sin contenido para el parseo de datos.");
 
-            List<HorarioTurno> _horariosTurnos = new List<HorarioTurno>();
+            List<Turno> _horariosTurnos = new List<Turno>();
 
             foreach (DataGridViewRow row in dgv.Rows)
             {
@@ -277,10 +264,10 @@ namespace Checador_FXE
                 };
 
                 int turnoNum = int.Parse(row.Cells[0].Value.ToString());
-                (TimeSpan entrada, TimeSpan salida) primerHorario = (_TryParseTime(row.Cells[1].Value), _TryParseTime(row.Cells[2].Value));
-                (TimeSpan entrada, TimeSpan salida) segundoHorario = (_TryParseTime(row.Cells[3].Value), _TryParseTime(row.Cells[4].Value));
+                Horario primerHorario = new Horario(_TryParseTime(row.Cells[1].Value), _TryParseTime(row.Cells[2].Value));
+                Horario segundoHorario = new Horario(_TryParseTime(row.Cells[3].Value), _TryParseTime(row.Cells[4].Value));
 
-                _horariosTurnos.Add(new HorarioTurno()
+                _horariosTurnos.Add(new Turno()
                 {
                     ID = turnoNum,
                     PrimerHorario = primerHorario,
@@ -991,38 +978,49 @@ namespace Checador_FXE
         public override string ToString() => $"{NumEmpleado} - {Empleado} - {Fecha.ToString("dd/MM/yyyy HH:mm:ss")} : {Tipo.ToString()}";
     }
 
+    internal struct Horario
+    {
+        public TimeSpan Entrada { get; } = TimeSpan.Zero;
+        public TimeSpan Salida { get; } = TimeSpan.Zero;
 
-    internal class HorarioTurno
+        public Horario(TimeSpan _entrada, TimeSpan _salida) 
+        {
+            Entrada = _entrada;
+            Salida = _salida;
+        }
+    }
+
+    internal struct Turno
     {
         public int ID { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public (TimeSpan Entrada, TimeSpan Salida) PrimerHorario { get; set; }
+        public Horario PrimerHorario { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <remarks>Se refiere al horario despues de comer</remarks>
-        public (TimeSpan Entrada, TimeSpan Salida) SegundoHorario { get; set; }
+        public Horario SegundoHorario { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <remarks>No siempre aplica</remarks>
-        public (TimeSpan Entrada, TimeSpan Salida) TiempoExtra { get; set; }
+        public Horario TiempoExtra { get; set; }
 
         /// <summary>
         /// Texto JSON con la configuracion de horarios correspondiente
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static HorarioTurno[] GetAll(string text)
+        public static Turno[] GetAll(string text)
         {
             #region 
-            List<HorarioTurno> _turnosDeTrabajo = new List<HorarioTurno>();
+            List<Turno> _turnosDeTrabajo = new List<Turno>();
 
             foreach (var i in JObject.Parse(text))
             {
-                HorarioTurno _turn = new HorarioTurno();
+                Turno _turn = new Turno();
 
                 _turn.ID = int.Parse(i.Key.ToString());
 
@@ -1040,18 +1038,16 @@ namespace Checador_FXE
                     return TimeSpan.Parse($"{grupos[0]:00}:{grupos[1]:00}");
                 };
 
-                Func<string, (TimeSpan Entrada, TimeSpan Salida)> BuildTimeSpan = delegate (string SCHEDULE)
+                Func<string, Horario> BuildTimeSpan = delegate (string SCHEDULE)
                 {
                     var horario = i.Value[SCHEDULE];
                     string entrada = horario["entrada"].ToString();
                     string salida = horario["salida"].ToString();
 
                     if (int.Parse(entrada) <= 0 && int.Parse(salida) <= 0)
-                        return (TimeSpan.Zero, TimeSpan.Zero);
+                        return new Horario();
 
-                    return (
-                        _DivideMakeTimeSpan(entrada), _DivideMakeTimeSpan(salida)
-                    );
+                    return new Horario(_DivideMakeTimeSpan(entrada), _DivideMakeTimeSpan(salida));
                 };
 
                 _turn.PrimerHorario = BuildTimeSpan("primer_horario");
@@ -1071,21 +1067,29 @@ namespace Checador_FXE
         /// <param name="turnNumber"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public static (TimeSpan Entrada, TimeSpan Salida) GetInOutTimes(int turnNumber)
+        public static Horario GetInOutTimes(int turnNumber)
         {
-            HorarioTurno[] _horariosTurnos = GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
+            Turno[] _horariosTurnos = GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
 
             if (turnNumber > _horariosTurnos.Length - 1)
                 throw new IndexOutOfRangeException("El numero de turno proporcionado no existe en la lista de turnos.");
 
-            HorarioTurno _targetTurn = _horariosTurnos[turnNumber];
+            Turno _targetTurn = _horariosTurnos[turnNumber];
 
-            if (_targetTurn.SegundoHorario != (TimeSpan.Zero, TimeSpan.Zero))
-            {
-                return (_targetTurn.PrimerHorario.Entrada, _targetTurn.SegundoHorario.Salida);
-            }
+            if (!_targetTurn.SegundoHorario.Equals(new Horario()))
+                return new Horario(_targetTurn.PrimerHorario.Entrada, _targetTurn.SegundoHorario.Salida);
 
-            return (_targetTurn.PrimerHorario.Entrada, _targetTurn.PrimerHorario.Salida);
+            return new Horario(_targetTurn.PrimerHorario.Entrada, _targetTurn.PrimerHorario.Salida);
+        }
+
+        public override string ToString() => base.ToString();
+
+        public override bool Equals([NotNullWhen(true)] object? obj) 
+        {
+            if (obj is null)
+                return false;
+
+            return ((Turno)obj).ID == this.ID;
         }
     }
 

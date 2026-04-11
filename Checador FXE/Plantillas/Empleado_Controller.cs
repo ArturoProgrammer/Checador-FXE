@@ -48,7 +48,7 @@ namespace Checador_FXE.Plantillas
                 Properties.Settings.Default.SERVER_HOSTNAME,
                 Properties.Settings.Default.SERVER_USER,
                 Properties.Settings.Default.SERVER_PASS,
-                Int32.Parse(Properties.Settings.Default.SERVER_PORT),
+                int.Parse(Properties.Settings.Default.SERVER_PORT),
                 Empleado.TABLE_NAME,
                 Empleado.DATABASE_NAME
             )).ExecuteQuery(
@@ -59,11 +59,15 @@ namespace Checador_FXE.Plantillas
 
             try
             {
+                _resp.Log.Add($"Iniciando lectura de los objetos encontrados...");
+                int count = 1;
                 while (_query.Read())
                 {
+                    _resp.Log.Add($"Leyendo objeto '{count}'");
+
                     objList.Add(new Empleado()
                     {
-                        NoEmp = _query.GetString(0),
+                        NoEmp = _query.GetInt32(0).ToString(),
                         Nombres = _query.GetString(1),
                         Apellidos = _query.GetString(2),
                         Puesto = _query.GetString(3),
@@ -71,7 +75,9 @@ namespace Checador_FXE.Plantillas
                         Division = _query.GetString(5),
                         Localidad = _query.GetString(6)
                     });
-                    _resp.Log.Add($"Empleado '{_query.GetString(0)}' obtenido...");
+                    _resp.Log.Add($"Empleado '{_query.GetInt32(0)}' obtenido...");
+
+                    count++;
                 }
 
                 _resp.Object = objList.ToArray();
@@ -150,6 +156,14 @@ namespace Checador_FXE.Plantillas
 
             return _resp;
             #endregion
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) 
+                return false;
+
+            return ((Empleado)obj).NoEmp == this.NoEmp;
         }
     }
 }

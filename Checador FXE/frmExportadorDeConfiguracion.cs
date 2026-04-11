@@ -71,10 +71,15 @@ namespace Checador_FXE
         {
             Multivalidator mv = new Multivalidator(this);
 
-            bool origen = mv.Validate<Fields>(Fields.Origen, new[] { ValidationParams.NOT_EMPTY_ENTRY }).Success;
-            bool destino = mv.Validate<Fields>(Fields.Destino, new[] { ValidationParams.NOT_EMPTY_ENTRY }).Success;
+            int fails = 0;
 
-            this.btnAceptar.Enabled = origen && destino;
+            foreach (Fields field in Enum.GetValues<Fields>())
+                fails += mv.Validate<Fields>(field, 
+                                            invalidValues: null, 
+                                            customValidation: null, 
+                                            ValidationParams.NOT_EMPTY_ENTRY).Success ? 0 : 1;
+
+            this.btnAceptar.Enabled = fails == 0;
         }
 
         enum WriteMode

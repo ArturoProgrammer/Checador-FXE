@@ -60,7 +60,7 @@ namespace Checador_FXE.MdiForms
         {
             dgv.Rows.Clear();
 
-            foreach (HorarioTurno i in HorarioTurno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
+            foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
             {
                 dgv.Rows.Add(new[]
                 {
@@ -343,7 +343,7 @@ namespace Checador_FXE.MdiForms
                     if (!projByCafOpened)
                     {
                         #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
-                        HorarioTurno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
+                        Turno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
 
                         foreach (var i in Report.Chequeos)
                         {
@@ -357,7 +357,7 @@ namespace Checador_FXE.MdiForms
                                 if (turnOfToday == -1)
                                     throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
 
-                                TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<HorarioTurno>()
+                                TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<Turno>()
                                                                                 .Where(h => h.ID == turnOfToday)
                                                                                 .Select(t => t.PrimerHorario.Entrada)
                                                                                 .FirstOrDefault());

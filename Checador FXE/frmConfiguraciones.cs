@@ -105,7 +105,7 @@ namespace Checador_FXE
 				}
              * */
 
-            foreach (HorarioTurno i in HorarioTurno.GetAll(text))
+            foreach (Turno i in Turno.GetAll(text))
             {
                 this.dgvAjustesHorarios.Rows.Add(new[]
                 {
@@ -163,7 +163,7 @@ namespace Checador_FXE
             // GENERAL
             //
             Properties.Settings.Default.DISPOSITIVO_DEFAULT = this.cboxDispositivoDefault.Value;
-            Properties.Settings.Default.MINUTOS_TOLERANCIA = this.txtMaximoRetrasoMinutosPermitidos.Value.Value.Minutes;
+            Properties.Settings.Default.MINUTOS_TOLERANCIA = this.txtMaximoRetrasoMinutosPermitidos.Value!.Value.Minutes;
             Properties.Settings.Default.COLOR_PINCEL = this.cboxColorPincel.Value;
             Properties.Settings.Default.DEFAULT_FILENAME = this.txtNombreArchivoDefecto.Value;
 
