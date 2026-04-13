@@ -12,7 +12,7 @@ namespace Checador_FXE.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace Checador_FXE.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"{""1"":{""primer_horario"":{""entrada"":800,""salida"":1500},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}},""2"":{""primer_horario"":{""entrada"":800,""salida"":1300},""segundo_horario"":{""entrada"":1500,""salida"":1700},""tiempo_extra"":{""entrada"":0,""salida"":0}},""3"":{""primer_horario"":{""entrada"":1500,""salida"":1700},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{""1"":{""titulo"":""Turno corrido"",""primer_horario"":{""entrada"":800,""salida"":1500},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}},""2"":{""titulo"":""Turno completo con comida"",""primer_horario"":{""entrada"":800,""salida"":1300},""segundo_horario"":{""entrada"":1500,""salida"":1700},""tiempo_extra"":{""entrada"":0,""salida"":0}},""3"":{""titulo"":""Media tarde"",""primer_horario"":{""entrada"":1500,""salida"":1700},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}}}")]
         public string TURNOS_HORARIOS {
             get {
                 return ((string)(this["TURNOS_HORARIOS"]));

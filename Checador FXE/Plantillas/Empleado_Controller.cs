@@ -53,7 +53,8 @@ namespace Checador_FXE.Plantillas
                 Empleado.DATABASE_NAME
             )).ExecuteQuery(
                 $"SELECT * FROM {Empleado.DATABASE_NAME}.{Empleado.TABLE_NAME} WHERE (Localidad=@Localidad);",
-                new (string, object)[] { ("@Localidad", localidad) }
+                ShowCommandPreview: false,
+                ("@Localidad", localidad)
             );
             _resp.Log.Add("Conexion con el servidor realizada...");
 

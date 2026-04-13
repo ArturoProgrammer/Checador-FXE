@@ -49,7 +49,7 @@ namespace Checador_FXE
             _resp.Log.Add($"Hostname del equipo obtenido...");
             HexaHash hash = new HexaHash(12);
             _resp.Log.Add("HASH para el evento generado...");
-            
+
             Response SERV_RESP = new Server.GeneralQuery(new ConnectionsData(
                 Properties.Settings.Default.SERVER_HOSTNAME,
                 Properties.Settings.Default.SERVER_USER,
@@ -59,14 +59,13 @@ namespace Checador_FXE
                 DataBaseName
             )).ExecuteNonQuery(
                 $@"INSERT INTO {DataBaseName}.{TableName} (Titulo, Descripcion, Hostname, HASH, NoEmp) VALUES (@Titulo, @Descripcion, @Hostname, @HASH, @NoEmp)",
-                new (string, object)[] { 
-                    ("@Titulo", this.Title.Trim()),
-                    ("@Descripcion", this.Description.Trim()),
-                    ("@Hostname", hostname),
-                    ("@HASH", hash.ToString()),
-                    ("@Fecha", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
-                    ("@NoEmp", this.NoEmpleado),
-                }
+                ShowCommandPreview: false,
+                ("@Titulo", this.Title.Trim()),
+                ("@Descripcion", this.Description.Trim()),
+                ("@Hostname", hostname),
+                ("@HASH", hash.ToString()),
+                ("@Fecha", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
+                ("@NoEmp", this.NoEmpleado)
             );
             _resp.Log.Add("Consulta NonQuery realiza...");
             _resp.Success = SERV_RESP.Success;
@@ -210,7 +209,7 @@ namespace Checador_FXE
         }
 
         // TODO: LOS TURNOS YA NO SE GUARDARAN EN LAS PROPIEDADES, AHORA SERA EN LA BASE DE DATOS LOCAL
-        internal static int[] GetHorarios() => Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS)
+        internal static int[] GetHorariosIDs() => Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS)
                                                     .Cast<Turno>().Select(t => t.ID).ToArray();                                            
 
         internal static string ParseJsonHorariosByDgv(flExtendedDataGridView dgv)
@@ -221,6 +220,7 @@ namespace Checador_FXE
             foreach (Turno i in ParseHorariosTurnosByDgv(dgv))
             {
                 string words = $@"""{i.ID}"" : {{
+    ""titulo"" : ""{i.Nombre}"",
     ""primer_horario"" : 
     {{
         ""entrada"" : {_buildMilitaryTimeString(i.PrimerHorario.Entrada)},
@@ -376,7 +376,8 @@ namespace Checador_FXE
                 Empleado.DATABASE_NAME
             )).ExecuteQuery(
                 $"SELECT all_allowed_sites FROM checador_fxe_db.global_config WHERE (config_name=@Name);",
-                new (string, object)[] { ("@Name", "Default") }
+                ShowCommandPreview: false,
+                ("@Name", "Default")
             );
 
             try
@@ -992,6 +993,10 @@ namespace Checador_FXE
 
     internal struct Turno
     {
+        /// <summary>
+        /// Nombre del turno
+        /// </summary>
+        public string Nombre { get; set; }
         public int ID { get; set; }
         /// <summary>
         /// 
@@ -1023,6 +1028,7 @@ namespace Checador_FXE
                 Turno _turn = new Turno();
 
                 _turn.ID = int.Parse(i.Key.ToString());
+                _turn.Nombre = i.Value!["titulo"]?.ToString() ?? "-1";
 
                 Func<string, TimeSpan> _DivideMakeTimeSpan = delegate (string t)
                 {
@@ -1041,8 +1047,8 @@ namespace Checador_FXE
                 Func<string, Horario> BuildTimeSpan = delegate (string SCHEDULE)
                 {
                     var horario = i.Value[SCHEDULE];
-                    string entrada = horario["entrada"].ToString();
-                    string salida = horario["salida"].ToString();
+                    string entrada = horario["entrada"]!.ToString();
+                    string salida = horario["salida"]!.ToString();
 
                     if (int.Parse(entrada) <= 0 && int.Parse(salida) <= 0)
                         return new Horario();
@@ -1082,7 +1088,7 @@ namespace Checador_FXE
             return new Horario(_targetTurn.PrimerHorario.Entrada, _targetTurn.PrimerHorario.Salida);
         }
 
-        public override string ToString() => base.ToString();
+        public override string ToString() => $"{ID} - {Nombre}";
 
         public override bool Equals([NotNullWhen(true)] object? obj) 
         {
@@ -1091,6 +1097,8 @@ namespace Checador_FXE
 
             return ((Turno)obj).ID == this.ID;
         }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     /// <summary>

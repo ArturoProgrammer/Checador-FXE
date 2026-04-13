@@ -46,11 +46,6 @@
             cboxLocalidadEstablecida = new FlowControls.flComboBoxLabelJoint();
             tabAjustesHorario = new TabPage();
             dgvAjustesHorarios = new FlowControls.flExtendedDataGridView();
-            colTurnoNom = new DataGridViewTextBoxColumn();
-            colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
-            colHorarioUno_Salida = new DataGridViewTextBoxColumn();
-            colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
-            colHorarioDos_Salida = new DataGridViewTextBoxColumn();
             tabServidor = new TabPage();
             flowLayoutPanel2 = new FlowLayoutPanel();
             flLabelHeader3 = new FlowControls.flLabelHeader();
@@ -58,10 +53,18 @@
             txtUsuarioServidor = new FlowControls.flTextBoxLabelJoint();
             txtPassServidor = new FlowControls.flTextBoxLabelJoint();
             txtPuerto = new FlowControls.flTextBoxLabelJoint();
+            flLabelHeader4 = new FlowControls.flLabelHeader();
+            txtRutaLocalDb = new FlowControls.flTextBoxLabelJoint();
             btnTestConnection = new FlowControls.flCustomButton();
             imageList1 = new ImageList(components);
             btnCerrar = new FlowControls.flCustomButton();
             btnAceptar = new FlowControls.flCustomButton();
+            colTurnoNom = new DataGridViewTextBoxColumn();
+            colNombre = new DataGridViewTextBoxColumn();
+            colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioUno_Salida = new DataGridViewTextBoxColumn();
+            colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioDos_Salida = new DataGridViewTextBoxColumn();
             flTabMenuControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -203,6 +206,7 @@
             // 
             txtNombreArchivoDefecto.EntryFont = new Font("Consolas", 9F);
             txtNombreArchivoDefecto.InputContentType = FlowControls.InputMode.GENERAL;
+            txtNombreArchivoDefecto.InputStyle = FlowControls.TextStyle.Normal;
             txtNombreArchivoDefecto.Label = "Nombre del archivo:";
             txtNombreArchivoDefecto.Location = new Point(3, 172);
             txtNombreArchivoDefecto.MinimumSize = new Size(100, 30);
@@ -214,7 +218,6 @@
             txtNombreArchivoDefecto.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtNombreArchivoDefecto.TextBoxWidth = 275;
             txtNombreArchivoDefecto.Value = "";
-            txtNombreArchivoDefecto.Validating += txtNombreArchivoDefecto_Validating;
             // 
             // flLabelHeader2
             // 
@@ -291,7 +294,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvAjustesHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvAjustesHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAjustesHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
+            dgvAjustesHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.White;
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
@@ -319,46 +322,7 @@
             dgvAjustesHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAjustesHorarios.Size = new Size(614, 350);
             dgvAjustesHorarios.TabIndex = 3;
-            // 
-            // colTurnoNom
-            // 
-            colTurnoNom.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colTurnoNom.HeaderText = "Turno No.";
-            colTurnoNom.MinimumWidth = 6;
-            colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 106;
-            // 
-            // colHorarioUno_Entrada
-            // 
-            colHorarioUno_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
-            colHorarioUno_Entrada.MinimumWidth = 6;
-            colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 122;
-            // 
-            // colHorarioUno_Salida
-            // 
-            colHorarioUno_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
-            colHorarioUno_Salida.MinimumWidth = 6;
-            colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 121;
-            // 
-            // colHorarioDos_Entrada
-            // 
-            colHorarioDos_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
-            colHorarioDos_Entrada.MinimumWidth = 6;
-            colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 127;
-            // 
-            // colHorarioDos_Salida
-            // 
-            colHorarioDos_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
-            colHorarioDos_Salida.MinimumWidth = 6;
-            colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 126;
+            dgvAjustesHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
             // 
             // tabServidor
             // 
@@ -381,6 +345,8 @@
             flowLayoutPanel2.Controls.Add(txtUsuarioServidor);
             flowLayoutPanel2.Controls.Add(txtPassServidor);
             flowLayoutPanel2.Controls.Add(txtPuerto);
+            flowLayoutPanel2.Controls.Add(flLabelHeader4);
+            flowLayoutPanel2.Controls.Add(txtRutaLocalDb);
             flowLayoutPanel2.Location = new Point(7, 6);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(601, 296);
@@ -391,7 +357,7 @@
             flLabelHeader3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             flLabelHeader3.BackColor = SystemColors.GradientInactiveCaption;
             flLabelHeader3.Font = new Font("Segoe UI", 14F);
-            flLabelHeader3.HeaderText = "Datos de Conexion";
+            flLabelHeader3.HeaderText = "Datos de Conexion Remota";
             flLabelHeader3.HeaderTextAlign = ContentAlignment.BottomLeft;
             flLabelHeader3.HeaderTextColor = SystemColors.ControlText;
             flLabelHeader3.LabelImage = (Image)resources.GetObject("flLabelHeader3.LabelImage");
@@ -408,6 +374,7 @@
             // 
             txtHostnameTcpIp.EntryFont = new Font("Consolas", 9F);
             txtHostnameTcpIp.InputContentType = FlowControls.InputMode.GENERAL;
+            txtHostnameTcpIp.InputStyle = FlowControls.TextStyle.Normal;
             txtHostnameTcpIp.Label = "Direccion hostname o TCP/IP:";
             txtHostnameTcpIp.Location = new Point(3, 54);
             txtHostnameTcpIp.MinimumSize = new Size(100, 30);
@@ -424,6 +391,7 @@
             // 
             txtUsuarioServidor.EntryFont = new Font("Consolas", 9F);
             txtUsuarioServidor.InputContentType = FlowControls.InputMode.GENERAL;
+            txtUsuarioServidor.InputStyle = FlowControls.TextStyle.Normal;
             txtUsuarioServidor.Label = "Usuario:";
             txtUsuarioServidor.Location = new Point(3, 93);
             txtUsuarioServidor.MinimumSize = new Size(100, 30);
@@ -440,6 +408,7 @@
             // 
             txtPassServidor.EntryFont = new Font("Consolas", 9F);
             txtPassServidor.InputContentType = FlowControls.InputMode.PASSWORD;
+            txtPassServidor.InputStyle = FlowControls.TextStyle.Normal;
             txtPassServidor.Label = "Contraseña:";
             txtPassServidor.Location = new Point(3, 132);
             txtPassServidor.MinimumSize = new Size(100, 30);
@@ -456,6 +425,7 @@
             // 
             txtPuerto.EntryFont = new Font("Consolas", 9F);
             txtPuerto.InputContentType = FlowControls.InputMode.NUMBERS;
+            txtPuerto.InputStyle = FlowControls.TextStyle.Normal;
             txtPuerto.Label = "Puerto:";
             txtPuerto.Location = new Point(3, 171);
             txtPuerto.MinimumSize = new Size(100, 30);
@@ -467,6 +437,41 @@
             txtPuerto.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtPuerto.TextBoxWidth = 75;
             txtPuerto.Value = "";
+            // 
+            // flLabelHeader4
+            // 
+            flLabelHeader4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            flLabelHeader4.BackColor = SystemColors.GradientInactiveCaption;
+            flLabelHeader4.Font = new Font("Segoe UI", 14F);
+            flLabelHeader4.HeaderText = "Datos de Conexion Local";
+            flLabelHeader4.HeaderTextAlign = ContentAlignment.BottomLeft;
+            flLabelHeader4.HeaderTextColor = SystemColors.ControlText;
+            flLabelHeader4.LabelImage = (Image)resources.GetObject("flLabelHeader4.LabelImage");
+            flLabelHeader4.LineColor = Color.Black;
+            flLabelHeader4.LineThickness = 1;
+            flLabelHeader4.Location = new Point(3, 210);
+            flLabelHeader4.MinimumSize = new Size(0, 45);
+            flLabelHeader4.Name = "flLabelHeader4";
+            flLabelHeader4.Padding = new Padding(20, 3, 20, 5);
+            flLabelHeader4.Size = new Size(598, 45);
+            flLabelHeader4.TabIndex = 5;
+            // 
+            // txtRutaLocalDb
+            // 
+            txtRutaLocalDb.EntryFont = new Font("Consolas", 9F);
+            txtRutaLocalDb.InputContentType = FlowControls.InputMode.GENERAL;
+            txtRutaLocalDb.InputStyle = FlowControls.TextStyle.Normal;
+            txtRutaLocalDb.Label = "Ruta:";
+            txtRutaLocalDb.Location = new Point(3, 261);
+            txtRutaLocalDb.MinimumSize = new Size(100, 30);
+            txtRutaLocalDb.Name = "txtRutaLocalDb";
+            txtRutaLocalDb.Placeholder = "";
+            txtRutaLocalDb.RootLineColor = Color.Gray;
+            txtRutaLocalDb.Size = new Size(456, 33);
+            txtRutaLocalDb.TabIndex = 8;
+            txtRutaLocalDb.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtRutaLocalDb.TextBoxWidth = 350;
+            txtRutaLocalDb.Value = "";
             // 
             // btnTestConnection
             // 
@@ -522,6 +527,54 @@
             btnAceptar.UseVisualStyleBackColor = false;
             btnAceptar.Click += btnAceptar_Click;
             // 
+            // colTurnoNom
+            // 
+            colTurnoNom.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colTurnoNom.HeaderText = "No.";
+            colTurnoNom.MinimumWidth = 6;
+            colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 64;
+            // 
+            // colNombre
+            // 
+            colNombre.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colNombre.HeaderText = "Nombre";
+            colNombre.MinimumWidth = 6;
+            colNombre.Name = "colNombre";
+            colNombre.Width = 96;
+            // 
+            // colHorarioUno_Entrada
+            // 
+            colHorarioUno_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
+            colHorarioUno_Entrada.MinimumWidth = 6;
+            colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
+            colHorarioUno_Entrada.Width = 122;
+            // 
+            // colHorarioUno_Salida
+            // 
+            colHorarioUno_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
+            colHorarioUno_Salida.MinimumWidth = 6;
+            colHorarioUno_Salida.Name = "colHorarioUno_Salida";
+            colHorarioUno_Salida.Width = 121;
+            // 
+            // colHorarioDos_Entrada
+            // 
+            colHorarioDos_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
+            colHorarioDos_Entrada.MinimumWidth = 6;
+            colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
+            colHorarioDos_Entrada.Width = 127;
+            // 
+            // colHorarioDos_Salida
+            // 
+            colHorarioDos_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
+            colHorarioDos_Salida.MinimumWidth = 6;
+            colHorarioDos_Salida.Name = "colHorarioDos_Salida";
+            colHorarioDos_Salida.Width = 126;
+            // 
             // frmConfiguraciones
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -537,6 +590,7 @@
             Name = "frmConfiguraciones";
             Text = "Configuraciones";
             Load += frmConfiguraciones_Load;
+            PreviewKeyDown += frmConfiguraciones_PreviewKeyDown;
             flTabMenuControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
@@ -557,11 +611,6 @@
         private FlowControls.flCustomButton btnCerrar;
         private FlowControls.flCustomButton btnAceptar;
         private FlowControls.flTimeLabelJoint txtMaximoRetrasoMinutosPermitidos;
-        private DataGridViewTextBoxColumn colTurnoNom;
-        private DataGridViewTextBoxColumn colHorarioUno_Entrada;
-        private DataGridViewTextBoxColumn colHorarioUno_Salida;
-        private DataGridViewTextBoxColumn colHorarioDos_Entrada;
-        private DataGridViewTextBoxColumn colHorarioDos_Salida;
         private FlowControls.flComboBoxLabelJoint cboxDispositivoDefault;
         private FlowControls.flComboBoxLabelJoint cboxColorPincel;
         private TabPage tabServidor;
@@ -577,5 +626,13 @@
         private FlowLayoutPanel flowLayoutPanel2;
         private FlowControls.flLabelHeader flLabelHeader3;
         private FlowControls.flTextBoxLabelJoint txtNombreArchivoDefecto;
+        private FlowControls.flLabelHeader flLabelHeader4;
+        private FlowControls.flTextBoxLabelJoint txtRutaLocalDb;
+        private DataGridViewTextBoxColumn colTurnoNom;
+        private DataGridViewTextBoxColumn colNombre;
+        private DataGridViewTextBoxColumn colHorarioUno_Entrada;
+        private DataGridViewTextBoxColumn colHorarioUno_Salida;
+        private DataGridViewTextBoxColumn colHorarioDos_Entrada;
+        private DataGridViewTextBoxColumn colHorarioDos_Salida;
     }
 }

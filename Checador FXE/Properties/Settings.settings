@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="TURNOS_HORARIOS" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{"1":{"primer_horario":{"entrada":800,"salida":1500},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}},"2":{"primer_horario":{"entrada":800,"salida":1300},"segundo_horario":{"entrada":1500,"salida":1700},"tiempo_extra":{"entrada":0,"salida":0}},"3":{"primer_horario":{"entrada":1500,"salida":1700},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}}}</Value>
+      <Value Profile="(Default)">{"1":{"titulo":"Turno corrido","primer_horario":{"entrada":800,"salida":1500},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}},"2":{"titulo":"Turno completo con comida","primer_horario":{"entrada":800,"salida":1300},"segundo_horario":{"entrada":1500,"salida":1700},"tiempo_extra":{"entrada":0,"salida":0}},"3":{"titulo":"Media tarde","primer_horario":{"entrada":1500,"salida":1700},"segundo_horario":{"entrada":0,"salida":0},"tiempo_extra":{"entrada":0,"salida":0}}}</Value>
     </Setting>
     <Setting Name="MINUTOS_TOLERANCIA" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>

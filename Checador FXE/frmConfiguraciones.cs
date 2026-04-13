@@ -1,9 +1,9 @@
 ﻿using FlowCommonWorkcore.SqlUtils.MySQL;
 using MySql.Data.MySqlClient;
 using System.ComponentModel;
-using FlowControls;
 using FlowControls.Utils;
 using FlowControls.Security;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Checador_FXE
 {
@@ -55,61 +55,12 @@ namespace Checador_FXE
         void _LoadHorariosFromJson(string text)
         {
             #region CARGA DE VALORES JSON
-            /* 
-             * Formato a resolver:
-             * 
-             * 
-				 {
-					"1" : {
-						"primer_horario": {
-							"entrada": 800,
-							"salida": 1500
-						},
-						"segundo_horario" : {
-							"entrada": 0,
-							"salida": 0
-						},
-						"tiempo_extra": {
-							"entrada": 0,
-							"salida": 0
-						}
-					},
-					"2" : {
-						"primer_horario": {
-							"entrada": 800,
-							"salida": 1300
-						},
-						"segundo_horario" : {
-							"entrada": 1500,
-							"salida": 1700
-						},
-						"tiempo_extra": {
-							"entrada": 0,
-							"salida": 0
-						}
-					},
-					"3" : {
-						"primer_horario": {
-							"entrada": 1500,
-							"salida": 1700
-						},
-						"segundo_horario" : {
-							"entrada": 0,
-							"salida": 0
-						},
-						"tiempo_extra": {
-							"entrada": 0,
-							"salida": 0
-						}
-					}
-				}
-             * */
-
             foreach (Turno i in Turno.GetAll(text))
             {
                 this.dgvAjustesHorarios.Rows.Add(new[]
                 {
                     $"{i.ID}",
+                    $"{i.Nombre}",
                     $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida)}",
                     $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida)}"
                 });
@@ -120,9 +71,7 @@ namespace Checador_FXE
         private void frmConfiguraciones_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
+                this.btnCerrar.PerformClick();
         }
 
         private void btnCerrar_Click(object sender, EventArgs e)
@@ -134,7 +83,7 @@ namespace Checador_FXE
         {
             #region
             [ControlValidateAttrib("txtMaximoRetrasoMinutosPermitidos", ControlField.FLTEXTBOXLABELJOINT)]
-            TIEMPO_MAXIMO_RETRASO, 
+            TIEMPO_MAXIMO_RETRASO,
             DISPOSITIVO_DEFAULT, COLOR_PINCEL, NOMBRE_ARCHIVO, LOCALIDAD_DEFAULT,
 
             // Pestaña de ajustes
@@ -144,18 +93,64 @@ namespace Checador_FXE
             #endregion
         }
 
-        void MultiValidator()
+        bool MultiValidator(Fields f)
         {
             #region
+            Multivalidator mv = new Multivalidator(this);
+            bool flag;
+            switch (f)
+            {
+                case Fields.AJUSTES_HORARIO:
+                    flag = mv.Validate<Fields>(f,invalidValues: null, () => {
+                        // Realizamos la validacion del DGV de los turnos existentes
+                        if (this.dgvAjustesHorarios.Rows.Count == 0)
+                            return false;
 
+                        // Las condiciones son: ID, titulo y que al menos haya un horario establecido
+                        List<bool> fails = new List<bool>();
+                        foreach (DataGridViewRow row in this.dgvAjustesHorarios.Rows)
+                        {
+                            // Validamos primer condicion
+                            if (row.Cells[0].Value == null || string.IsNullOrWhiteSpace(row.Cells[0].Value.ToString()?.Trim()))
+                                fails.Add(false);
+                            // Validamos segunda condicion
+                            if (row.Cells[1].Value == null || string.IsNullOrWhiteSpace(row.Cells[1].Value.ToString()?.Trim()))
+                                fails.Add(false);
+                            // Validamos tercer condicion, minimo, debe estar establecido el primer horario
+
+                            // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
+                            asd
+                        }
+
+                        return fails.Count == 0;
+                    }, ValidationParams.CUSTOM_ACTION, ValidationParams.NOT_EMPTY_ENTRY).Success;
+                    break;
+                default:
+                    flag = mv.Validate<Fields>(f, ValidationParams.NOT_EMPTY_ENTRY).Success;
+                    break;
+            }
+
+            return flag;
             #endregion
+        }
+
+        bool PassAllValidations()
+        {
+            List<bool> _validations = new List<bool>();
+
+            foreach (Fields field in Enum.GetValues(typeof(Fields)))
+            {
+                _validations.Add(MultiValidator(field));
+            }
+
+            return _validations.All(v => v);
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
             // Ejecutamos los multivalidadores
-
-
+            if (!PassAllValidations())
+                return;
             /* 
              * Guardamos los cambios efectuados
              * */
@@ -223,6 +218,7 @@ namespace Checador_FXE
         /// <returns></returns>
         async Task<bool> TestConexion(string hostname, string user, string pass, int port)
         {
+            #region
             MySqlDataReader? _query = null;
             bool flag = false;
 
@@ -236,7 +232,8 @@ namespace Checador_FXE
 
                 _query = new Server.GeneralQuery(_connection).ExecuteQuery(
                     $"SELECT config_id FROM checador_fxe_db.global_config WHERE (config_name=@Name);",
-                    new (string, object)[] { ("@Name", "Default") }
+                    ShowCommandPreview: false,
+                    ("@Name", "Default")
                 );
 
                 flag = _query.HasRows;
@@ -251,6 +248,7 @@ namespace Checador_FXE
             }
 
             return flag;
+            #endregion
         }
 
 
@@ -310,15 +308,21 @@ namespace Checador_FXE
                 MessageBox.Show("Debes de seleccionar un elemento!");
         }
 
-        private void txtNombreArchivoDefecto_Validating(object sender, CancelEventArgs e)
-        {
-
-        }
-
         private void cboxLocalidadEstablecida_Validating(object sender, CancelEventArgs e)
         {
             if (this.cboxLocalidadEstablecida.IsNonSelectedTextSelected)
                 MessageBox.Show("Debes de seleccionar un elemento!");
+        }
+
+        private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
+        {
+            this.dgvAjustesHorarios.Rows.Add(1);    // Se agrega una linea por defecto
+
+            // Establecemos el ID del turno segun el turno anterior
+            this.dgvAjustesHorarios.Rows[this.dgvAjustesHorarios.Rows.Count - 1].Cells[0].Value =
+                this.dgvAjustesHorarios.Rows.Count > 1
+                ? (int.Parse(this.dgvAjustesHorarios.Rows[this.dgvAjustesHorarios.Rows.Count - 2].Cells[0].Value.ToString()) + 1).ToString()
+                : "1";
         }
     }
 }
