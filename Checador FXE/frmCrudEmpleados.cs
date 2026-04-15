@@ -109,13 +109,13 @@ namespace Checador_FXE
             {
                 Empleado emp = new Empleado()
                 {
-                    NoEmp = r.Cells[GridCells.NO_EMP.GetIndex()].Value?.ToString() ?? "",
-                    Nombres = r.Cells[GridCells.NOMBRE.GetIndex()].Value?.ToString() ?? "",
-                    Apellidos = r.Cells[GridCells.APELLIDOS.GetIndex()].Value?.ToString() ?? "",
-                    Puesto = r.Cells[GridCells.PUESTO.GetIndex()].Value?.ToString() ?? "",
-                    Region = r.Cells[GridCells.REGION.GetIndex()].Value?.ToString() ?? "",
-                    Division = r.Cells[GridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
-                    Localidad = r.Cells[GridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
+                    NoEmp = r.Cells[EmpleadosGridCells.NO_EMP.GetIndex()].Value?.ToString() ?? "",
+                    Nombres = r.Cells[EmpleadosGridCells.NOMBRE.GetIndex()].Value?.ToString() ?? "",
+                    Apellidos = r.Cells[EmpleadosGridCells.APELLIDOS.GetIndex()].Value?.ToString() ?? "",
+                    Puesto = r.Cells[EmpleadosGridCells.PUESTO.GetIndex()].Value?.ToString() ?? "",
+                    Region = r.Cells[EmpleadosGridCells.REGION.GetIndex()].Value?.ToString() ?? "",
+                    Division = r.Cells[EmpleadosGridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
+                    Localidad = r.Cells[EmpleadosGridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
                     Area = "UdA"
                 };
 
@@ -135,14 +135,14 @@ namespace Checador_FXE
         {
             // Establecemos el icono de seleccionado
             if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.SelectedRows[0].Cells[GridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+                this.dgvAjustesEmpleados.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
         }
 
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
             // Establecemos el icono de no seleccionado
             if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[GridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+                this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
         }
 
         private void exportarParaConfiguracionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace Checador_FXE
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex == GridCells.LOCALIDAD.GetIndex())
+            if (e.ColumnIndex == EmpleadosGridCells.LOCALIDAD.GetIndex())
             {
                 var grid = (flExtendedDataGridView)sender;
 

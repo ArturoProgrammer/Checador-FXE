@@ -84,12 +84,32 @@ namespace Checador_FXE
             #region
             [ControlValidateAttrib("txtMaximoRetrasoMinutosPermitidos", ControlField.FLTEXTBOXLABELJOINT)]
             TIEMPO_MAXIMO_RETRASO,
-            DISPOSITIVO_DEFAULT, COLOR_PINCEL, NOMBRE_ARCHIVO, LOCALIDAD_DEFAULT,
+
+            [ControlValidateAttrib("cboxDispositivoDefault", ControlField.FLCOMBOBOXLABELJOINT)]
+            DISPOSITIVO_DEFAULT,
+            [ControlValidateAttrib("cboxColorPincel", ControlField.FLCOMBOBOXLABELJOINT)]
+            COLOR_PINCEL, 
+            [ControlValidateAttrib("txtNombreArchivoDefecto", ControlField.FLTEXTBOXLABELJOINT)]
+            NOMBRE_ARCHIVO,
+            [ControlValidateAttrib("cboxLocalidadEstablecida", ControlField.FLCOMBOBOXLABELJOINT)]
+            LOCALIDAD_DEFAULT,
 
             // Pestaña de ajustes
+            [ControlValidateAttrib("dgvAjustesHorarios", ControlField.GENERIC)]
             AJUSTES_HORARIO,
 
-            DIRECCION_SERVIDOR, USUARIO_SERVIDOR, PASS_SERVIDOR, PUERTO_SERVIDOR
+            [ControlValidateAttrib("txtHostnameTcpIp", ControlField.FLTEXTBOXLABELJOINT)]
+            DIRECCION_SERVIDOR, 
+            [ControlValidateAttrib("txtUsuarioServidor", ControlField.FLTEXTBOXLABELJOINT)] 
+            USUARIO_SERVIDOR, 
+            [ControlValidateAttrib("txtPassServidor", ControlField.FLTEXTBOXLABELJOINT)]
+            PASS_SERVIDOR,
+            [ControlValidateAttrib("txtPuerto", ControlField.FLTEXTBOXLABELJOINT)]
+            PUERTO_SERVIDOR,
+
+            // Datos de conexion local
+            [ControlValidateAttrib("txtRutaLocalDb", ControlField.FLTEXTBOXLABELJOINT)]
+            RUTA_DB_LOCAL,
             #endregion
         }
 
@@ -101,7 +121,7 @@ namespace Checador_FXE
             switch (f)
             {
                 case Fields.AJUSTES_HORARIO:
-                    flag = mv.Validate<Fields>(f,invalidValues: null, () => {
+                    flag = mv.Validate<Fields>(f, invalidValues: null, () => {
                         // Realizamos la validacion del DGV de los turnos existentes
                         if (this.dgvAjustesHorarios.Rows.Count == 0)
                             return false;
@@ -111,19 +131,35 @@ namespace Checador_FXE
                         foreach (DataGridViewRow row in this.dgvAjustesHorarios.Rows)
                         {
                             // Validamos primer condicion
-                            if (row.Cells[0].Value == null || string.IsNullOrWhiteSpace(row.Cells[0].Value.ToString()?.Trim()))
+                            if (row.Cells[TurnosGridCells.NUMBER.GetIndex()].Value == null || string.IsNullOrWhiteSpace(row.Cells[TurnosGridCells.NUMBER.GetIndex()].Value.ToString()?.Trim()))
                                 fails.Add(false);
                             // Validamos segunda condicion
-                            if (row.Cells[1].Value == null || string.IsNullOrWhiteSpace(row.Cells[1].Value.ToString()?.Trim()))
-                                fails.Add(false);
+                            if (row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value == null || string.IsNullOrWhiteSpace(row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value.ToString()?.Trim()))
+                                    fails.Add(false);
+                            
                             // Validamos tercer condicion, minimo, debe estar establecido el primer horario
+                            if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value.ToString()?.Trim()) || 
+                                String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_OUT.GetIndex()].Value.ToString()?.Trim()))
+                                fails.Add(false);
 
                             // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
-                            asd
+                            if (!String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value.ToString()?.Trim()) || 
+                                !String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value.ToString()?.Trim()))
+                            {
+                                if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value.ToString()?.Trim()) || 
+                                    String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value.ToString()?.Trim()))
+                                    fails.Add(false);
+                            }
                         }
 
                         return fails.Count == 0;
                     }, ValidationParams.CUSTOM_ACTION, ValidationParams.NOT_EMPTY_ENTRY).Success;
+                    break;
+                case Fields.RUTA_DB_LOCAL:
+                    //
+                    // Omitimos la validacion por el momento
+                    //
+                    flag = true;
                     break;
                 default:
                     flag = mv.Validate<Fields>(f, ValidationParams.NOT_EMPTY_ENTRY).Success;

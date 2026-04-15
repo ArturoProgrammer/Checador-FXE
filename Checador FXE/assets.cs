@@ -1176,7 +1176,52 @@ namespace Checador_FXE
     }
 }
 
-public enum GridCells
+public enum RelacionHorariosGridCells
+{
+    ICON,
+    NO_EMP,
+    NOMBRE_COMP
+}
+
+public static class RelacionHorariosGridCellsExtension
+{
+    public static int GetIndex(this RelacionHorariosGridCells gc) => gc switch
+    {
+        RelacionHorariosGridCells.ICON => 0,
+        RelacionHorariosGridCells.NO_EMP => 1,
+        RelacionHorariosGridCells.NOMBRE_COMP => 2,
+        _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
+    };
+}
+
+
+public enum TurnosGridCells
+{
+    NUMBER,
+    NOMBRE,
+    FIRST_IN,
+    FIRST_OUT,
+    SECOND_IN,
+    SECOND_OUT,
+}
+
+public static class TurnosGridCellsExtension
+{
+
+    public static int GetIndex(this TurnosGridCells gc) => gc switch
+    {
+        TurnosGridCells.NUMBER => 0,
+        TurnosGridCells.NOMBRE => 1,
+        TurnosGridCells.FIRST_IN => 2,
+        TurnosGridCells.FIRST_OUT => 3,
+        TurnosGridCells.SECOND_IN => 4,
+        TurnosGridCells.SECOND_OUT => 5,
+        _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
+    };
+}
+
+
+public enum EmpleadosGridCells
 {
     ICON,
     NO_EMP,
@@ -1188,19 +1233,19 @@ public enum GridCells
     LOCALIDAD
 }
 
-public static class GridCellsExtension
+public static class EmpleadosGridCellsExtension
 {
 
-    public static int GetIndex(this GridCells gc) => gc switch
+    public static int GetIndex(this EmpleadosGridCells gc) => gc switch
     {
-        GridCells.ICON => 0,
-        GridCells.NO_EMP => 1,
-        GridCells.NOMBRE => 2,
-        GridCells.APELLIDOS => 3,
-        GridCells.PUESTO => 4,
-        GridCells.REGION => 5,
-        GridCells.DIVISION => 6,
-        GridCells.LOCALIDAD => 7,
+        EmpleadosGridCells.ICON => 0,
+        EmpleadosGridCells.NO_EMP => 1,
+        EmpleadosGridCells.NOMBRE => 2,
+        EmpleadosGridCells.APELLIDOS => 3,
+        EmpleadosGridCells.PUESTO => 4,
+        EmpleadosGridCells.REGION => 5,
+        EmpleadosGridCells.DIVISION => 6,
+        EmpleadosGridCells.LOCALIDAD => 7,
         _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
     };
 }

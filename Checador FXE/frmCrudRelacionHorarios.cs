@@ -121,19 +121,19 @@ namespace Checador_FXE
         {
             // Establecemos el icono de seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[GridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
         }
 
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
             // Establecemos el icono de no seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[GridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
         }
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex <= 2)
+            if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
                 return;
 
             var grid = (flExtendedDataGridView)sender;
