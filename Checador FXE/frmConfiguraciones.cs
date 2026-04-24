@@ -223,23 +223,23 @@ namespace Checador_FXE
             this.Close();
         }
 
-        Dictionary<string, string> _ServerProps = new Dictionary<string, string>()
+        struct ServerProps
         {
-            { "hostname", Properties.Settings.Default.SERVER_HOSTNAME },
-            { "user", Properties.Settings.Default.SERVER_USER },
-            { "pass", Properties.Settings.Default.SERVER_PASS },
-            { "port", Properties.Settings.Default.SERVER_PORT.ToString() }
-        };
+            public static string hostname { get; } = Properties.Settings.Default.SERVER_HOSTNAME;
+            public static string user { get; } = Properties.Settings.Default.SERVER_USER;
+            public static string password { get; } = Properties.Settings.Default.SERVER_PASS;
+            public static string port { get; } = Properties.Settings.Default.SERVER_PORT;
+        }
 
         bool _ServerPropsHasChanged()
         {
-            if (this.txtHostnameTcpIp.Value != _ServerProps["hostname"])
+            if (this.txtHostnameTcpIp.Value != ServerProps.hostname)
                 return true;
-            if (this.txtUsuarioServidor.Value != _ServerProps["user"])
+            if (this.txtUsuarioServidor.Value != ServerProps.user)
                 return true;
-            if (this.txtPassServidor.Value != _ServerProps["pass"])
+            if (this.txtPassServidor.Value != ServerProps.password)
                 return true;
-            if (this.txtPuerto.Value.ToString() != _ServerProps["port"])
+            if (this.txtPuerto.Value.ToString() != ServerProps.port)
                 return true;
             return false;
         }

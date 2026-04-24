@@ -39,6 +39,7 @@
             toolStripButton2 = new ToolStripButton();
             imageList1 = new ImageList(components);
             dgvRelacionDeHorarios = new FlowControls.flExtendedDataGridView();
+            flCustomToolStripSeparator1 = new FlowControls.flCustomToolStripSeparator();
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
             SuspendLayout();
@@ -48,7 +49,7 @@
             flCustomToolStrip1.BackColor = SystemColors.ActiveCaption;
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2 });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, flCustomToolStripSeparator1 });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
             flCustomToolStrip1.Size = new Size(852, 25);
@@ -142,6 +143,16 @@
             dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             dgvRelacionDeHorarios.KeyDown += dgvRelacionDeHorarios_KeyDown;
             // 
+            // flCustomToolStripSeparator1
+            // 
+            flCustomToolStripSeparator1.AutoSize = false;
+            flCustomToolStripSeparator1.LineColor = Color.DimGray;
+            flCustomToolStripSeparator1.LineMargin = 1;
+            flCustomToolStripSeparator1.LineThickness = 2;
+            flCustomToolStripSeparator1.Name = "flCustomToolStripSeparator1";
+            flCustomToolStripSeparator1.SeparatorHeight = 24;
+            flCustomToolStripSeparator1.Size = new Size(6, 24);
+            // 
             // frmCrudRelacionHorarios
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -168,5 +179,6 @@
         private ToolStripButton toolStripButton2;
         private ImageList imageList1;
         private FlowControls.flExtendedDataGridView dgvRelacionDeHorarios;
+        private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator1;
     }
 }
