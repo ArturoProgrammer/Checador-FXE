@@ -1,8 +1,7 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
 using FlowControls;
-using System.CodeDom;
-using System.Data;
+using FlowControls.Utils;
 
 namespace Checador_FXE
 {
@@ -43,9 +42,25 @@ namespace Checador_FXE
             //Properties.Settings.Default.Save();
         }
 
+        void WriteStatus(bool status, string message)
+        {
+            this.lblStatus.Text = status ? "Listo" : "Error";
+            this.lblStatus.ForeColor = status ? Color.DarkGreen : Color.IndianRed;
+            this.lblMessage.Text = message;
+        }
+
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
-            LoadView(DateTime.Now.Month, DateTime.Now.Year);
+            WriteStatus(true, "Inicializacion exitosa");
+
+            foreach (ToolStripItem i in this.flCustomToolStrip1.Items)
+                if (i is ToolStripControlHost host)
+                    MessageBox.Show(host.Control.Name);
+
+            this.cboxMonth.SelectedIndex = DateTime.Now.Month - 1;
+            this.txtYear.Text = DateTime.Now.Year.ToString();
+
+            this.btnIrAMes.PerformClick();
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
@@ -55,53 +70,62 @@ namespace Checador_FXE
 
         void LoadView(int month, int year, string localidad = "Sufragio")
         {
-            #region CODIGO
-            Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
-
-            this.dgvRelacionDeHorarios.Rows.Clear();
-            this.dgvRelacionDeHorarios.Columns.Clear();
-
-            if (!_SERV_RESP.Success)
+            try
             {
-                MessageBox.Show(_SERV_RESP.Message);
-                return;
-            }
+                #region CODIGO
+                Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
 
-            // Preparamos primero las columnas del DGV
-            this.dgvRelacionDeHorarios.Columns.AddRange(colBaseTemplate);
-            for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
-            {
-                this.dgvRelacionDeHorarios.Columns.Add(new DataGridViewTextBoxColumn()
+                this.dgvRelacionDeHorarios.Rows.Clear();
+                this.dgvRelacionDeHorarios.Columns.Clear();
+
+                if (!_SERV_RESP.Success)
                 {
-                    HeaderText = i.ToString(),
-                    Name = $"colDay{i.ToString()}",
-                    Width = 32,
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                    Resizable = DataGridViewTriState.False,
-                });
-            }
+                    MessageBox.Show(_SERV_RESP.Message);
+                    return;
+                }
 
-            // Cargamos las filas
-            foreach (Empleado j in _SERV_RESP.Object!)
-            {
-                DataGridViewRow _row = new DataGridViewRow();
-                _row.Cells.AddRange(
-                    new DataGridViewImageCell()
-                    {
-                        Value = IconGallery.Size64.NeutralObjectGreenUnselected,
-                        ImageLayout = DataGridViewImageCellLayout.Zoom,
-                    },
-                    new DataGridViewTextBoxCell() { Value = j.NoEmp },
-                    new DataGridViewTextBoxCell() { Value = $"{j.Nombres} {j.Apellidos}" }
-                );
-
-                // Agregamos las celdas de los dias
+                // Preparamos primero las columnas del DGV
+                this.dgvRelacionDeHorarios.Columns.AddRange(colBaseTemplate);
                 for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
-                    _row.Cells.Add(new DataGridViewTextBoxCell());
+                {
+                    this.dgvRelacionDeHorarios.Columns.Add(new DataGridViewTextBoxColumn()
+                    {
+                        HeaderText = i.ToString(),
+                        Name = $"colDay{i.ToString()}",
+                        Width = 32,
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                        Resizable = DataGridViewTriState.False,
+                    });
+                }
 
-                this.dgvRelacionDeHorarios.Rows.Add(_row);
+                // Cargamos las filas
+                foreach (Empleado j in _SERV_RESP.Object!)
+                {
+                    DataGridViewRow _row = new DataGridViewRow();
+                    _row.Cells.AddRange(
+                        new DataGridViewImageCell()
+                        {
+                            Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                            ImageLayout = DataGridViewImageCellLayout.Zoom,
+                        },
+                        new DataGridViewTextBoxCell() { Value = j.NoEmp },
+                        new DataGridViewTextBoxCell() { Value = $"{j.Nombres} {j.Apellidos}" }
+                    );
+
+                    // Agregamos las celdas de los dias
+                    for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
+                        _row.Cells.Add(new DataGridViewTextBoxCell());
+
+                    this.dgvRelacionDeHorarios.Rows.Add(_row);
+                }
+                #endregion
+
+                WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
             }
-            #endregion
+            catch (Exception ex)
+            {
+                WriteStatus(false, $"Error al cargar la vista: {ex.Message}");
+            }
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -183,6 +207,95 @@ namespace Checador_FXE
         private void dgvRelacionDeHorarios_KeyDown(object sender, KeyEventArgs e)
         {
             // Agregar que solamente se puedan teclear numeros
+        }
+
+        enum Fields
+        {
+            [ControlValidateAttrib("txtYear", ControlField.GENERIC)]
+            [ValidationRuleAttrib(ValidationParams.CUSTOM_ACTION)]
+            Year,
+            [ControlValidateAttrib("cboxMonth", ControlField.GENERIC)]
+            [ValidationRuleAttrib(ValidationParams.CUSTOM_ACTION)]
+            Month,
+            [ControlValidateAttrib("dgvRelacionDeHorarios", ControlField.GENERIC)]
+            Dgv
+        }
+
+        bool ValidateFields(Fields f)
+        {
+            bool flag;
+
+            Multivalidator mv = new Multivalidator(this);
+
+            switch (f)
+            {
+                case Fields.Month:
+                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
+                    {
+                        return true;
+                    }).Success;
+                    break;
+                case Fields.Year:
+                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
+                    {
+                        return (String.IsNullOrEmpty(this.txtYear.Text.Trim()) || !int.TryParse(this.txtYear.Text.Trim(), out _));
+                    }).Success;
+                    break;
+                case Fields.Dgv:
+                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
+                    {
+                        return true;
+                    }, ValidationParams.CUSTOM_ACTION).Success;
+                    break;
+                default:
+                    flag = true;
+                    break;
+            }
+
+            return flag;
+        }
+
+
+        private void txtYear_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Cargamos la nueva vista de horario
+                this.btnIrAMes.PerformClick();
+                return;
+            }
+
+            // Permitir números del teclado principal (0–9)
+            bool isNumberKey = e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9;
+
+            // Permitir números del teclado numérico
+            bool isNumpadKey = e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9;
+
+            // Permitir teclas de control
+            bool isControlKey =
+                e.KeyCode == Keys.Back ||
+                e.KeyCode == Keys.Delete ||
+                e.KeyCode == Keys.Left ||
+                e.KeyCode == Keys.Right ||
+                e.KeyCode == Keys.Tab;
+
+            if (!isNumberKey && !isNumpadKey && !isControlKey)
+            {
+                e.SuppressKeyPress = true; // Bloquea el input
+                e.Handled = true;
+            }
+        }
+
+        private void btnIrAMes_Click(object sender, EventArgs e)
+        {
+            if (!ValidateFields(Fields.Year))
+            {
+                WriteStatus(false, "Año invalido!");
+                return;
+            }
+
+            DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
+            LoadView(dt.Month, dt.Year);
         }
     }
 }
