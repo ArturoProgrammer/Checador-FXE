@@ -35,9 +35,15 @@ namespace Checador_FXE.Plantillas
         [ParamSqlKey("@Localidad")]
         [ColumnSqlName("localidad")]
         public string Localidad { get; set; }
+        [ParamSqlKey("@TurnoDefault")]
+        [ColumnSqlName("turnoDefault")]
+        public int TurnoDefault { get; set; } = 1;
 
-        public Empleado() { }
+        public static void InitializeDb()
+        {
 
+        }
+        
         public static Response<Empleado[]> GetAll(string localidad, bool ShowObjectLog = false)
         {
             #region

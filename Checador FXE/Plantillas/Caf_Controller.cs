@@ -1,21 +1,9 @@
 ﻿using Checador_FXE.MdiForms;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Math;
-using DocumentFormat.OpenXml.Office.CoverPageProps;
-using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
 using FlowCommonWorkcore;
 using FlowControls;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Compression;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using ZstdSharp.Unsafe;
 
 namespace Checador_FXE.Plantillas
 {

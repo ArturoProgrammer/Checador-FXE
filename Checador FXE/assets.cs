@@ -1180,7 +1180,8 @@ public enum RelacionHorariosGridCells
 {
     ICON,
     NO_EMP,
-    NOMBRE_COMP
+    NOMBRE_COMP,
+    DAYS_START
 }
 
 public static class RelacionHorariosGridCellsExtension
@@ -1190,6 +1191,7 @@ public static class RelacionHorariosGridCellsExtension
         RelacionHorariosGridCells.ICON => 0,
         RelacionHorariosGridCells.NO_EMP => 1,
         RelacionHorariosGridCells.NOMBRE_COMP => 2,
+        RelacionHorariosGridCells.DAYS_START => 3,
         _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
     };
 }

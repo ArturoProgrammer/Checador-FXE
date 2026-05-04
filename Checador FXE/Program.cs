@@ -1,6 +1,9 @@
+using Checador_FXE.Plantillas;
 using DocumentFormat.OpenXml.InkML;
+using FlowCommonWorkcore.HelperAssets;
 using Org.BouncyCastle.Tls;
 using System.Runtime.CompilerServices;
+using System.Web;
 
 namespace Checador_FXE
 {
@@ -9,6 +12,7 @@ namespace Checador_FXE
         internal static ToolStripStatusLabel? lblStatus;
         internal static ToolStripStatusLabel? lblOperation;
         private static readonly string _MutexName = $"ChecadorFXE-{Environment.Version}";
+        internal static string DbPath = $@"{Application.StartupPath}\dbs";
 
         /// <summary>
         /// Nombre del recurso del formato de asistencia de la primer quincena del mes
@@ -132,6 +136,9 @@ namespace Checador_FXE
                 //
                 //_DownloadResource(FORMATO_ASIST_1_PROPS);
                 //_DownloadResource(FORMATO_ASIST_2_PROPS);
+                FlowCommonWorkcore.UtilityFunctions.CreateDirectory(DbPath, ForceOverwrite: false);
+                RelacionHorarios.InitializeDb();
+                Empleado.InitializeDb();
 
                 MainDesktop _mainDesktop = new MainDesktop();
                 Application.Run(_mainDesktop);

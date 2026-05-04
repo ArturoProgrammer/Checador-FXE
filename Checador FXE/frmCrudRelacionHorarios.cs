@@ -2,6 +2,9 @@
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Utils;
+using System.CodeDom;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace Checador_FXE
 {
@@ -53,10 +56,6 @@ namespace Checador_FXE
         {
             WriteStatus(true, "Inicializacion exitosa");
 
-            foreach (ToolStripItem i in this.flCustomToolStrip1.Items)
-                if (i is ToolStripControlHost host)
-                    MessageBox.Show(host.Control.Name);
-
             this.cboxMonth.SelectedIndex = DateTime.Now.Month - 1;
             this.txtYear.Text = DateTime.Now.Year.ToString();
 
@@ -72,7 +71,9 @@ namespace Checador_FXE
         {
             try
             {
-                #region CODIGO
+                this.Cursor = Cursors.WaitCursor;
+
+                #region CARGA DE LA UI
                 Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
 
                 this.dgvRelacionDeHorarios.Rows.Clear();
@@ -120,12 +121,33 @@ namespace Checador_FXE
                 }
                 #endregion
 
+                #region CARGA DE DATOS EN LA UI
+                // Recorremos todas las filas para ir llenando los turnos asignados a esos dias
+                RelacionHorarios _actualRelacion = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year), 
+                                                                        ShowObjectLog: true).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
+                foreach (var i in _actualRelacion.Relacion.Items)
+                {
+                    foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
+                    {
+                        if (r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString() != i.NoEmp.ToString())
+                            continue;
+
+                        for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
+                            r.Cells[d_i].Value = i.Turno;   // Escribimos el turno asignado
+
+                        break;
+                    }
+                }
+                #endregion
+
                 WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
             }
             catch (Exception ex)
             {
                 WriteStatus(false, $"Error al cargar la vista: {ex.Message}");
             }
+
+            this.Cursor = Cursors.Default;
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -221,18 +243,34 @@ namespace Checador_FXE
             Dgv
         }
 
+        Control[] getLocalsControls()
+        {
+            List<Control> lsControls = new List<Control>();
+
+            foreach (Control c in this.Controls)
+                lsControls.Add(c);
+
+            // Conversiones dinamicas de prueba
+            ComboBox cboxMonth_Dynamic = new ComboBox() { Name = this.cboxMonth.Name };
+            TextBox txtYear_Dynamic = new TextBox() { Name = this.txtYear.Name };
+
+            lsControls.AddRange(new Control[] { cboxMonth_Dynamic, txtYear_Dynamic });
+
+            return lsControls.ToArray();
+        }
+
         bool ValidateFields(Fields f)
         {
             bool flag;
 
-            Multivalidator mv = new Multivalidator(this);
+            Multivalidator mv = new Multivalidator(this, getLocalsControls());
 
             switch (f)
             {
                 case Fields.Month:
                     flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
                     {
-                        return true;
+                        return true;    // Por defecto, solo de manera momentanea
                     }).Success;
                     break;
                 case Fields.Year:
