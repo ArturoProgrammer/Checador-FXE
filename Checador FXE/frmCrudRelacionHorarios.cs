@@ -131,7 +131,7 @@ namespace Checador_FXE
                     {
                         if (r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString() != i.NoEmp.ToString())
                             continue;
-
+                        
                         for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
                             r.Cells[d_i].Value = i.Turno;   // Escribimos el turno asignado
 

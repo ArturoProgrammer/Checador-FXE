@@ -36,10 +36,16 @@ namespace Checador_FXE.Plantillas
 
     public class TurnoEmpleadoCollection
     {
-        private readonly List<TurnoEmpleado> _items = new();
+        // Propiedades
+        private List<TurnoEmpleado> _items = new();
         public int Count => _items.Count;
         public TurnoEmpleado[] Items => _items.ToArray();
         
+        // Constructores
+        public TurnoEmpleadoCollection() { }
+        public TurnoEmpleadoCollection(TurnoEmpleado[] items) => _items.AddRange(items);
+
+        // Indexer
         public TurnoEmpleado this[int noEmp]
         {
             get
@@ -74,21 +80,14 @@ namespace Checador_FXE.Plantillas
             }
         }
 
-        public int this[int noEmp, DateOnly dia]
-        {
-            get
-            {
-                this[noEmp];
-            }
-        }
-
-
+        // Metodos
         public void Add(TurnoEmpleado item) => _items.Add(item);
-        public void Remove(TurnoEmpleado item)
-        {
-            // Remueve de la coleccion segun el numero de empleado
-        }
+        public void AddRange(TurnoEmpleado[] items) => _items.AddRange(items);
+        public void Clear() => _items.Clear();
+        public void Remove(TurnoEmpleado item) => _items.Remove(item);
+        public void Remove(int index) => _items.RemoveAt(index);
     }
+
 
     /// <summary>
     /// Relacion de horarios-turnos para un mes especifico
@@ -114,32 +113,40 @@ namespace Checador_FXE.Plantillas
             // Crea el archivo de la base de datos en caso de que no exista
             if (!File.Exists(DB_PATH))
             {
-                Response _resp = SQLiteAssets.CreateTable(DB_PATH, TABLE_NAME,
+                Response _db_resp = SQLiteAssets.CreateDataBase(DB_PATH, TABLE_NAME, overwrite: false);
+
+                if (!_db_resp.Success)
+                    throw new NullReferenceException($"Ocurrio un error al crear la base de datos '{DB_PATH}'! {_db_resp.Message}");
+
+                Response _tb_resp = SQLiteAssets.CreateTable(DB_PATH, TABLE_NAME,
                     new ColumnTemplate("position", DataTypes.INTEGER, isPrimaryKey: true, isNotNull: true),
                     new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("ID"), DataTypes.TEXT, isNotNull: true),
                     new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("Relacion"), DataTypes.TEXT, isNotNull: true),
                     new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("HASH"), DataTypes.TEXT, isNotNull: true));
+
+                if (!_tb_resp.Success)
+                    throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");
+
             }
         }
 
-        static Func<string, TurnoEmpleado[]> parseJsonRelacion = (json) =>
+        static Func<string, TurnoEmpleadoCollection> parseJsonRelacion = (json) =>
         {
             try
             {
-                return JsonConvert.DeserializeObject<TurnoEmpleado[]>(json);
+                return new TurnoEmpleadoCollection(JsonConvert.DeserializeObject<TurnoEmpleado[]>(json));
             }
             catch
             {
                 throw new Exception("Ocurrio un error inesperado al parsear la informacion del JsonRelaciones");
             }
         };
-
-        Func<TurnoEmpleado[], string> buildJsonRelacion = (relacion) =>
+        Func<TurnoEmpleadoCollection, string> buildJsonRelacion = (relacion) =>
         {
             try
             {
                 List<string> parts = new List<string>();
-                foreach (TurnoEmpleado i in relacion)
+                foreach (TurnoEmpleado i in relacion.Items)
                 {
                     parts.Add($@"{i.NoEmp} : {{
     ""Turno"" : ""{i.Turno}"",
@@ -163,7 +170,7 @@ namespace Checador_FXE.Plantillas
 
             try
             {
-                ConnectionsData _data = new ConnectionsData($@"{Program.DbPath}\RelacionTurnos.db", TABLE_NAME);
+                ConnectionsData _data = new ConnectionsData(DB_PATH, TABLE_NAME);
                 Server.SqlReadConnection _connection = new Server.SqlReadConnection(_data);
                 SqliteDataReader _reader = _connection.MakeQuery("*");
 
@@ -187,6 +194,9 @@ namespace Checador_FXE.Plantillas
                 _response.Message = ex.Message;
                 _response.Object = null;
             }
+
+            if (ShowObjectLog)
+                MessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
 
             return _response;
             #endregion

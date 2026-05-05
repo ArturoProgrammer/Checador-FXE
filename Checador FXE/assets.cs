@@ -210,7 +210,7 @@ namespace Checador_FXE
 
         // TODO: LOS TURNOS YA NO SE GUARDARAN EN LAS PROPIEDADES, AHORA SERA EN LA BASE DE DATOS LOCAL
         internal static int[] GetHorariosIDs() => Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS)
-                                                    .Cast<Turno>().Select(t => t.ID).ToArray();                                            
+                                                    .Cast<Turno>().Select(t => t.ID).ToArray();
 
         internal static string ParseJsonHorariosByDgv(flExtendedDataGridView dgv)
         {
@@ -364,42 +364,7 @@ namespace Checador_FXE
         /// Obtenemos el listado de las localidades disponibles desde el servidor
         /// </summary>
         /// <returns></returns>
-        internal static string[] GetLocalidadesDisponibles()
-        {
-            List<string> localidades = new List<string>();
-
-            MySqlDataReader _query = new Server.GeneralQuery(new ConnectionsData(
-                Properties.Settings.Default.SERVER_HOSTNAME,
-                Properties.Settings.Default.SERVER_USER,
-                Properties.Settings.Default.SERVER_PASS,
-                Empleado.TABLE_NAME,
-                Empleado.DATABASE_NAME
-            )).ExecuteQuery(
-                $"SELECT all_allowed_sites FROM checador_fxe_db.global_config WHERE (config_name=@Name);",
-                ShowCommandPreview: false,
-                ("@Name", "Default")
-            );
-
-            try
-            {
-                while (_query.Read())
-                {
-                    string rawSites = _query.GetString(0);
-                    localidades.AddRange(rawSites.Split(";").Select(site => site.Trim()).Where(site => !string.IsNullOrEmpty(site)));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ocurrió un error al cargar el listado de las localidades disponibles.\n\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                localidades.AddRange(new[] { "Hermosillo", "Sufragio", "Nogales" });
-            }
-            finally
-            {
-                _query.Close();
-            }
-
-            return localidades.ToArray();
-        }
+        internal static string[] GetLocalidadesDisponibles() => GlobalConfig.GetAll().Object!.FirstOrDefault(t => t.TituloConfiguracion == "Default")!.LocalidadesCompatibles;
     }
 
     internal enum TipoChecada

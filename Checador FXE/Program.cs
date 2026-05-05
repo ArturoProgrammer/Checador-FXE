@@ -139,6 +139,7 @@ namespace Checador_FXE
                 FlowCommonWorkcore.UtilityFunctions.CreateDirectory(DbPath, ForceOverwrite: false);
                 RelacionHorarios.InitializeDb();
                 Empleado.InitializeDb();
+                GlobalConfig.InitializeDb();
 
                 MainDesktop _mainDesktop = new MainDesktop();
                 Application.Run(_mainDesktop);
