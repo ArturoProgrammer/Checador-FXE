@@ -46,6 +46,7 @@
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             exportarParaConfiguracionToolStripMenuItem = new ToolStripMenuItem();
             dgvAjustesEmpleados = new FlowControls.flExtendedDataGridView();
+            imageList1 = new ImageList(components);
             colImageIcon = new DataGridViewTextBoxColumn();
             colNumEmpleado = new DataGridViewTextBoxColumn();
             colNombres = new DataGridViewTextBoxColumn();
@@ -54,7 +55,7 @@
             colRegion = new DataGridViewTextBoxColumn();
             colDivision = new DataGridViewTextBoxColumn();
             colLocalidad = new DataGridViewTextBoxColumn();
-            imageList1 = new ImageList(components);
+            colTurnoDefault = new DataGridViewTextBoxColumn();
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAjustesEmpleados).BeginInit();
             SuspendLayout();
@@ -190,7 +191,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvAjustesEmpleados.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvAjustesEmpleados.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAjustesEmpleados.Columns.AddRange(new DataGridViewColumn[] { colImageIcon, colNumEmpleado, colNombres, colApellidos, colPuesto, colRegion, colDivision, colLocalidad });
+            dgvAjustesEmpleados.Columns.AddRange(new DataGridViewColumn[] { colImageIcon, colNumEmpleado, colNombres, colApellidos, colPuesto, colRegion, colDivision, colLocalidad, colTurnoDefault });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.White;
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
@@ -216,6 +217,7 @@
             dgvAjustesEmpleados.SelectedRowColor = Color.SteelBlue;
             dgvAjustesEmpleados.SelectionForeColor = Color.Black;
             dgvAjustesEmpleados.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAjustesEmpleados.ShowContextMenu = true;
             dgvAjustesEmpleados.Size = new Size(852, 414);
             dgvAjustesEmpleados.TabIndex = 4;
             dgvAjustesEmpleados.OnAddClick += dgvAjustesHorarios_OnAddClick;
@@ -225,6 +227,13 @@
             dgvAjustesEmpleados.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvAjustesEmpleados.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             // 
+            // imageList1
+            // 
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName(0, "solicitud-32.png");
+            // 
             // colImageIcon
             // 
             colImageIcon.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -233,7 +242,7 @@
             colImageIcon.MinimumWidth = 6;
             colImageIcon.Name = "colImageIcon";
             colImageIcon.Resizable = DataGridViewTriState.False;
-            colImageIcon.Width = 26;
+            colImageIcon.Width = 8;
             // 
             // colNumEmpleado
             // 
@@ -298,12 +307,13 @@
             colLocalidad.Name = "colLocalidad";
             colLocalidad.Width = 106;
             // 
-            // imageList1
+            // colTurnoDefault
             // 
-            imageList1.ColorDepth = ColorDepth.Depth32Bit;
-            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
-            imageList1.TransparentColor = Color.Transparent;
-            imageList1.Images.SetKeyName(0, "solicitud-32.png");
+            colTurnoDefault.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colTurnoDefault.HeaderText = "Turno Def.";
+            colTurnoDefault.MinimumWidth = 6;
+            colTurnoDefault.Name = "colTurnoDefault";
+            colTurnoDefault.Width = 110;
             // 
             // frmCrudEmpleados
             // 
@@ -346,5 +356,6 @@
         private DataGridViewTextBoxColumn colLocalidad;
         private ToolStripDropDownButton toolStripDropDownButton1;
         private ToolStripMenuItem exportarParaConfiguracionToolStripMenuItem;
+        private DataGridViewTextBoxColumn colTurnoDefault;
     }
 }

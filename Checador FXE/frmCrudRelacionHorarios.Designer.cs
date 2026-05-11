@@ -41,6 +41,11 @@
             cboxMonth = new ToolStripComboBox();
             txtYear = new ToolStripTextBox();
             btnIrAMes = new ToolStripButton();
+            flCustomToolStripSeparator2 = new FlowControls.flCustomToolStripSeparator();
+            toolStripLabel1 = new ToolStripLabel();
+            cboxParametroLimitacion = new ToolStripComboBox();
+            txtValorLimitacion = new ToolStripTextBox();
+            btnLimitarAmbito = new ToolStripButton();
             imageList1 = new ImageList(components);
             dgvRelacionDeHorarios = new FlowControls.flExtendedDataGridView();
             statusStrip1 = new StatusStrip();
@@ -57,7 +62,7 @@
             flCustomToolStrip1.BackColor = SystemColors.ActiveCaption;
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
             flCustomToolStrip1.Size = new Size(897, 25);
@@ -114,12 +119,54 @@
             // btnIrAMes
             // 
             btnIrAMes.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            btnIrAMes.Image = (Image)resources.GetObject("btnIrAMes.Image");
+            btnIrAMes.Image = Properties.Resources.play3_16;
             btnIrAMes.ImageTransparentColor = Color.Magenta;
             btnIrAMes.Name = "btnIrAMes";
             btnIrAMes.Size = new Size(25, 22);
             btnIrAMes.Text = "Ir a mes indicado";
             btnIrAMes.Click += btnIrAMes_Click;
+            // 
+            // flCustomToolStripSeparator2
+            // 
+            flCustomToolStripSeparator2.AutoSize = false;
+            flCustomToolStripSeparator2.LineColor = Color.DimGray;
+            flCustomToolStripSeparator2.LineMargin = 1;
+            flCustomToolStripSeparator2.LineThickness = 2;
+            flCustomToolStripSeparator2.Name = "flCustomToolStripSeparator2";
+            flCustomToolStripSeparator2.SeparatorHeight = 24;
+            flCustomToolStripSeparator2.Size = new Size(6, 24);
+            // 
+            // toolStripLabel1
+            // 
+            toolStripLabel1.Name = "toolStripLabel1";
+            toolStripLabel1.Size = new Size(67, 22);
+            toolStripLabel1.Text = "Limitar a...";
+            // 
+            // cboxParametroLimitacion
+            // 
+            cboxParametroLimitacion.BackColor = SystemColors.GradientActiveCaption;
+            cboxParametroLimitacion.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboxParametroLimitacion.Name = "cboxParametroLimitacion";
+            cboxParametroLimitacion.Size = new Size(121, 25);
+            cboxParametroLimitacion.SelectedIndexChanged += cboxParametroLimitacion_SelectedIndexChanged;
+            // 
+            // txtValorLimitacion
+            // 
+            txtValorLimitacion.BackColor = SystemColors.GradientActiveCaption;
+            txtValorLimitacion.BorderStyle = BorderStyle.FixedSingle;
+            txtValorLimitacion.Name = "txtValorLimitacion";
+            txtValorLimitacion.Size = new Size(160, 25);
+            txtValorLimitacion.KeyDown += txtValorLimitacion_KeyDown;
+            // 
+            // btnLimitarAmbito
+            // 
+            btnLimitarAmbito.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnLimitarAmbito.Image = Properties.Resources.filter_24;
+            btnLimitarAmbito.ImageTransparentColor = Color.Magenta;
+            btnLimitarAmbito.Name = "btnLimitarAmbito";
+            btnLimitarAmbito.Size = new Size(25, 22);
+            btnLimitarAmbito.Text = "Limitar ambito";
+            btnLimitarAmbito.Click += toolStripButton3_Click;
             // 
             // imageList1
             // 
@@ -255,5 +302,10 @@
         private ToolStripStatusLabel lblStatus;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripStatusLabel lblMessage;
+        private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator2;
+        private ToolStripLabel toolStripLabel1;
+        private ToolStripComboBox cboxParametroLimitacion;
+        private ToolStripTextBox txtValorLimitacion;
+        private ToolStripButton btnLimitarAmbito;
     }
 }

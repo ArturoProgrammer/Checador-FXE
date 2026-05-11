@@ -2,7 +2,6 @@
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Utils;
-using System.CodeDom;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -10,8 +9,13 @@ namespace Checador_FXE
 {
     public partial class frmCrudRelacionHorarios : Form
     {
-        DataGridViewColumn[] colBaseTemplate =
-        {
+        /// <summary>
+        /// Arreglo de las columnas actualmente cargadas, no la vista actual.
+        /// </summary>
+        List<DataGridViewRow> actualView = new List<DataGridViewRow>();
+        RelacionHorarios actualSelected = new RelacionHorarios();
+
+        DataGridViewColumn[] colBaseTemplate = {
             new DataGridViewImageColumn() {
                 Name = "colIcon",
                 HeaderText = "",
@@ -43,6 +47,15 @@ namespace Checador_FXE
 
             //Properties.Settings.Default.TURNOS_HORARIOS = @"{""1"":{""titulo"":""Turno corrido"",""primer_horario"":{""entrada"":800,""salida"":1500},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}},""2"":{""titulo"":""Turno completo con comida"",""primer_horario"":{""entrada"":800,""salida"":1300},""segundo_horario"":{""entrada"":1500,""salida"":1700},""tiempo_extra"":{""entrada"":0,""salida"":0}},""3"":{""titulo"":""Media tarde"",""primer_horario"":{""entrada"":1500,""salida"":1700},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}}}";
             //Properties.Settings.Default.Save();
+
+            // Cargamos los elementos
+            this.cboxParametroLimitacion.Items.AddRange(Enum.GetValues<LimitationParam>()
+                                                            .Cast<LimitationParam>()
+                                                            .Select(l => l.GetText())
+                                                            .ToArray());
+
+            this.cboxParametroLimitacion.SelectedIndex = 0;
+            this.txtValorLimitacion.Text = "";
         }
 
         void WriteStatus(bool status, string message)
@@ -67,6 +80,43 @@ namespace Checador_FXE
 
         }
 
+
+        void LoadLimitedView(LimitationParam param, string value)
+        {
+            try
+            {
+                this.dgvRelacionDeHorarios.Rows.Clear();
+                foreach (DataGridViewRow r in actualView)
+                {
+                    switch (param)
+                    {
+                        case LimitationParam.TODO:
+                            // Mostramos todo
+                            this.dgvRelacionDeHorarios.Rows.Add(r);
+                            break;
+                        case LimitationParam.NOMBRE:
+                            // Mostramos vista filtrada por el nombre de empleado
+                            if (r.Cells[RelacionHorariosGridCells.NOMBRE_COMP.GetIndex()].Value.ToString().Contains(value, StringComparison.OrdinalIgnoreCase))
+                                this.dgvRelacionDeHorarios.Rows.Add(r);
+                            break;
+                        case LimitationParam.NUM_EMP:
+                            // Mostramos vista filtrada por el numero de empleado
+                            if (r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString().Contains(value, StringComparison.OrdinalIgnoreCase))
+                                this.dgvRelacionDeHorarios.Rows.Add(r);
+                            break;
+                    }
+                }
+                this.dgvRelacionDeHorarios.Invalidate();
+
+                WriteStatus(true, $"Ambito limitado a '{param.GetText()}' : '{value}'");
+            }
+            catch (Exception ex)
+            {
+                WriteStatus(false, $"Ocurio un error inesperado. {ex.Message}");
+            }
+
+        }
+
         void LoadView(int month, int year, string localidad = "Sufragio")
         {
             try
@@ -85,18 +135,28 @@ namespace Checador_FXE
                     return;
                 }
 
+                /* 
+                 * Indices de las celdas de las filas que pertenecen a los dias domingos
+                 * */
+                List<int> _sundays = new List<int>();
+
                 // Preparamos primero las columnas del DGV
                 this.dgvRelacionDeHorarios.Columns.AddRange(colBaseTemplate);
                 for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
                 {
+                    DateOnly _day = new DateOnly(year, month, i);
+
                     this.dgvRelacionDeHorarios.Columns.Add(new DataGridViewTextBoxColumn()
                     {
-                        HeaderText = i.ToString(),
+                        HeaderText = $"{_day.ToString("dddd", new CultureInfo("es-MX"))}, {_day.Day}",
                         Name = $"colDay{i.ToString()}",
-                        Width = 32,
+                        Width = 70,
                         AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                         Resizable = DataGridViewTriState.False,
                     });
+
+                    if (_day.DayOfWeek == DayOfWeek.Sunday)
+                        _sundays.Add(i);
                 }
 
                 // Cargamos las filas
@@ -117,28 +177,32 @@ namespace Checador_FXE
                     for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
                         _row.Cells.Add(new DataGridViewTextBoxCell());
 
+                    // Pintamos los dias domingos
+                    foreach (int i in _sundays)
+                        _row.Cells[2 + i].Style.BackColor = Color.LightPink;
+
                     this.dgvRelacionDeHorarios.Rows.Add(_row);
                 }
                 #endregion
-
                 #region CARGA DE DATOS EN LA UI
                 // Recorremos todas las filas para ir llenando los turnos asignados a esos dias
-                RelacionHorarios _actualRelacion = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year), 
-                                                                        ShowObjectLog: true).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
-                foreach (var i in _actualRelacion.Relacion.Items)
-                {
-                    foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
-                    {
-                        if (r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString() != i.NoEmp.ToString())
-                            continue;
-                        
-                        for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
-                            r.Cells[d_i].Value = i.Turno;   // Escribimos el turno asignado
+                actualSelected = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year),
+                                                                        ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
 
-                        break;
+                foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
+                {
+                    int noEmp = Int32.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
+                    for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
+                    {
+                        TurnoEmpleado targetTurno = actualSelected.Relacion[noEmp, d_i - 2];
+                        r.Cells[d_i].Value = targetTurno.Turno == -1 ? "" : targetTurno.Turno;   // Escribimos el turno asignado
                     }
                 }
                 #endregion
+
+                actualView.Clear();
+                foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
+                    actualView.Add(r);
 
                 WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
             }
@@ -155,7 +219,12 @@ namespace Checador_FXE
             //
             // BOTON DE GUARDADO
             //
-            throw new NotImplementedException();
+            actualSelected.UpdateByGrid(actualView.ToArray());
+            Response _resp = actualSelected.Save(ShowObjectLog: true);
+            WriteStatus(_resp.Success, _resp.Message);
+
+            if (_resp.Success is false)
+                MessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -182,7 +251,7 @@ namespace Checador_FXE
             if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
                 return;
 
-            var grid = (flExtendedDataGridView)sender;
+            flExtendedDataGridView grid = (flExtendedDataGridView)sender;
 
             // Limpiar antes de validar
             var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -203,21 +272,22 @@ namespace Checador_FXE
             }
 
             // Valida que el ID exista en la lista de horarios
-            bool ok = Utils.GetHorariosIDs().Contains(input);
-
-            if (!ok)
+            if (!Utils.GetHorariosIDs().Contains(input))
             {
                 List<string> turns = new List<string>();
                 foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
                     turns.Add($"* {i.ID} ({i.Nombre})");
 
-                MessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}");
+                MessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;   // No permite salir de la celda
                 return;
             }
 
             // Limpia error si es valido
             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+
+            // Guardamos la nueva informacion
+            actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
         }
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
@@ -334,6 +404,27 @@ namespace Checador_FXE
 
             DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
             LoadView(dt.Month, dt.Year);
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            LoadLimitedView(LimitationParamExtensions.Parse(this.cboxParametroLimitacion.Text),
+                            this.txtValorLimitacion.Text);
+        }
+
+        private void cboxParametroLimitacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.cboxParametroLimitacion.SelectedText == "Todo")
+            {
+                this.txtValorLimitacion.Enabled = false;
+                return;
+            }
+        }
+
+        private void txtValorLimitacion_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                this.btnLimitarAmbito.PerformClick();
         }
     }
 }

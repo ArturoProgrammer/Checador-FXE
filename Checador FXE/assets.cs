@@ -3,17 +3,40 @@ using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils.MySQL;
 using FlowControls;
 using iTextSharp.text;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json.Linq;
 using SpreadsheetLight;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security.Principal;
 
 namespace Checador_FXE
 {
+    public enum LimitationParam
+    {
+        TODO, NUM_EMP, NOMBRE
+    }
+
+    internal static class LimitationParamExtensions
+    {
+        public static string GetText(this LimitationParam a) => a switch
+        {
+            LimitationParam.TODO => "Todo",
+            LimitationParam.NUM_EMP => "No. Emp.",
+            LimitationParam.NOMBRE => "Nombre",
+            _ => throw new NotImplementedException(),
+        };
+
+        public static LimitationParam Parse(string text) => text switch
+        {
+            "Todo" => LimitationParam.TODO,
+            "No. Emp." => LimitationParam.NUM_EMP,
+            "Nombre" => LimitationParam.NOMBRE,
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+
     internal class CrudEventLog
     {
         //
@@ -603,52 +626,6 @@ namespace Checador_FXE
                     );   // Meses del periodo
 
                     ACTUAL_RPT_YEAR = period.Start.Year;
-
-                    /* CODIGO ANTERIOR EN DESUSO
-                    (int Start, int End)[] _MONTH_COORDS = new (int Start, int End)[meses.Length];
-
-                    int X_MONTH_COORD = 1;  // Inicio del mes
-                    int Y_MONTH_COORD;  // Fin del mes
-
-                    int _jumps = 0;
-                    for (int i = 1; i <= TRGT_LIMIT; i++)
-                    {
-                        // 
-                        // UBICAMOS LAS COORDENADAS DE CADA MES
-                        //
-                        // ES DECIR, DE QUE COLUMNA A QUE COLUMNA REPRESENTA UN MES
-                        //
-
-                        string NXT_DAY = sl.GetCellValueAsString(PERIOD_DAYS_ROW, i + 1).Trim();
-                        //MessageBox.Show($"Analizando Col: {i}->{NXT_DAY} (Limite: {TRGT_LIMIT}) X: {X_MONTH_COORD}");
-
-                        if (String.IsNullOrEmpty(NXT_DAY))
-                        {
-                            Y_MONTH_COORD = i;  // Indicamos la finalizacion del mes
-                            _MONTH_COORDS[_jumps] = (X_MONTH_COORD, Y_MONTH_COORD);
-                            break;  // Rompemos el ciclo en caso de que ya no haya mas dias
-                        }
-
-                        int[] finalDays = { 28, 29, 30, 31 };
-                        int actualDay = sl.GetCellValueAsInt32(PERIOD_DAYS_ROW, i);
-                        int nextDay = Int32.Parse(NXT_DAY);
-
-                        if (finalDays.Contains(actualDay) && actualDay > nextDay)
-                        {
-                            // Indicamos que cambiamos de mes
-                            Y_MONTH_COORD = i;  // Indicamos la finalizacion del mes
-                            _MONTH_COORDS[_jumps] = (X_MONTH_COORD, Y_MONTH_COORD);
-
-                            //
-                            // Indicamos que vamos a analizar el siguiente mes, 
-                            // por lo que hacemos el salto de mes
-                            //
-                            _jumps++;
-                            X_MONTH_COORD = i + 1; // Indicamos el inicio del nuevo mes
-                        }
-                    }
-                    */
-
                     (int Start, int End)[] _MONTH_COORDS = MakeMonthCoordsArray(PERIOD_DAYS_ROW, 1, TRGT_LIMIT, sl);
                     
 
@@ -1197,7 +1174,8 @@ public enum EmpleadosGridCells
     PUESTO,
     REGION,
     DIVISION,
-    LOCALIDAD
+    LOCALIDAD,
+    TURNO_DEFAULT
 }
 
 public static class EmpleadosGridCellsExtension
@@ -1213,6 +1191,7 @@ public static class EmpleadosGridCellsExtension
         EmpleadosGridCells.REGION => 5,
         EmpleadosGridCells.DIVISION => 6,
         EmpleadosGridCells.LOCALIDAD => 7,
+        EmpleadosGridCells.TURNO_DEFAULT => 8,
         _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
     };
 }

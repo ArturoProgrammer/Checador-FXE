@@ -101,6 +101,16 @@ namespace Checador_FXE.Properties {
         }
         
         /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap filter_24 {
+            get {
+                object obj = ResourceManager.GetObject("filter-24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Byte[].
         /// </summary>
         internal static byte[] FORMATO_ASISTENCIA_TAB_1_15_form {

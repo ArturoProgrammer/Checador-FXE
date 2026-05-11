@@ -2,6 +2,7 @@
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using Microsoft.Data.Sqlite;
+using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.Plantillas
 {
@@ -64,83 +65,17 @@ namespace Checador_FXE.Plantillas
                 if (!_tb_resp.Success)
                     throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");
             }
-
-            // Cargamos la base de datos con los valores
-
         }
         
         public static Response<Empleado[]> GetAll(string localidad, bool ShowObjectLog = false)
         {
             #region
-            /*
-            List<Empleado> objList = new List<Empleado>();
-            Response<Empleado[]> _resp = new Response<Empleado[]>(false, "Iniciando obtencion de empleados...", null);
-
-            MySqlDataReader _query = new Server.GeneralQuery(new ConnectionsData(
-                Properties.Settings.Default.SERVER_HOSTNAME,
-                Properties.Settings.Default.SERVER_USER,
-                Properties.Settings.Default.SERVER_PASS,
-                int.Parse(Properties.Settings.Default.SERVER_PORT),
-                Empleado.TABLE_NAME,
-                Empleado.DATABASE_NAME
-            )).ExecuteQuery(
-                $"SELECT * FROM {Empleado.DATABASE_NAME}.{Empleado.TABLE_NAME} WHERE (Localidad=@Localidad);",
-                ShowCommandPreview: false,
-                ("@Localidad", localidad)
-            );
-            _resp.Log.Add("Conexion con el servidor realizada...");
-
-            try
-            {
-                _resp.Log.Add($"Iniciando lectura de los objetos encontrados...");
-                int count = 1;
-                while (_query.Read())
-                {
-                    _resp.Log.Add($"Leyendo objeto '{count}'");
-
-                    objList.Add(new Empleado()
-                    {
-                        NoEmp = _query.GetInt32(0).ToString(),
-                        Nombres = _query.GetString(1),
-                        Apellidos = _query.GetString(2),
-                        Puesto = _query.GetString(3),
-                        Region = _query.GetString(4),
-                        Division = _query.GetString(5),
-                        Localidad = _query.GetString(6)
-                    });
-                    _resp.Log.Add($"Empleado '{_query.GetInt32(0)}' obtenido...");
-
-                    count++;
-                }
-
-                _resp.Object = objList.ToArray();
-                _resp.Success = true;
-                _resp.Message = $"Todos los empleados para la localidad de '{localidad}' obtenido con exito!";
-            }
-            catch (Exception ex)
-            {
-                _resp.Success = false;
-                _resp.Message = $"Excepcion inesperada al consultar los empleados!\n{ex.Message}";
-                _resp.Log.Add($"{ex}");
-                MessageBox.Show($"Ocurrió un error al cargar los empleados de la localidad seleccionada.\n\n {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                _query.Close();
-            }
-
-            if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
-
-            return _resp;
-            */
-
             List<Empleado> _list = new List<Empleado>();
             Response<Empleado[]> _resp = new Response<Empleado[]>(false, "Iniciando obtencion de empleados...", null);
 
             ConnectionsData _data = new ConnectionsData(DB_PATH, TABLE_NAME);
             Server.SqlReadConnection _connection = new Server.SqlReadConnection(_data);
-            SqliteDataReader _reader = _connection.MakeQuery("*");
+            SqliteDataReader _reader = _connection.MakeQuery("*", "WHERE (localidad=@Localidad)", ("@Localidad", localidad));
             _resp.Log.Add("ConnectionsData y acciones de consulta realzadas...");
 
             List<string> _noEmpLists = new List<string>();
@@ -190,7 +125,7 @@ namespace Checador_FXE.Plantillas
             {
                 ConnectionsData _data = new ConnectionsData(DB_PATH, TABLE_NAME);
                 Server.SqlReadConnection _connection = new Server.SqlReadConnection(_data);
-                SqliteDataReader _reader = _connection.MakeQuery("*");
+                SqliteDataReader _reader = _connection.MakeQuery("*", "WHERE (no_emp=@NoEmp)", ("@NoEmp", noEmp));
 
                 Empleado _obj = new Empleado();
 

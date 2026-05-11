@@ -64,6 +64,7 @@ namespace Checador_FXE
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "Pacifico" }); // Region
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "Hermosillo" }); // Division
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = $"{Properties.Settings.Default.LOCALIDAD_DEFAULT}" }); // Localidad
+            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "1" });   // Turno Default
 
             this.dgvAjustesEmpleados.Rows.Add(_row);
             this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Selected = true;
@@ -73,7 +74,7 @@ namespace Checador_FXE
         void LoadView(string localidad)
         {
             #region CODIGO
-            Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad);
+            Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
             this.dgvAjustesEmpleados.Rows.Clear();
 
             if (!_SERV_RESP.Success)
@@ -97,6 +98,7 @@ namespace Checador_FXE
                 _row.Cells.Add(new DataGridViewTextBoxCell() { Value = i.Region }); // Region
                 _row.Cells.Add(new DataGridViewTextBoxCell() { Value = i.Division }); // Division
                 _row.Cells.Add(new DataGridViewTextBoxCell() { Value = i.Localidad }); // Localidad
+                _row.Cells.Add(new DataGridViewTextBoxCell() { Value = i.TurnoDefault });   // Turno Default
 
                 this.dgvAjustesEmpleados.Rows.Add(_row);
             }
@@ -116,7 +118,8 @@ namespace Checador_FXE
                     Region = r.Cells[EmpleadosGridCells.REGION.GetIndex()].Value?.ToString() ?? "",
                     Division = r.Cells[EmpleadosGridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
                     Localidad = r.Cells[EmpleadosGridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
-                    Area = "UdA"
+                    Area = "UdA",
+                    TurnoDefault = int.TryParse(r.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value?.ToString(), out int turno) ? turno : 1
                 };
 
                 emp.Save(ShowObjectLog: false);

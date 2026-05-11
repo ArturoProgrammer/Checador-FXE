@@ -30,16 +30,15 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mdiQuincenaView));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            TreeNode treeNode1 = new TreeNode("");
-            FlowControls.QuickAccessButton quickAccessButton1 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton2 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton3 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton4 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton5 = new FlowControls.QuickAccessButton();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            FlowControls.QuickAccessButton quickAccessButton6 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton7 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton8 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton9 = new FlowControls.QuickAccessButton();
+            FlowControls.QuickAccessButton quickAccessButton10 = new FlowControls.QuickAccessButton();
             flExtendedTabControl1 = new FlowControls.flExtendedTabControl();
             pageGeneral = new TabPage();
             tableLayoutPanel4 = new TableLayoutPanel();
@@ -179,6 +178,7 @@
             // 
             txtAutorizador.EntryFont = new Font("Consolas", 10F);
             txtAutorizador.InputContentType = FlowControls.InputMode.GENERAL;
+            txtAutorizador.InputStyle = FlowControls.TextStyle.Normal;
             txtAutorizador.Label = "Autorizador:";
             txtAutorizador.Location = new Point(18, 168);
             txtAutorizador.MinimumSize = new Size(100, 30);
@@ -195,6 +195,7 @@
             // 
             txtNombreElaborador.EntryFont = new Font("Consolas", 10F);
             txtNombreElaborador.InputContentType = FlowControls.InputMode.GENERAL;
+            txtNombreElaborador.InputStyle = FlowControls.TextStyle.Normal;
             txtNombreElaborador.Label = "Nombre del elaborador:";
             txtNombreElaborador.Location = new Point(18, 129);
             txtNombreElaborador.MinimumSize = new Size(100, 30);
@@ -225,6 +226,7 @@
             // 
             txtLugarRemitente.EntryFont = new Font("Consolas", 10F);
             txtLugarRemitente.InputContentType = FlowControls.InputMode.GENERAL;
+            txtLugarRemitente.InputStyle = FlowControls.TextStyle.Normal;
             txtLugarRemitente.Label = "Lugar remitente:";
             txtLugarRemitente.Location = new Point(18, 90);
             txtLugarRemitente.MinimumSize = new Size(100, 30);
@@ -240,6 +242,7 @@
             // 
             txtAreaRemitente.EntryFont = new Font("Consolas", 10F);
             txtAreaRemitente.InputContentType = FlowControls.InputMode.GENERAL;
+            txtAreaRemitente.InputStyle = FlowControls.TextStyle.Normal;
             txtAreaRemitente.Label = "Area remitente:";
             txtAreaRemitente.Location = new Point(18, 51);
             txtAreaRemitente.MinimumSize = new Size(100, 30);
@@ -275,9 +278,9 @@
             pageParsingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageParsingResults.BorderStyle = BorderStyle.FixedSingle;
             pageParsingResults.Controls.Add(splitContainer1);
-            pageParsingResults.Location = new Point(4, 29);
+            pageParsingResults.Location = new Point(4, 44);
             pageParsingResults.Name = "pageParsingResults";
-            pageParsingResults.Size = new Size(192, 67);
+            pageParsingResults.Size = new Size(819, 427);
             pageParsingResults.TabIndex = 2;
             pageParsingResults.Text = "Resultados del Parsing";
             // 
@@ -296,8 +299,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(lviewRegistros);
-            splitContainer1.Size = new Size(190, 65);
-            splitContainer1.SplitterDistance = 25;
+            splitContainer1.Size = new Size(817, 425);
+            splitContainer1.SplitterDistance = 383;
             splitContainer1.SplitterWidth = 6;
             splitContainer1.TabIndex = 0;
             // 
@@ -317,8 +320,8 @@
             // 
             splitContainer2.Panel2.BackColor = SystemColors.GradientInactiveCaption;
             splitContainer2.Panel2.Controls.Add(tableLayoutPanel1);
-            splitContainer2.Size = new Size(190, 25);
-            splitContainer2.SplitterDistance = 25;
+            splitContainer2.Size = new Size(817, 383);
+            splitContainer2.SplitterDistance = 650;
             splitContainer2.SplitterWidth = 6;
             splitContainer2.TabIndex = 2;
             // 
@@ -338,7 +341,7 @@
             calendarAsistencias.Name = "calendarAsistencias";
             calendarAsistencias.ShowHolidays = true;
             calendarAsistencias.ShowMonthHeader = true;
-            calendarAsistencias.Size = new Size(23, 23);
+            calendarAsistencias.Size = new Size(648, 381);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
             calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
@@ -358,7 +361,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(159, 23);
+            tableLayoutPanel1.Size = new Size(159, 381);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -382,7 +385,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(159, 1);
+            lviewDayEvents.Size = new Size(159, 311);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -430,6 +433,7 @@
             txtEmpleadoSeleccionado.Enabled = false;
             txtEmpleadoSeleccionado.EntryFont = new Font("Consolas", 9F);
             txtEmpleadoSeleccionado.InputContentType = FlowControls.InputMode.GENERAL;
+            txtEmpleadoSeleccionado.InputStyle = FlowControls.TextStyle.Normal;
             txtEmpleadoSeleccionado.Label = "Emp.:";
             txtEmpleadoSeleccionado.Location = new Point(3, 38);
             txtEmpleadoSeleccionado.MinimumSize = new Size(100, 30);
@@ -448,7 +452,7 @@
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(190, 36);
+            lviewRegistros.Size = new Size(817, 36);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
@@ -463,10 +467,10 @@
             pageCastingSetting.Controls.Add(panel1);
             pageCastingSetting.Controls.Add(btnSincronizarAjustes);
             pageCastingSetting.Controls.Add(flLabelHeader1);
-            pageCastingSetting.Location = new Point(4, 29);
+            pageCastingSetting.Location = new Point(4, 44);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(192, 67);
+            pageCastingSetting.Size = new Size(819, 427);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
@@ -510,11 +514,11 @@
             // dgvTurnosHorarios
             // 
             dgvTurnosHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvTurnosHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle5.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle5.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvTurnosHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             dgvTurnosHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvTurnosHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
             dgvTurnosHorarios.BorderStyle = BorderStyle.None;
@@ -523,25 +527,25 @@
             dgvTurnosHorarios.ButtonRemoveEnabled = false;
             dgvTurnosHorarios.ButtonViewEnabled = false;
             dgvTurnosHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle6.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle6.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.White;
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle7.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle7.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle7.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle7;
             dgvTurnosHorarios.Dock = DockStyle.Fill;
             dgvTurnosHorarios.EnableHeadersVisualStyles = false;
             dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
@@ -552,12 +556,13 @@
             dgvTurnosHorarios.Name = "dgvTurnosHorarios";
             dgvTurnosHorarios.RowHeadersVisible = false;
             dgvTurnosHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
-            dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.SelectionBackColor = Color.Orange;
+            dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle8;
             dgvTurnosHorarios.SelectedCellColor = Color.Moccasin;
             dgvTurnosHorarios.SelectedRowColor = Color.SteelBlue;
             dgvTurnosHorarios.SelectionForeColor = Color.Black;
             dgvTurnosHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvTurnosHorarios.ShowContextMenu = true;
             dgvTurnosHorarios.Size = new Size(632, 259);
             dgvTurnosHorarios.TabIndex = 4;
             // 
@@ -631,7 +636,7 @@
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(184, 45);
+            flLabelHeader1.Size = new Size(811, 45);
             flLabelHeader1.TabIndex = 1;
             // 
             // pageCastingResults
@@ -639,9 +644,9 @@
             pageCastingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingResults.BorderStyle = BorderStyle.FixedSingle;
             pageCastingResults.Controls.Add(splitResultadosCasting_Background);
-            pageCastingResults.Location = new Point(4, 29);
+            pageCastingResults.Location = new Point(4, 44);
             pageCastingResults.Name = "pageCastingResults";
-            pageCastingResults.Size = new Size(192, 67);
+            pageCastingResults.Size = new Size(819, 427);
             pageCastingResults.TabIndex = 4;
             pageCastingResults.Text = "Resultados del Casting";
             // 
@@ -659,7 +664,7 @@
             // splitResultadosCasting_Background.Panel2
             // 
             splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
-            splitResultadosCasting_Background.Size = new Size(190, 65);
+            splitResultadosCasting_Background.Size = new Size(817, 425);
             splitResultadosCasting_Background.SplitterDistance = 161;
             splitResultadosCasting_Background.SplitterWidth = 6;
             splitResultadosCasting_Background.TabIndex = 0;
@@ -681,7 +686,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
-            tableLayoutPanel3.Size = new Size(161, 65);
+            tableLayoutPanel3.Size = new Size(161, 425);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // txtBusqueda
@@ -689,6 +694,7 @@
             txtBusqueda.Dock = DockStyle.Fill;
             txtBusqueda.EntryFont = new Font("Consolas", 9F);
             txtBusqueda.InputContentType = FlowControls.InputMode.GENERAL;
+            txtBusqueda.InputStyle = FlowControls.TextStyle.Normal;
             txtBusqueda.Label = "Buscar:";
             txtBusqueda.Location = new Point(4, 4);
             txtBusqueda.MinimumSize = new Size(100, 30);
@@ -710,7 +716,7 @@
             lblTotalDeEmpleados.InfoLabelForeColor = SystemColors.MenuHighlight;
             lblTotalDeEmpleados.InfoLabelText = "0";
             lblTotalDeEmpleados.Label = "Total de empledos:";
-            lblTotalDeEmpleados.Location = new Point(4, 34);
+            lblTotalDeEmpleados.Location = new Point(4, 394);
             lblTotalDeEmpleados.MinimumSize = new Size(150, 30);
             lblTotalDeEmpleados.Name = "lblTotalDeEmpleados";
             lblTotalDeEmpleados.RootLineColor = Color.Gray;
@@ -723,17 +729,18 @@
             treePagingResultadosCasting.Dock = DockStyle.Fill;
             treePagingResultadosCasting.EnableDefaultIcons = true;
             treePagingResultadosCasting.Header = "Empleados Registrados";
+            treePagingResultadosCasting.HeaderFont = new Font("Segoe UI", 9F, FontStyle.Bold);
+            treePagingResultadosCasting.HeaderForeColor = SystemColors.ControlText;
+            treePagingResultadosCasting.HidePagingIfSinglePage = false;
             treePagingResultadosCasting.ItemSize = 34;
             treePagingResultadosCasting.Location = new Point(4, 38);
             treePagingResultadosCasting.MinimumSize = new Size(119, 140);
             treePagingResultadosCasting.Name = "treePagingResultadosCasting";
             treePagingResultadosCasting.PageSize = 15;
             treePagingResultadosCasting.SelectedItem = null;
-            treeNode1.Name = "";
-            treeNode1.Text = "";
-            treePagingResultadosCasting.SelectedNode = treeNode1;
+            treePagingResultadosCasting.SelectedNode = null;
             treePagingResultadosCasting.ShowLines = false;
-            treePagingResultadosCasting.Size = new Size(153, 140);
+            treePagingResultadosCasting.Size = new Size(153, 349);
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
@@ -746,7 +753,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(25, 65);
+            panel2.Size = new Size(650, 425);
             panel2.TabIndex = 0;
             // 
             // calendarEmpleadoCasteado
@@ -765,7 +772,7 @@
             calendarEmpleadoCasteado.Name = "calendarEmpleadoCasteado";
             calendarEmpleadoCasteado.ShowHolidays = true;
             calendarEmpleadoCasteado.ShowMonthHeader = true;
-            calendarEmpleadoCasteado.Size = new Size(23, 63);
+            calendarEmpleadoCasteado.Size = new Size(648, 423);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
             calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
@@ -789,65 +796,65 @@
             // flQuickAccessPanel1
             // 
             flQuickAccessPanel1.BackColor = SystemColors.GradientInactiveCaption;
-            quickAccessButton1.BackColor = SystemColors.ActiveCaption;
-            quickAccessButton1.BorderLineColor = Color.Silver;
-            quickAccessButton1.BorderLineThickness = 1;
-            quickAccessButton1.Enabled = true;
-            quickAccessButton1.FlatStyle = FlatStyle.Flat;
-            quickAccessButton1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            quickAccessButton1.ForeColor = SystemColors.ControlText;
-            quickAccessButton1.Image = Properties.Resources.save2_16;
-            quickAccessButton1.Name = "btnGuardar";
-            quickAccessButton1.ShortcutKeys = Keys.Control | Keys.G;
-            quickAccessButton1.Text = "Guardar";
-            quickAccessButton2.BackColor = Color.RosyBrown;
-            quickAccessButton2.BorderLineColor = Color.Silver;
-            quickAccessButton2.BorderLineThickness = 1;
-            quickAccessButton2.Enabled = true;
-            quickAccessButton2.FlatStyle = FlatStyle.Flat;
-            quickAccessButton2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            quickAccessButton2.ForeColor = SystemColors.ControlText;
-            quickAccessButton2.Image = Properties.Resources.cancel_16;
-            quickAccessButton2.Name = "btnCerrar";
-            quickAccessButton2.Text = "Cerrar";
-            quickAccessButton3.BackColor = SystemColors.ActiveCaption;
-            quickAccessButton3.BorderLineColor = Color.Silver;
-            quickAccessButton3.BorderLineThickness = 1;
-            quickAccessButton3.Enabled = false;
-            quickAccessButton3.FlatStyle = FlatStyle.Flat;
-            quickAccessButton3.Font = new Font("Microsoft Sans Serif", 8.25F);
-            quickAccessButton3.ForeColor = SystemColors.ControlText;
-            quickAccessButton3.Image = Properties.Resources.printer_16;
-            quickAccessButton3.Name = "btnImprimir";
-            quickAccessButton3.ShortcutKeys = Keys.Control | Keys.P;
-            quickAccessButton3.Text = "Imprimir";
-            quickAccessButton4.BackColor = SystemColors.ActiveCaption;
-            quickAccessButton4.BorderLineColor = Color.Silver;
-            quickAccessButton4.BorderLineThickness = 1;
-            quickAccessButton4.Enabled = true;
-            quickAccessButton4.FlatStyle = FlatStyle.Flat;
-            quickAccessButton4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            quickAccessButton4.ForeColor = SystemColors.ControlText;
-            quickAccessButton4.Image = Properties.Resources.pdf3_16;
-            quickAccessButton4.Name = "btnGenerar";
-            quickAccessButton4.ShortcutKeys = Keys.F5;
-            quickAccessButton4.Text = "Generar";
-            quickAccessButton5.BackColor = Color.NavajoWhite;
-            quickAccessButton5.BorderLineColor = Color.Silver;
-            quickAccessButton5.BorderLineThickness = 1;
-            quickAccessButton5.Enabled = true;
-            quickAccessButton5.FlatStyle = FlatStyle.Flat;
-            quickAccessButton5.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            quickAccessButton5.ForeColor = SystemColors.ControlText;
-            quickAccessButton5.Image = Properties.Resources.play3_16;
-            quickAccessButton5.Name = "btnEjecutar";
-            quickAccessButton5.ShortcutKeys = Keys.Control | Keys.E;
-            quickAccessButton5.Text = "Ejecutar";
-            flQuickAccessPanel1.Buttons.Add(quickAccessButton1);
-            flQuickAccessPanel1.Buttons.Add(quickAccessButton2);
-            flQuickAccessPanel1.Buttons.Add(quickAccessButton3);
-            flQuickAccessPanel1.Buttons.Add(quickAccessButton4);
-            flQuickAccessPanel1.Buttons.Add(quickAccessButton5);
+            quickAccessButton6.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton6.BorderLineColor = Color.Silver;
+            quickAccessButton6.BorderLineThickness = 1;
+            quickAccessButton6.Enabled = true;
+            quickAccessButton6.FlatStyle = FlatStyle.Flat;
+            quickAccessButton6.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton6.ForeColor = SystemColors.ControlText;
+            quickAccessButton6.Image = Properties.Resources.save2_16;
+            quickAccessButton6.Name = "btnGuardar";
+            quickAccessButton6.ShortcutKeys = Keys.Control | Keys.G;
+            quickAccessButton6.Text = "Guardar";
+            quickAccessButton7.BackColor = Color.RosyBrown;
+            quickAccessButton7.BorderLineColor = Color.Silver;
+            quickAccessButton7.BorderLineThickness = 1;
+            quickAccessButton7.Enabled = true;
+            quickAccessButton7.FlatStyle = FlatStyle.Flat;
+            quickAccessButton7.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton7.ForeColor = SystemColors.ControlText;
+            quickAccessButton7.Image = Properties.Resources.cancel_16;
+            quickAccessButton7.Name = "btnCerrar";
+            quickAccessButton7.Text = "Cerrar";
+            quickAccessButton8.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton8.BorderLineColor = Color.Silver;
+            quickAccessButton8.BorderLineThickness = 1;
+            quickAccessButton8.Enabled = false;
+            quickAccessButton8.FlatStyle = FlatStyle.Flat;
+            quickAccessButton8.Font = new Font("Microsoft Sans Serif", 8.25F);
+            quickAccessButton8.ForeColor = SystemColors.ControlText;
+            quickAccessButton8.Image = Properties.Resources.printer_16;
+            quickAccessButton8.Name = "btnImprimir";
+            quickAccessButton8.ShortcutKeys = Keys.Control | Keys.P;
+            quickAccessButton8.Text = "Imprimir";
+            quickAccessButton9.BackColor = SystemColors.ActiveCaption;
+            quickAccessButton9.BorderLineColor = Color.Silver;
+            quickAccessButton9.BorderLineThickness = 1;
+            quickAccessButton9.Enabled = true;
+            quickAccessButton9.FlatStyle = FlatStyle.Flat;
+            quickAccessButton9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton9.ForeColor = SystemColors.ControlText;
+            quickAccessButton9.Image = Properties.Resources.pdf3_16;
+            quickAccessButton9.Name = "btnGenerar";
+            quickAccessButton9.ShortcutKeys = Keys.F5;
+            quickAccessButton9.Text = "Generar";
+            quickAccessButton10.BackColor = Color.NavajoWhite;
+            quickAccessButton10.BorderLineColor = Color.Silver;
+            quickAccessButton10.BorderLineThickness = 1;
+            quickAccessButton10.Enabled = true;
+            quickAccessButton10.FlatStyle = FlatStyle.Flat;
+            quickAccessButton10.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            quickAccessButton10.ForeColor = SystemColors.ControlText;
+            quickAccessButton10.Image = Properties.Resources.play3_16;
+            quickAccessButton10.Name = "btnEjecutar";
+            quickAccessButton10.ShortcutKeys = Keys.Control | Keys.E;
+            quickAccessButton10.Text = "Ejecutar";
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton6);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton7);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton8);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton9);
+            flQuickAccessPanel1.Buttons.Add(quickAccessButton10);
             flQuickAccessPanel1.Dock = DockStyle.Fill;
             flQuickAccessPanel1.LineColor = Color.Black;
             flQuickAccessPanel1.LineThickness = 1;
