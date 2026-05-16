@@ -17,6 +17,9 @@ namespace Checador_FXE.Plantillas
         public static string PathTempFile { get; private set; }
         public static string DefaultProjFilePath { get; private set;  }
 
+        /// <summary>
+        /// Clase inicializadora del objeto
+        /// </summary>
         void InitializeClass()
         {
             // Asignamos la ruta de la carpeta temporal
@@ -50,9 +53,16 @@ namespace Checador_FXE.Plantillas
         {
             public static readonly string FILEPATH = @"data\configuracion_casting.json";
 
-            public string TurnosCrudJson { get; set; }
+            /// <summary>
+            /// Horarios de los turnos del mes con el que se realizo/realizara el casting
+            /// </summary>
+            public string HorariosTurnosCrudJson { get; set; }
             public TimeSpan TiempoRetrasoPermitido { get; set; }
             public bool DomingosNoLaborables { get; set; }
+            /// <summary>
+            /// Relacion de turnos del mes para cada empleado : objeto TurnoEmpleadoCollection
+            /// </summary>
+            public string TurnosEmpleadoJson { get; set; }
 
             public string MakeJson() => JsonSerializer.Serialize<ConfiguracionCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static ConfiguracionCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ConfiguracionCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -187,7 +197,7 @@ namespace Checador_FXE.Plantillas
         /// Directorio de archivos temporales
         /// </summary>
         public string TempDir { get; private set; }
-
+        
 
         /// <summary>
         /// Constructor basado en un nuevo proyecto
@@ -208,9 +218,10 @@ namespace Checador_FXE.Plantillas
             };
             this.ConfiguracionCasting = new ConfiguracionCastingTab()
             {
-                TurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
+                HorariosTurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
-                DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked
+                DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
+                TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson()
             };
             this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using Checador_FXE.Plantillas;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office2010.Word;
 using DocumentFormat.OpenXml.Office2016.Excel;
 using iTextSharp.text;
@@ -179,24 +180,27 @@ namespace Checador_FXE
                                 }
 
                                 // Escribimos el horario del empleado
-                                Func<List<(DateOnly, int)>, int, TimeSpan> _GetWorkTimeSchedule = delegate (List<(DateOnly fecha, int turno)> turnos, int tipo)
+                                Func<TurnoEmpleado[], int, TimeSpan> _GetWorkTimeSchedule = delegate (TurnoEmpleado[] turnos, int tipo)
                                 {
                                     Horario t = new Horario();
 
                                     foreach (var i in turnos)
                                     {
-                                        if (i.turno == 0)
+                                        if (i.Turno == 0 || i.Turno == -1)
                                             continue;
 
-                                        t = Turno.GetInOutTimes(i.turno);
+                                        t = Turno.GetInOutTimes(i.Turno);
                                         break;
                                     }
 
                                     return tipo == 0 ? t.Entrada : t.Entrada;
                                 };
 
-                                TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos[empName], 0);
-                                TimeSpan end = _GetWorkTimeSchedule(rpt.Turnos[empName], 1);
+                                //TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos[empName], 0);
+                                //TimeSpan end = _GetWorkTimeSchedule(rpt.Turnos[empName], 1);
+                                
+                                TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos.Items.Cast<TurnoEmpleado>().Where(t => t.Nombre == empName).ToArray(), 0);
+                                TimeSpan end = _GetWorkTimeSchedule(rpt.Turnos.Items.Cast<TurnoEmpleado>().Where(t => t.Nombre == empName).ToArray(), 1);
                                 
                                 cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"{start.Hours:00}:{start.Minutes:00}", IHC_S.X, (A_L > 1 ? IHC_S.Y - (IHC_JUMPS * (A_L - 1)) : IHC_S.Y), 0); // Horario de entrada
                                 cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"{end.Hours:00}:{end.Minutes:00}", IHC_E.X, (A_L > 1 ? IHC_E.Y - (IHC_JUMPS * (A_L - 1)) : IHC_E.Y), 0);     // Horario de salida

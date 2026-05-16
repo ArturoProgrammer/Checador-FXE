@@ -408,7 +408,7 @@ namespace Checador_FXE
         /// <summary>
         /// Relacion de turnos y los empleados
         /// </summary>
-        internal Dictionary<string, List<(DateOnly Day, int TurnNumber)>> Turnos { get; set; }
+        internal TurnoEmpleadoCollection Turnos { get; set; }
         /// <summary>
         /// Ruta del archivo .xlsx que se usa para la generacion del reporte
         /// </summary>
@@ -479,7 +479,7 @@ namespace Checador_FXE
         /// <param name="path"></param>
         /// <returns></returns>
         private (bool Status, 
-                Dictionary<string, List<(DateOnly Day, int TurnNumber)>> RelacionTurnos, 
+                TurnoEmpleadoCollection RelacionTurnos, 
                 Dictionary<string, Checada[]> Chequeos, 
                 (DateTime Start, DateTime End) PeriodTime) 
         READER_ZK_TECO_K40(string path)
@@ -531,7 +531,8 @@ namespace Checador_FXE
             (DateTime Start, DateTime End) period = (DateTime.MinValue, DateTime.MinValue);
 
             // DICCIONARIO DE RELACION ("USUARIO" : "TURNO")
-            Dictionary<string, List<(DateOnly, int)>> DEAD_USUARIO_TURNO = new Dictionary<string, List<(DateOnly, int)>>();
+            //Dictionary<string, List<(DateOnly, int)>> DEAD_USUARIO_TURNO = new Dictionary<string, List<(DateOnly, int)>>();
+            TurnoEmpleadoCollection DEAD_USUARIO_TURNO = new TurnoEmpleadoCollection();
 
             try
             {
@@ -877,22 +878,21 @@ namespace Checador_FXE
 
                     while (actualEmployeeRow <= LAST_EMPLOYEE_ROW)
                     {
-                        string employeeName = sl.GetCellValueAsString(actualEmployeeRow, Utils.GetColumnInt(NOM_EMP_TURNSHEET_COLUMN.ToString()));
+                        //string employeeName = sl.GetCellValueAsString(actualEmployeeRow, Utils.GetColumnInt(NOM_EMP_TURNSHEET_COLUMN.ToString()));
+                        int employeeNoEmp = Int32.Parse(sl.GetCellValueAsString(actualEmployeeRow, Utils.GetColumnInt("A")));
                         for (int day = Utils.GetColumnInt(START_TURNOS_COL.ToString()); day <= dayLimit; day++)
                         {
                             int turnOfDay = sl.GetCellValueAsInt32(actualEmployeeRow, day);
                             string numberOfDay = sl.GetCellValueAsString(PERIOD_DAYS_TURNSHEET_ROW, day);
 
-                            var _dataTuple = (DateOnly.Parse($"{numberOfDay}-{GetMonthByCoords(day, _MONTH_COORDS)}-{ACTUAL_RPT_YEAR}"), turnOfDay);
-
-                            if (DEAD_USUARIO_TURNO.ContainsKey(employeeName))
+                            //var _dataTuple = (DateOnly.Parse($"{numberOfDay}-{GetMonthByCoords(day, _MONTH_COORDS)}-{ACTUAL_RPT_YEAR}"), turnOfDay);
+                            DEAD_USUARIO_TURNO.Add(new TurnoEmpleado()
                             {
-                                DEAD_USUARIO_TURNO[employeeName].Add(_dataTuple);
-                            }
-                            else
-                            {
-                                DEAD_USUARIO_TURNO.Add(employeeName, new List<(DateOnly, int)>() { _dataTuple });
-                            }
+                                Dia = DateOnly.Parse($"{numberOfDay}-{GetMonthByCoords(day, _MONTH_COORDS)}-{ACTUAL_RPT_YEAR}"),
+                                NoEmp = employeeNoEmp,
+                                Turno = turnOfDay,
+                                Nombre = sl.GetCellValueAsString(actualEmployeeRow, Utils.GetColumnInt(NOM_EMP_TURNSHEET_COLUMN.ToString()))
+                            });
                         }
 
                         actualEmployeeRow++;
@@ -905,7 +905,7 @@ namespace Checador_FXE
             catch (Exception ex)
             {
                 MessageBox.Show($"{ex.Message}\n{ex}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return (false, new Dictionary<string, List<(DateOnly, int)>>(), new Dictionary<string, Checada[]>(), period);
+                return (false, new TurnoEmpleadoCollection(), new Dictionary<string, Checada[]>(), period);
             }
         }
     }

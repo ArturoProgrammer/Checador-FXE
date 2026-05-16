@@ -12,6 +12,7 @@ namespace Checador_FXE.MdiForms
         internal ReporteAsistencias Report { get; }
         internal MainDesktop LegacyParent { get; }
         internal CafProjFile ActualCafProject { get; set; }
+        internal RelacionHorarios RelacionHorarioSelected { get; set; }
         internal string ProjectFullname { get; set; } = "-1";
 
         bool projByCafOpened = false;
@@ -28,6 +29,7 @@ namespace Checador_FXE.MdiForms
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
+            this.RelacionHorarioSelected = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!;
 
             LoadAllData();
 
@@ -52,6 +54,7 @@ namespace Checador_FXE.MdiForms
             this.LegacyParent = mdiParent;
             projCaf.MdiForm = this; this.ActualCafProject = projCaf;
             this.ProjectFullname = projFullname;
+            this.RelacionHorarioSelected = ;
 
             LoadAllData();
         }
@@ -288,6 +291,11 @@ namespace Checador_FXE.MdiForms
                     Func<TimeSpan, TimeSpan> _GetMaximumTime = (TimeSpan entradaNormal) => entradaNormal.Add(new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0));
 
                     // Obtiene el turno correspondiente del dia y el usuario indicado
+                    /*
+                     * 
+                     * FUNCION ANTIGUA, SE MANTIENE POR COMPATIBILIDAD HEREDADA, 
+                     * PERO SE RECOMIENDA USAR LA NUEVA FUNCION DEBAJO DE ESTA
+                     * 
                     Func<Dictionary<string, List<(DateOnly, int)>>, DateOnly, string, int> _GetTurn = delegate (Dictionary<string, List<(DateOnly, int)>> c, DateOnly fecha, string empNombre)
                     {
                         foreach (var o in c[empNombre])
@@ -297,6 +305,17 @@ namespace Checador_FXE.MdiForms
                         }
 
                         return -1;
+                    };
+                    */
+
+                    /* 
+                     * VERSION NUEVA DE LA FUNCION EN LA CUAL YA SE IMPLEMENTA LA CLASE DE TURNOS, 
+                     * POR LO QUE SE SIMPLIFICA BASTANTE EL PROCESO DE OBTENCION DEL TURNO CORRESPONDIENTE
+                     * */
+
+                    Func<TurnoEmpleadoCollection, DateOnly, string, int> _GetTurn = delegate (TurnoEmpleadoCollection c, DateOnly fecha, string empNombre)
+                    {
+                        return c[c.Items.Cast<TurnoEmpleado>().FirstOrDefault(e => e.Nombre == empNombre).NoEmp, fecha.Day].Turno;
                     };
 
                     // Evalua si llego a tiempo o presento un retardo. True en caso de ser un retardo y false en caso contrario

@@ -1,18 +1,111 @@
-﻿using DocumentFormat.OpenXml.Office2013.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using FlowCommonWorkcore;
+﻿using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using Microsoft.Data.Sqlite;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using static Checador_FXE.Plantillas.RelacionHorarios;
 
 namespace Checador_FXE.Plantillas
 {
+    internal static class Helpers
+    {
+        #region
+        public static Func<string, TurnoEmpleadoCollection> parseJsonRelacion = (json) =>
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(json))
+                    return new TurnoEmpleadoCollection();
+
+                var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, List<JsonTurno>>>(json);
+
+                var collection = new TurnoEmpleadoCollection();
+
+                if (dict == null)
+                    return collection;
+
+                foreach (var kv in dict)
+                {
+                    int noEmp = int.Parse(kv.Key);
+
+                    foreach (var item in kv.Value)
+                    {
+                        collection.Add(new TurnoEmpleado(
+                            noEmp,
+                            item.Turno,
+                            item.Nombre,
+                            DateOnly.Parse(item.Dia)
+                        ));
+                    }
+                }
+
+                return collection;
+            }
+            catch
+            {
+                throw new Exception("Ocurrio un error inesperado al parsear la informacion del JsonRelaciones");
+            }
+        };
+        public static Func<TurnoEmpleadoCollection, string> buildJsonRelacion = (relacion) =>
+        {
+            #region CODIGO
+            try
+            {
+                Dictionary<int, List<TurnoEmpleado>> _relacionEmpleadosTurnos = new Dictionary<int, List<TurnoEmpleado>>();
+
+                foreach (TurnoEmpleado t in relacion.Items)
+                {
+                    if (!_relacionEmpleadosTurnos.ContainsKey(t.NoEmp))
+                        _relacionEmpleadosTurnos[t.NoEmp] = new List<TurnoEmpleado>();
+                    _relacionEmpleadosTurnos[t.NoEmp].Add(t);
+                }
+
+                List<string> _employeeSections = new List<string>();
+
+                foreach (int n_E in _relacionEmpleadosTurnos.Keys)
+                {
+                    List<string> _turnosParts = new List<string>();
+
+                    foreach (TurnoEmpleado t in _relacionEmpleadosTurnos[n_E])
+                        _turnosParts.Add($"{{\"Nombre\":\"{t.Nombre}\",\"Dia\":\"{t.Dia.ToString("yyyy-MM-dd")}\",\"Turno\":{t.Turno}}}");
+
+                    _employeeSections.Add($"\"{n_E}\":[{string.Join(",\n", _turnosParts)}]");
+                }
+
+                return "{" + string.Join(",\n", _employeeSections) + "}";
+            }
+            catch
+            {
+                throw new Exception("Ocurrio un error inesperado al parsear la informacion del JsonRelaciones");
+            }
+            #endregion
+        };
+        public static Func<RelacionHorarioID, TurnoEmpleadoCollection> makeDefaultRelacion = (id) =>
+        {
+            Empleado[] _actualEmpelados = Empleado.GetAll(Properties.Settings.Default.LOCALIDAD_DEFAULT).Object ??
+                throw new NullReferenceException($"Ocurrio un error durante la obtencion de los empleados para la localidad default.");
+
+            TurnoEmpleadoCollection _collection = new TurnoEmpleadoCollection();
+            foreach (Empleado e in _actualEmpelados)
+            {
+                int actualMonthNumber = DateTime.ParseExact(id.Month, "MMMM", CultureInfo.CurrentCulture).Month;
+                for (int day = 1; day <= DateTime.DaysInMonth(id.Year, actualMonthNumber); day++)
+                {
+                    DateOnly d_Only = new DateOnly(id.Year, actualMonthNumber, day);
+                    int _turnoSelected = d_Only.DayOfWeek is DayOfWeek.Sunday ? -1 : e.TurnoDefault;
+                    _collection.Add(
+                        new TurnoEmpleado(Int32.Parse(e.NoEmp), _turnoSelected, $"{e.Nombres} {e.Apellidos}", d_Only)
+                    );
+                }
+            }
+
+            return _collection;
+        };
+        #endregion
+    }
+
     public struct RelacionHorarioID
     {
         public string Month { get; } // Mes en formato de texto (Ej: Enero, Febrero, etc.)
@@ -27,6 +120,11 @@ namespace Checador_FXE.Plantillas
         public override string ToString() => $"{Month}-{Year}";
         public override bool Equals([NotNullWhen(true)] object? obj) => obj is RelacionHorarioID id && this.Month == id.Month && this.Year == id.Year;
         public override int GetHashCode() => HashCode.Combine(Month, Year);
+        /// <summary>
+        /// Obtiene el ID de relacion de horarios correspondiente al mes y año actual
+        /// </summary>
+        /// <returns></returns>
+        public static RelacionHorarioID GetActualId() => new RelacionHorarioID(DateTime.Now.ToString("MMMM", new CultureInfo("es-MX")), DateTime.Now.Year);
     }
 
     public struct TurnoEmpleado
@@ -86,6 +184,11 @@ namespace Checador_FXE.Plantillas
         public void Clear() => _items.Clear();
         public void Remove(TurnoEmpleado item) => _items.Remove(item);
         public void Remove(int index) => _items.RemoveAt(index);
+        public bool Contains(TurnoEmpleado item) => _items.Contains(item);
+        public bool ContainsKey(int noEmp) => _items.Any(t => t.NoEmp == noEmp);
+
+        public string BuildJson() => Helpers.buildJsonRelacion(this);
+        public static TurnoEmpleadoCollection ParseJson(string json) => Helpers.parseJsonRelacion(json);
     }
 
 
@@ -137,99 +240,6 @@ namespace Checador_FXE.Plantillas
             public int Turno { get; set; }
         }
 
-
-        static Func<string, TurnoEmpleadoCollection> parseJsonRelacion = (json) =>
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(json))
-                    return new TurnoEmpleadoCollection();
-
-                var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, List<JsonTurno>>>(json);
-
-                var collection = new TurnoEmpleadoCollection();
-
-                if (dict == null)
-                    return collection;
-
-                foreach (var kv in dict)
-                {
-                    int noEmp = int.Parse(kv.Key);
-
-                    foreach (var item in kv.Value)
-                    {
-                        collection.Add(new TurnoEmpleado(
-                            noEmp,
-                            item.Turno,
-                            item.Nombre,
-                            DateOnly.Parse(item.Dia)
-                        ));
-                    }
-                }
-
-                return collection;
-            }
-            catch
-            {
-                throw new Exception("Ocurrio un error inesperado al parsear la informacion del JsonRelaciones");
-            }
-        };
-        Func<TurnoEmpleadoCollection, string> buildJsonRelacion = (relacion) =>
-        {
-            #region CODIGO
-            try
-            {
-                Dictionary<int, List<TurnoEmpleado>> _relacionEmpleadosTurnos = new Dictionary<int, List<TurnoEmpleado>>();
-
-                foreach (TurnoEmpleado t in relacion.Items)
-                {
-                    if (!_relacionEmpleadosTurnos.ContainsKey(t.NoEmp))
-                        _relacionEmpleadosTurnos[t.NoEmp] = new List<TurnoEmpleado>();
-                    _relacionEmpleadosTurnos[t.NoEmp].Add(t);
-                }
-
-                List<string> _employeeSections = new List<string>();
-
-                foreach (int n_E in _relacionEmpleadosTurnos.Keys)
-                {
-                    List<string> _turnosParts = new List<string>();
-
-                    foreach (TurnoEmpleado t in _relacionEmpleadosTurnos[n_E])
-                        _turnosParts.Add($"{{\"Nombre\":\"{t.Nombre}\",\"Dia\":\"{t.Dia.ToString("yyyy-MM-dd")}\",\"Turno\":{t.Turno}}}");
-
-                    _employeeSections.Add($"\"{n_E}\":[{string.Join(",\n", _turnosParts)}]");
-                }
-
-                return "{" + string.Join(",\n", _employeeSections) + "}";
-            }
-            catch
-            {
-                throw new Exception("Ocurrio un error inesperado al parsear la informacion del JsonRelaciones");
-            }
-            #endregion
-        };
-        static Func<RelacionHorarioID, TurnoEmpleadoCollection> makeDefaultRelacion = (id) =>
-        {
-            Empleado[] _actualEmpelados = Empleado.GetAll(Properties.Settings.Default.LOCALIDAD_DEFAULT).Object ?? 
-                throw new NullReferenceException($"Ocurrio un error durante la obtencion de los empleados para la localidad default.");
-
-            TurnoEmpleadoCollection _collection = new TurnoEmpleadoCollection();
-            foreach (Empleado e in _actualEmpelados)
-            {
-                int actualMonthNumber = DateTime.ParseExact(id.Month, "MMMM", CultureInfo.CurrentCulture).Month;
-                for (int day = 1; day <= DateTime.DaysInMonth(id.Year, actualMonthNumber); day++)
-                {
-                    DateOnly d_Only = new DateOnly(id.Year, actualMonthNumber, day);
-                    int _turnoSelected = d_Only.DayOfWeek is DayOfWeek.Sunday ? -1 : e.TurnoDefault;
-                    _collection.Add(
-                        new TurnoEmpleado(Int32.Parse(e.NoEmp), _turnoSelected, $"{e.Nombres} {e.Apellidos}", d_Only)
-                    );
-                }
-            }
-
-            return _collection;
-        };
-
         /// <summary>
         /// 
         /// </summary>
@@ -259,7 +269,7 @@ namespace Checador_FXE.Plantillas
 
                 while (_reader.Read())
                 {
-                    _obj.Relacion = parseJsonRelacion(_reader.GetString(2));
+                    _obj.Relacion = TurnoEmpleadoCollection.ParseJson(_reader.GetString(2));
                     _obj.HASH = new HexaHash(_reader.GetString(3));
                     haveRelaciones = true;
                 }
@@ -267,7 +277,7 @@ namespace Checador_FXE.Plantillas
                 if (!haveRelaciones)
                 {
                     #region GENERACION DE HORARIO POR DEFECTO
-                    _obj.Relacion = makeDefaultRelacion(id);
+                    _obj.Relacion = Helpers.makeDefaultRelacion(id);
                     _obj.HASH = new HexaHash();
 
                     if (SaveIfDefault)
@@ -389,7 +399,7 @@ namespace Checador_FXE.Plantillas
                 (string, object)[] _queryParams = new (string, object)[]
                 {
                     (ParamSqlKey.GetValue<RelacionHorarios>("ID"), ID.ToString()),
-                    (ParamSqlKey.GetValue<RelacionHorarios>("Relacion"), buildJsonRelacion(Relacion)),
+                    (ParamSqlKey.GetValue<RelacionHorarios>("Relacion"), Relacion.BuildJson()),
                     (ParamSqlKey.GetValue<RelacionHorarios>("HASH"), HASH.Hash)
                 };
                 _resp.Log.Add($"Parametros SQL construidos...");
