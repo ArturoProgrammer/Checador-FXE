@@ -572,6 +572,7 @@
             colTurnoNom.HeaderText = "Turno No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 106;
             // 
             // colHorarioUno_Entrada
             // 
@@ -579,7 +580,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 116;
+            colHorarioUno_Entrada.Width = 122;
             // 
             // colHorarioUno_Salida
             // 
@@ -587,7 +588,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 113;
+            colHorarioUno_Salida.Width = 121;
             // 
             // colHorarioDos_Entrada
             // 
@@ -595,7 +596,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 120;
+            colHorarioDos_Entrada.Width = 127;
             // 
             // colHorarioDos_Salida
             // 
@@ -603,7 +604,7 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 117;
+            colHorarioDos_Salida.Width = 126;
             // 
             // btnSincronizarAjustes
             // 
@@ -866,7 +867,7 @@
             // 
             // mdiQuincenaView
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(853, 540);

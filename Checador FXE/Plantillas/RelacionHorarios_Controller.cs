@@ -142,8 +142,6 @@ namespace Checador_FXE.Plantillas
             this.Nombre = nombre;
             this.Dia = dia;
         }
-
-
     }
 
     public class TurnoEmpleadoCollection
@@ -408,9 +406,9 @@ namespace Checador_FXE.Plantillas
                 };
                 _resp.Log.Add($"Parametros SQL construidos...");
 
-                string insertQuery = Common.BuildInsertQuery<RelacionHorarios>(this, DB_PATH, TABLE_NAME, IgnoreSqlColumnsParamsNull: true).Replace($"{DB_PATH}.{TABLE_NAME}", TABLE_NAME);
+                string insertQuery = Common.BuildInsertQuery<RelacionHorarios>(this, TABLE_NAME, IgnoreSqlColumnsParamsNull: true);
                 _resp.Log.Add($"Cadena de insercion construida...");
-                string updateQuery = Common.BuildUpdateQuery<RelacionHorarios>(this, DB_PATH, TABLE_NAME, $"{ColumnSqlName.GetValue<RelacionHorarios>("HASH")}={ParamSqlKey.GetValue<RelacionHorarios>("HASH")}", IgnoreSqlColumnsParamsNull: true).Replace($"{DB_PATH}.{TABLE_NAME}", TABLE_NAME);
+                string updateQuery = Common.BuildUpdateQuery<RelacionHorarios>(this, TABLE_NAME, $"{ColumnSqlName.GetValue<RelacionHorarios>("HASH")}={ParamSqlKey.GetValue<RelacionHorarios>("HASH")}", IgnoreSqlColumnsParamsNull: true);
                 _resp.Log.Add($"Cadena de actualizacion construida...");
 
                 Response _SERV_RESP = _connection.MakeQuery("hash", HASH.Hash, insertQuery, updateQuery, _queryParams);

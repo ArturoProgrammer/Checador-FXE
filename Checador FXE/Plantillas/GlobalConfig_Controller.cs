@@ -1,7 +1,9 @@
-﻿using FlowCommonWorkcore;
+﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using Microsoft.Data.Sqlite;
+using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.Plantillas
 {
@@ -53,7 +55,48 @@ namespace Checador_FXE.Plantillas
                 LocalidadesCompatibles = new string[] { "Hermosillo, Nogales, Sufragio" },
                 TituloConfiguracion = "Default"
             };
-            conf.Save(true);
+
+            string[] columnNames = {    ColumnSqlName.GetValue<GlobalConfig>("ID"),
+                                        ColumnSqlName.GetValue<GlobalConfig>("LocalidadesCompatibles"),
+                                        ColumnSqlName.GetValue<GlobalConfig>("TituloConfiguracion") };
+            string[] columnValues = {   ParamSqlKey.GetValue<GlobalConfig>("ID"),
+                                        ParamSqlKey.GetValue<GlobalConfig>("LocalidadesCompatibles"),
+                                        ParamSqlKey.GetValue<GlobalConfig>("TituloConfiguracion") };
+
+            SqlCmdParamParsingConfig _scpConfig = new SqlCmdParamParsingConfig().DisableIgnoreSqlColumnsParamsNull()
+                                                                                .AddParsingProcess(new ParsingProcess()
+                                                                                {
+                                                                                    Type = typeof(string[]),
+                                                                                    Process = (object a) =>
+                                                                                    {
+                                                                                        return String.Join(";", (a as string[])!);
+                                                                                    }
+                                                                                });
+            // Validamos que no tenga los valores correspondientes
+            Server.GeneralQuery query = new Server.GeneralQuery(new ConnectionsData(GlobalConfig.DB_PATH, GlobalConfig.TABLE_NAME));
+            var _resp = query.ExecuteNonQuery(
+                $@"
+UPDATE {GlobalConfig.TABLE_NAME}
+SET 
+    {columnNames[0]} = CASE 
+                  WHEN {columnNames[0]} IS NULL OR {columnNames[0]} = '' THEN {columnValues[0]}
+                  ELSE {columnNames[0]} 
+               END,
+    {columnNames[1]} = CASE 
+                  WHEN {columnNames[1]} IS NULL OR {columnNames[1]} = '' THEN {columnValues[1]}
+                  ELSE {columnNames[1]} 
+               END,
+    {columnNames[2]} = CASE 
+                  WHEN {columnNames[2]} IS NULL OR {columnNames[2]} = '' THEN {columnValues[2]}
+                  ELSE {columnNames[2]} 
+               END,
+",
+                ShowCommandPreview: true,
+                Common.BuildParamsArray<GlobalConfig>(conf, _scpConfig));
+
+            MessageBox.Show(_resp.GetBuildedLog());
+
+            conf.Save();
         }
 
         public static Response<GlobalConfig[]> GetAll(bool ShowObjectLog = false)
@@ -151,9 +194,17 @@ namespace Checador_FXE.Plantillas
             Server.SqlWriteConnection _connection = new Server.SqlWriteConnection(new ConnectionsData(DB_PATH, TABLE_NAME));
             _resp.Log.Add($"Conexion de escritura establecida...");
 
-            SqlCmdParam[] parameters = Common.BuildParamsArray<GlobalConfig>(this);
-            parameters[1] = String.Join(";", LocalidadesCompatibles); // Fix Local
-            MessageBox.Show(string.Join("\n", parameters.Select(t => $"{t.Column}:{t.Key}={t.Value}").ToArray()));
+            SqlCmdParamParsingConfig _scpConf = new SqlCmdParamParsingConfig().DisableIgnoreSqlColumnsParamsNull()
+                                                                                .AddParsingProcess(new ParsingProcess()
+                                                                                {
+                                                                                    Type = typeof(string[]),
+                                                                                    Process = (object a) =>
+                                                                                    {
+                                                                                        return String.Join(";", (a as string[])!);
+                                                                                    }
+                                                                                });
+
+            SqlCmdParam[] parameters = Common.BuildParamsArray<GlobalConfig>(this, _scpConf);
 
             _resp.Log.Add($"Parametros construidos");
 
@@ -161,9 +212,6 @@ namespace Checador_FXE.Plantillas
             _resp.Log.Add("Cadena de adicion construida...");
             string UPDATE_QUERY = Common.BuildUpdateQuery<GlobalConfig>(this, GlobalConfig.TABLE_NAME, conditional: "config_id=@ConfigId");
             _resp.Log.Add("Cadena de actualizacion construida...");
-
-            MessageBox.Show(ADDITION_QUERY);
-            MessageBox.Show(UPDATE_QUERY);
 
             Response SERVER_RESPONSE = _connection.MakeQuery(
                 ColumnSqlName.GetValue<GlobalConfig>("ID"),
