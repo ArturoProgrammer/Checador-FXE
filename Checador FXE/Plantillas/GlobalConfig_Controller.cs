@@ -40,6 +40,20 @@ namespace Checador_FXE.Plantillas
                 if (!_tb_resp.Success)
                     throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");
             }
+
+            // Asignamos los valores por defecto en caso de que no se encuentren asignados
+            AssignDbDefaultValues();
+        }
+
+        static void AssignDbDefaultValues()
+        {
+            GlobalConfig conf = new GlobalConfig()
+            {
+                ID = 1,
+                LocalidadesCompatibles = new string[] { "Hermosillo, Nogales, Sufragio" },
+                TituloConfiguracion = "Default"
+            };
+            conf.Save(true);
         }
 
         public static Response<GlobalConfig[]> GetAll(bool ShowObjectLog = false)
@@ -138,12 +152,18 @@ namespace Checador_FXE.Plantillas
             _resp.Log.Add($"Conexion de escritura establecida...");
 
             SqlCmdParam[] parameters = Common.BuildParamsArray<GlobalConfig>(this);
+            parameters[1] = String.Join(";", LocalidadesCompatibles); // Fix Local
+            MessageBox.Show(string.Join("\n", parameters.Select(t => $"{t.Column}:{t.Key}={t.Value}").ToArray()));
+
             _resp.Log.Add($"Parametros construidos");
 
-            string ADDITION_QUERY = Common.BuildInsertQuery<GlobalConfig>(this, GlobalConfig.DB_NAME, GlobalConfig.TABLE_NAME);
+            string ADDITION_QUERY = Common.BuildInsertQuery<GlobalConfig>(this, GlobalConfig.TABLE_NAME);
             _resp.Log.Add("Cadena de adicion construida...");
-            string UPDATE_QUERY = Common.BuildUpdateQuery<GlobalConfig>(this, GlobalConfig.DB_NAME, GlobalConfig.TABLE_NAME, conditional: "config_id=@ConfigId");
+            string UPDATE_QUERY = Common.BuildUpdateQuery<GlobalConfig>(this, GlobalConfig.TABLE_NAME, conditional: "config_id=@ConfigId");
             _resp.Log.Add("Cadena de actualizacion construida...");
+
+            MessageBox.Show(ADDITION_QUERY);
+            MessageBox.Show(UPDATE_QUERY);
 
             Response SERVER_RESPONSE = _connection.MakeQuery(
                 ColumnSqlName.GetValue<GlobalConfig>("ID"),

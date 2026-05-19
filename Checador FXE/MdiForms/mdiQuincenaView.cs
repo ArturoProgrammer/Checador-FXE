@@ -54,8 +54,9 @@ namespace Checador_FXE.MdiForms
             this.LegacyParent = mdiParent;
             projCaf.MdiForm = this; this.ActualCafProject = projCaf;
             this.ProjectFullname = projFullname;
-            this.RelacionHorarioSelected = ;
-
+            this.RelacionHorarioSelected = RelacionHorarios.Parse(projCaf.ConfiguracionCasting.RelacionID,
+                                                                    projCaf.ConfiguracionCasting.TurnosEmpleadoJson,
+                                                                    projCaf.ConfiguracionCasting.RelacionHASH, ShowObjectLog: true).Object ?? throw new Exception("Error durante el parseo de datos");
             LoadAllData();
         }
 

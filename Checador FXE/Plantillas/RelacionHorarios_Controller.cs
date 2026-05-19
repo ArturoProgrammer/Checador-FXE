@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using ZstdSharp.Unsafe;
 using static Checador_FXE.Plantillas.RelacionHorarios;
 
 namespace Checador_FXE.Plantillas
@@ -353,6 +354,9 @@ namespace Checador_FXE.Plantillas
             _resp.Object = _list.ToArray();
             _resp.Message = $"Proceso de obtencion de ID finalizado {fails} errores!";
 
+            if (ShowObjectLog)
+                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+
             return _resp;
             #endregion
         }
@@ -425,8 +429,46 @@ namespace Checador_FXE.Plantillas
             
             _resp.Message = _resp.Success ? $"Relacion de horario para '{ID}' guardado correctamente!" : $"Ocurrio un error al intentar guardar la relacion de horario '{ID}'!";
 
+            if (ShowObjectLog)
+                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+
             return _resp;
             #endregion
+        }
+
+        public static Response<RelacionHorarios> Parse(string relacionId, string relacionTurnosJson, string relacionHash, bool ShowObjectLog = false)
+        {
+            Response<RelacionHorarios> _resp = new Response<RelacionHorarios>(false, "Iniciando operacion de parsing", null);
+
+            MessageBox.Show(relacionTurnosJson, "JSON a parsear");
+
+            try 
+            {
+                RelacionHorarios _obj = new RelacionHorarios();
+                _obj.ID = new RelacionHorarioID(relacionId.Split("-")[0], int.Parse(relacionId.Split("-")[1]));
+                _resp.Log.Add("ID asignado...");
+                _obj.Relacion = TurnoEmpleadoCollection.ParseJson(relacionTurnosJson);
+                _resp.Log.Add("Relacion de Turnos asignada...");
+                _obj.HASH = new HexaHash(relacionHash);
+                _resp.Log.Add("HASH asignado...");
+
+                _resp.Object = _obj;
+                _resp.Success = true;
+                _resp.Message = $"Parsing de relacion de horarios realizado correctamente!";
+            }
+            catch (Exception ex)
+            {
+                _resp.Log.Add(ex.ToString());
+                _resp.Success = false;
+                _resp.Message = $"Ocurrio un error al intentar parsear la relacion de horarios! {ex.Message}";
+                _resp.Object = null;
+            }
+
+
+            if (ShowObjectLog)
+                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+
+            return _resp;
         }
     }
 }

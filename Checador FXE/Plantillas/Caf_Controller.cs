@@ -54,15 +54,20 @@ namespace Checador_FXE.Plantillas
             public static readonly string FILEPATH = @"data\configuracion_casting.json";
 
             /// <summary>
-            /// Horarios de los turnos del mes con el que se realizo/realizara el casting
+            /// Horarios de los turnos del mes con el que se realizo/realizara el casting. Ejemplo: turno 1 -> 07:00-15:00
             /// </summary>
-            public string HorariosTurnosCrudJson { get; set; }
-            public TimeSpan TiempoRetrasoPermitido { get; set; }
-            public bool DomingosNoLaborables { get; set; }
+            public required string HorariosTurnosCrudJson { get; set; }
+            public required TimeSpan TiempoRetrasoPermitido { get; set; }
+            public required bool DomingosNoLaborables { get; set; }
             /// <summary>
-            /// Relacion de turnos del mes para cada empleado : objeto TurnoEmpleadoCollection
+            /// Relacion de turnos del mes para cada empleado : objeto TurnoEmpleadoCollection. Ejemplo: empleado 2422 dia 3 -> turno 1
             /// </summary>
-            public string TurnosEmpleadoJson { get; set; }
+            public required string TurnosEmpleadoJson { get; set; }
+            /// <summary>
+            /// ID de la relacion actual. Corresponde al struct RelacionHorarioID
+            /// </summary>
+            public required string RelacionID { get; set; }
+            public required string RelacionHASH { get; set; }
 
             public string MakeJson() => JsonSerializer.Serialize<ConfiguracionCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static ConfiguracionCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ConfiguracionCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -221,7 +226,9 @@ namespace Checador_FXE.Plantillas
                 HorariosTurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
                 DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
-                TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson()
+                TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson(),
+                RelacionID = MdiForm.RelacionHorarioSelected.ID.ToString(),
+                RelacionHASH = MdiForm.RelacionHorarioSelected.HASH.ToString()
             };
             this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
@@ -235,7 +242,7 @@ namespace Checador_FXE.Plantillas
         /// 
         /// </summary>
         /// <remarks>ASIGNA TODOS LOS PARAMETROS DE MANERA DEFAULT</remarks>
-        public CafProjFile()
+        private CafProjFile()
         {
             InitializeClass();
         }
@@ -379,7 +386,7 @@ namespace Checador_FXE.Plantillas
                 */
             }
 
-            if (ShowObjectLog) MessageBox.Show(_resp.GetBuildedLog());
+            if (ShowObjectLog) MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion
