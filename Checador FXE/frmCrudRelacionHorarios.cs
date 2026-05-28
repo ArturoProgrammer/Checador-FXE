@@ -188,14 +188,13 @@ namespace Checador_FXE
                 // Recorremos todas las filas para ir llenando los turnos asignados a esos dias
                 actualSelected = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year),
                                                                         ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
-
                 foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
                 {
                     int noEmp = Int32.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
                     for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
                     {
                         TurnoEmpleado targetTurno = actualSelected.Relacion[noEmp, d_i - 2];
-                        r.Cells[d_i].Value = targetTurno.Turno == -1 ? "" : targetTurno.Turno;   // Escribimos el turno asignado
+                        r.Cells[d_i].Value = targetTurno.Turno == 0 ? "" : targetTurno.Turno;   // Escribimos el turno asignado
                     }
                 }
                 #endregion
@@ -210,8 +209,10 @@ namespace Checador_FXE
             {
                 WriteStatus(false, $"Error al cargar la vista: {ex.Message}");
             }
-
-            this.Cursor = Cursors.Default;
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -229,7 +230,7 @@ namespace Checador_FXE
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Funcion proxima a implementar!");
         }
 
         private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
@@ -425,6 +426,18 @@ namespace Checador_FXE
         {
             if (e.KeyCode == Keys.Enter)
                 this.btnLimitarAmbito.PerformClick();
+        }
+
+        private void toolStrpBtn_NuevoTurno_Click(object sender, EventArgs e)
+        {
+            frmConfiguraciones frm = new frmConfiguraciones("tabAjustesHorario");
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                // En caso de que se haya eliminado un turno, eliminamos las referencias de ese turno
+                #region
+                
+                #endregion
+            }
         }
     }
 }

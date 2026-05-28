@@ -35,7 +35,7 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             flTabMenuControl1 = new FlowControls.flTabMenuControl();
-            tabPage1 = new TabPage();
+            tabGeneral = new TabPage();
             flowLayoutPanel1 = new FlowLayoutPanel();
             flLabelHeader1 = new FlowControls.flLabelHeader();
             txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
@@ -46,6 +46,12 @@
             cboxLocalidadEstablecida = new FlowControls.flComboBoxLabelJoint();
             tabAjustesHorario = new TabPage();
             dgvAjustesHorarios = new FlowControls.flExtendedDataGridView();
+            colTurnoNom = new DataGridViewTextBoxColumn();
+            colNombre = new DataGridViewTextBoxColumn();
+            colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioUno_Salida = new DataGridViewTextBoxColumn();
+            colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
+            colHorarioDos_Salida = new DataGridViewTextBoxColumn();
             tabServidor = new TabPage();
             flowLayoutPanel2 = new FlowLayoutPanel();
             flLabelHeader3 = new FlowControls.flLabelHeader();
@@ -59,14 +65,8 @@
             imageList1 = new ImageList(components);
             btnCerrar = new FlowControls.flCustomButton();
             btnAceptar = new FlowControls.flCustomButton();
-            colTurnoNom = new DataGridViewTextBoxColumn();
-            colNombre = new DataGridViewTextBoxColumn();
-            colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
-            colHorarioUno_Salida = new DataGridViewTextBoxColumn();
-            colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
-            colHorarioDos_Salida = new DataGridViewTextBoxColumn();
             flTabMenuControl1.SuspendLayout();
-            tabPage1.SuspendLayout();
+            tabGeneral.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             tabAjustesHorario.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).BeginInit();
@@ -79,7 +79,7 @@
             flTabMenuControl1.Alignment = TabAlignment.Right;
             flTabMenuControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             flTabMenuControl1.ControlBackColor = SystemColors.GradientInactiveCaption;
-            flTabMenuControl1.Controls.Add(tabPage1);
+            flTabMenuControl1.Controls.Add(tabGeneral);
             flTabMenuControl1.Controls.Add(tabAjustesHorario);
             flTabMenuControl1.Controls.Add(tabServidor);
             flTabMenuControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
@@ -98,18 +98,18 @@
             flTabMenuControl1.TabIndex = 0;
             flTabMenuControl1.UnselectionColor = Color.LightGray;
             // 
-            // tabPage1
+            // tabGeneral
             // 
-            tabPage1.BackColor = SystemColors.GradientInactiveCaption;
-            tabPage1.BorderStyle = BorderStyle.FixedSingle;
-            tabPage1.Controls.Add(flowLayoutPanel1);
-            tabPage1.ImageIndex = 0;
-            tabPage1.Location = new Point(4, 4);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(616, 352);
-            tabPage1.TabIndex = 0;
-            tabPage1.Text = "General";
+            tabGeneral.BackColor = SystemColors.GradientInactiveCaption;
+            tabGeneral.BorderStyle = BorderStyle.FixedSingle;
+            tabGeneral.Controls.Add(flowLayoutPanel1);
+            tabGeneral.ImageIndex = 0;
+            tabGeneral.Location = new Point(4, 4);
+            tabGeneral.Name = "tabGeneral";
+            tabGeneral.Padding = new Padding(3);
+            tabGeneral.Size = new Size(616, 352);
+            tabGeneral.TabIndex = 0;
+            tabGeneral.Text = "General";
             // 
             // flowLayoutPanel1
             // 
@@ -320,9 +320,58 @@
             dgvAjustesHorarios.SelectedRowColor = Color.SteelBlue;
             dgvAjustesHorarios.SelectionForeColor = Color.Black;
             dgvAjustesHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAjustesHorarios.ShowContextMenu = true;
             dgvAjustesHorarios.Size = new Size(614, 350);
             dgvAjustesHorarios.TabIndex = 3;
             dgvAjustesHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
+            // 
+            // colTurnoNom
+            // 
+            colTurnoNom.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colTurnoNom.HeaderText = "No.";
+            colTurnoNom.MinimumWidth = 6;
+            colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 64;
+            // 
+            // colNombre
+            // 
+            colNombre.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colNombre.HeaderText = "Nombre";
+            colNombre.MinimumWidth = 6;
+            colNombre.Name = "colNombre";
+            colNombre.Width = 96;
+            // 
+            // colHorarioUno_Entrada
+            // 
+            colHorarioUno_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
+            colHorarioUno_Entrada.MinimumWidth = 6;
+            colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
+            colHorarioUno_Entrada.Width = 122;
+            // 
+            // colHorarioUno_Salida
+            // 
+            colHorarioUno_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
+            colHorarioUno_Salida.MinimumWidth = 6;
+            colHorarioUno_Salida.Name = "colHorarioUno_Salida";
+            colHorarioUno_Salida.Width = 121;
+            // 
+            // colHorarioDos_Entrada
+            // 
+            colHorarioDos_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
+            colHorarioDos_Entrada.MinimumWidth = 6;
+            colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
+            colHorarioDos_Entrada.Width = 127;
+            // 
+            // colHorarioDos_Salida
+            // 
+            colHorarioDos_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
+            colHorarioDos_Salida.MinimumWidth = 6;
+            colHorarioDos_Salida.Name = "colHorarioDos_Salida";
+            colHorarioDos_Salida.Width = 126;
             // 
             // tabServidor
             // 
@@ -527,54 +576,6 @@
             btnAceptar.UseVisualStyleBackColor = false;
             btnAceptar.Click += btnAceptar_Click;
             // 
-            // colTurnoNom
-            // 
-            colTurnoNom.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colTurnoNom.HeaderText = "No.";
-            colTurnoNom.MinimumWidth = 6;
-            colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 64;
-            // 
-            // colNombre
-            // 
-            colNombre.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colNombre.HeaderText = "Nombre";
-            colNombre.MinimumWidth = 6;
-            colNombre.Name = "colNombre";
-            colNombre.Width = 96;
-            // 
-            // colHorarioUno_Entrada
-            // 
-            colHorarioUno_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
-            colHorarioUno_Entrada.MinimumWidth = 6;
-            colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 122;
-            // 
-            // colHorarioUno_Salida
-            // 
-            colHorarioUno_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
-            colHorarioUno_Salida.MinimumWidth = 6;
-            colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 121;
-            // 
-            // colHorarioDos_Entrada
-            // 
-            colHorarioDos_Entrada.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
-            colHorarioDos_Entrada.MinimumWidth = 6;
-            colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 127;
-            // 
-            // colHorarioDos_Salida
-            // 
-            colHorarioDos_Salida.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
-            colHorarioDos_Salida.MinimumWidth = 6;
-            colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 126;
-            // 
             // frmConfiguraciones
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -592,7 +593,7 @@
             Load += frmConfiguraciones_Load;
             PreviewKeyDown += frmConfiguraciones_PreviewKeyDown;
             flTabMenuControl1.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
+            tabGeneral.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             tabAjustesHorario.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).EndInit();
@@ -604,7 +605,7 @@
         #endregion
 
         private FlowControls.flTabMenuControl flTabMenuControl1;
-        private TabPage tabPage1;
+        private TabPage tabGeneral;
         private TabPage tabAjustesHorario;
         private ImageList imageList1;
         private FlowControls.flExtendedDataGridView dgvAjustesHorarios;

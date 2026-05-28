@@ -66,6 +66,7 @@ namespace Checador_FXE
 ====================================================
 
 ");
+
             MessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

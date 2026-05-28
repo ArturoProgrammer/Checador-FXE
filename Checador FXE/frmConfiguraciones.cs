@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 using System.ComponentModel;
 using FlowControls.Utils;
 using FlowControls.Security;
-using DocumentFormat.OpenXml.Spreadsheet;
+using Checador_FXE.Plantillas;
 
 namespace Checador_FXE
 {
@@ -13,6 +13,14 @@ namespace Checador_FXE
         {
             InitializeComponent();
         }
+
+        public frmConfiguraciones(string tabName)
+        {
+            InitializeComponent();
+            GoToTab(tabName);
+        }
+
+        public void GoToTab(string tabName) => this.flTabMenuControl1.SelectTab(tabName);
 
         private void frmConfiguraciones_Load(object sender, EventArgs e)
         {
@@ -33,7 +41,7 @@ namespace Checador_FXE
             this.txtNombreArchivoDefecto.Value = Properties.Settings.Default.DEFAULT_FILENAME;
 
             //this.cboxLocalidadEstablecida.Items.AddRange(Utils.GetLocalidadesDisponibles());
-            this.cboxLocalidadEstablecida.Items.AddRange(new[] { "Hermosillo", "Nogales", "Sufragio" });
+            this.cboxLocalidadEstablecida.Items.AddRange(GlobalConfig.Get("1").Object!.LocalidadesCompatibles);
             this.cboxLocalidadEstablecida.Value = Properties.Settings.Default.LOCALIDAD_DEFAULT;
 
             //
@@ -76,13 +84,14 @@ namespace Checador_FXE
 
         private void btnCerrar_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         enum Fields
         {
             #region
-            [ControlValidateAttrib("txtMaximoRetrasoMinutosPermitidos", ControlField.FLTEXTBOXLABELJOINT)]
+            [ControlValidateAttrib("txtMaximoRetrasoMinutosPermitidos", ControlField.FLTIMELABELJOINT)]
             TIEMPO_MAXIMO_RETRASO,
 
             [ControlValidateAttrib("cboxDispositivoDefault", ControlField.FLCOMBOBOXLABELJOINT)]
@@ -116,7 +125,13 @@ namespace Checador_FXE
         bool MultiValidator(Fields f)
         {
             #region
-            Multivalidator mv = new Multivalidator(this);
+            // Casteamos todos los controles de paginas del menu
+            List<Control> _arrayControls = new List<Control>();
+            _arrayControls.AddRange(_arrayControls.Concat(this.tabGeneral.Controls[0].Controls.Cast<Control>().ToArray())
+                                                .Concat(this.tabAjustesHorario.Controls.Cast<Control>().ToArray())
+                                                .Concat(this.tabServidor.Controls[0].Controls.Cast<Control>().ToArray()));
+
+            Multivalidator mv = new Multivalidator(this, _arrayControls.ToArray());
             bool flag;
             switch (f)
             {
@@ -141,7 +156,7 @@ namespace Checador_FXE
                             if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value.ToString()?.Trim()) || 
                                 String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_OUT.GetIndex()].Value.ToString()?.Trim()))
                                 fails.Add(false);
-
+                            
                             // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
                             if (!String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value.ToString()?.Trim()) || 
                                 !String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value.ToString()?.Trim()))
@@ -175,9 +190,7 @@ namespace Checador_FXE
             List<bool> _validations = new List<bool>();
 
             foreach (Fields field in Enum.GetValues(typeof(Fields)))
-            {
                 _validations.Add(MultiValidator(field));
-            }
 
             return _validations.All(v => v);
         }
@@ -186,7 +199,11 @@ namespace Checador_FXE
         {
             // Ejecutamos los multivalidadores
             if (!PassAllValidations())
+            {
+                MessageBox.Show("No se pudieron validar todos los controles!");
                 return;
+            }
+
             /* 
              * Guardamos los cambios efectuados
              * */
@@ -203,7 +220,72 @@ namespace Checador_FXE
             //
             // AJUSTES DE HORARIO
             //
-            Properties.Settings.Default.TURNOS_HORARIOS = Utils.ParseJsonHorariosByDgv(this.dgvAjustesHorarios);
+            bool SaveFlag_NuevosTurnos = false;
+
+            {
+                /* 
+                 * Revisamos primero las afectaciones de horarios y si el usuario desea aplicar los cambios
+                 * Analizamos solo las del mes actual y los usuarios con ese horario por defecto
+                 * */
+                int[] turnosNuevos = Utils.ParseHorariosTurnosByDgv(this.dgvAjustesHorarios).Select(t => t.ID).ToArray(); // TODO: resolver error en esta linea de codigo
+
+                int[] turnosAnteriores = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS).Select(t => t.ID).ToArray();
+                int[] turnosEliminados = turnosAnteriores.Except(turnosNuevos).ToArray();
+                int nuevoTurnoDefault = turnosNuevos[0];
+
+                // Analisis de turnos por defecto
+                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosTurnoDefecto = Empleado.GetAll(this.cboxLocalidadEstablecida.Value).Object!.Where(t => turnosEliminados.Contains(t.TurnoDefault))
+                                                                                                                                                    .Select(t => (t.Nombres, t.NoEmp, t.TurnoDefault))
+                                                                                                                                                    .ToArray();
+                // Analisis de turnos de la relacion de turnos del mes actual
+                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosRelacionActual = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!.Relacion.Items.Where(t => turnosEliminados.Contains(t.Turno))
+                                                                                                                                                            .Select(t => (t.Nombre, t.NoEmp.ToString(), t.Turno))
+                                                                                                                                                            .ToArray();
+                // "Early Return" para efectos practicos
+                if (EmpleadosAfectadosTurnoDefecto.Length == 0 && EmpleadosAfectadosRelacionActual.Length == 0)
+                    SaveFlag_NuevosTurnos = true; // No hay afectaciones
+
+                if (!SaveFlag_NuevosTurnos)
+                {
+                    if (MessageBox.Show($@"Afectaciones encontradas.
+{(EmpleadosAfectadosTurnoDefecto.Length > 0 ? 
+$@"Los siguientes empleados tienen asignado como turno por defecto uno de los turnos a eliminar:
+{String.Join("\n", EmpleadosAfectadosTurnoDefecto.Select(s => $"* {s.Nombres} - {s.NoEmp}: {s.Turno}").ToArray())}" : "")}
+
+{(EmpleadosAfectadosRelacionActual.Length > 0 ?
+$@"Los siguientes empleados tienen asignado al menos un horario con uno de los turnos a eliminar:
+{String.Join("\n", EmpleadosAfectadosRelacionActual.Select(s => $"* {s.Nombres} - {s.NoEmp}: {s.Turno}").ToArray())}" : "")}
+".Trim()) == DialogResult.Yes)
+                    {
+                        #region CAMBIOS DE TURNOS AFECTADOS AL TURNO POR DEFECTO
+                        if (EmpleadosAfectadosTurnoDefecto.Length > 0) {
+                            Empleado[] _empleados = Empleado.GetAll(this.cboxLocalidadEstablecida.Value).Object!.Where(e => turnosEliminados.Contains(e.TurnoDefault)).ToArray();
+                            foreach (var emp in _empleados)
+                            {
+                                emp.TurnoDefault = nuevoTurnoDefault;
+                                emp.Save();
+                            }
+                        }
+
+                        if (EmpleadosAfectadosRelacionActual.Length > 0) {
+                            RelacionHorarios _relacion = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object ?? throw new Exception("No se pudo cargar la relacion actual para su actualizacion");
+                            RelacionHorarios _BUFFER_RELACION = _relacion;
+                            foreach (var i in _relacion.Relacion.Items)
+                            {
+                                if (!turnosEliminados.Contains(i.Turno))
+                                    continue;
+
+                                _BUFFER_RELACION.Relacion[i.NoEmp, i.Dia.Day].Turno = nuevoTurnoDefault;
+                            }
+                        }
+                        #endregion
+
+                        SaveFlag_NuevosTurnos = true;
+                    }
+                }
+            }
+            
+            Properties.Settings.Default.TURNOS_HORARIOS = SaveFlag_NuevosTurnos ? Utils.ParseJsonHorariosByDgv(this.dgvAjustesHorarios) : Properties.Settings.Default.TURNOS_HORARIOS;
 
             //
             // SERVIDOR
@@ -220,6 +302,8 @@ namespace Checador_FXE
                     Application.Restart();
                 }
             }
+
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

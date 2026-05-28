@@ -36,7 +36,6 @@ namespace Checador_FXE
         };
     }
 
-
     internal class CrudEventLog
     {
         //
@@ -138,7 +137,6 @@ namespace Checador_FXE
         [Description("name:ZKTECO K40;")]
         ZKTECO_K40,
     }
-
 
     internal static class TipoChecadaExtensions
     {
@@ -276,7 +274,6 @@ namespace Checador_FXE
 
             foreach (DataGridViewRow row in dgv.Rows)
             {
-
                 Func<object, TimeSpan> _TryParseTime = delegate (object cellValue)
                 {
                     string tVal = (string)cellValue;
@@ -286,13 +283,15 @@ namespace Checador_FXE
                     return TimeSpan.Parse(tVal);
                 };
 
-                int turnoNum = int.Parse(row.Cells[0].Value.ToString());
-                Horario primerHorario = new Horario(_TryParseTime(row.Cells[1].Value), _TryParseTime(row.Cells[2].Value));
-                Horario segundoHorario = new Horario(_TryParseTime(row.Cells[3].Value), _TryParseTime(row.Cells[4].Value));
+                int turnoNum = int.Parse(row.Cells[0].Value.ToString()!);
+                string turnoNombre = row.Cells[1].Value.ToString()!;
+                Horario primerHorario = new Horario(_TryParseTime(row.Cells[2].Value), _TryParseTime(row.Cells[3].Value));
+                Horario segundoHorario = new Horario(_TryParseTime(row.Cells[4].Value), _TryParseTime(row.Cells[5].Value));
 
                 _horariosTurnos.Add(new Turno()
                 {
                     ID = turnoNum,
+                    Nombre = turnoNombre,
                     PrimerHorario = primerHorario,
                     SegundoHorario = segundoHorario
                 });

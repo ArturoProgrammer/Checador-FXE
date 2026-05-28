@@ -76,6 +76,7 @@ namespace Checador_FXE.Plantillas
         {
             public static readonly string FILEPATH = @"data\resultados_casting.json";
 
+            //public PeriodoCasteadoCollection PeriodoCasteado { get; private set; }
             public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; private set; }
 
             public ResultadosCastingTab() { }
@@ -88,6 +89,7 @@ namespace Checador_FXE.Plantillas
             /// <exception cref="Exception"></exception>
             public string MakeJson(flTreeViewPaging pagingView)
             {
+
                 Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _array = new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
                 List<string> _nodes = new List<string>();
 
@@ -100,9 +102,7 @@ namespace Checador_FXE.Plantillas
 
                     List<string> _Lines = new List<string>();
                     foreach (DateOnly dia in _array[obj.ObjectTitle].Keys)
-                    {
                         _Lines.Add($@"""{dia.ToString("yyyy-MM-dd")}"" : ""{_array[obj.ObjectTitle][dia].GetText()}""");
-                    }
 
                     _nodes.Add($@"""{obj.ObjectTitle}"" : {{
     {String.Join(",\n", _Lines)}

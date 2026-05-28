@@ -95,7 +95,7 @@ namespace Checador_FXE.Plantillas
                 for (int day = 1; day <= DateTime.DaysInMonth(id.Year, actualMonthNumber); day++)
                 {
                     DateOnly d_Only = new DateOnly(id.Year, actualMonthNumber, day);
-                    int _turnoSelected = d_Only.DayOfWeek is DayOfWeek.Sunday ? -1 : e.TurnoDefault;
+                    int _turnoSelected = d_Only.DayOfWeek is DayOfWeek.Sunday ? 0 : e.TurnoDefault;
                     _collection.Add(
                         new TurnoEmpleado(Int32.Parse(e.NoEmp), _turnoSelected, $"{e.Nombres} {e.Apellidos}", d_Only)
                     );
@@ -128,7 +128,7 @@ namespace Checador_FXE.Plantillas
         public static RelacionHorarioID GetActualId() => new RelacionHorarioID(DateTime.Now.ToString("MMMM", new CultureInfo("es-MX")), DateTime.Now.Year);
     }
 
-    public struct TurnoEmpleado
+    public class TurnoEmpleado
     {
         public int NoEmp { get; set; } // Número de empleado
         public int Turno { get; set; } // Número de turno asignado (Ej: 1, 2, 3, etc.)
@@ -142,6 +142,8 @@ namespace Checador_FXE.Plantillas
             this.Nombre = nombre;
             this.Dia = dia;
         }
+
+        public TurnoEmpleado() { }
     }
 
     public class TurnoEmpleadoCollection
@@ -164,16 +166,25 @@ namespace Checador_FXE.Plantillas
         /// <param name="diaNumber">Dia del turno a buscar</param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        public TurnoEmpleado this[int noEmp, int diaNumber]
+        public TurnoEmpleado? this[int noEmp, int diaNumber]
         {
             get
             {
                 TurnoEmpleado? target = _items.Cast<TurnoEmpleado>().FirstOrDefault(t => t.NoEmp == noEmp && t.Dia.Day == diaNumber);
-
-                if (!target.HasValue)
+                /*
+                if (target is null)
                     throw new IndexOutOfRangeException($"No se encontro el numero de empleado proporcionado. '{noEmp}'");
+                */
+                return target;
+            }
+            set
+            {
+                int index = _items.FindIndex(t => t.NoEmp == noEmp && t.Dia.Day == diaNumber);
 
-                return target.Value;
+                if (index == -1)
+                    throw new IndexOutOfRangeException();
+
+                _items[index] = value;
             }
         }
 
@@ -228,7 +239,6 @@ namespace Checador_FXE.Plantillas
 
                 if (!_tb_resp.Success)
                     throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");
-
             }
         }
 
@@ -377,8 +387,19 @@ namespace Checador_FXE.Plantillas
                     obj.Dia = new DateOnly(this.ID.Year, 
                                            DateTime.ParseExact(this.ID.Month, "MMMM", new CultureInfo("es-MX")).Month, 
                                            d_i - 2);
-                    obj.Turno = String.IsNullOrEmpty(r.Cells[d_i].Value.ToString()!.Trim()) ? -1 : Int32.Parse(r.Cells[d_i].Value.ToString()!);
-                    Debug.WriteLine($"Guardado: {obj.NoEmp}.{obj.Nombre} // {obj.Dia.ToString("dddd, dd - MMMM - yyyy")} ===> {obj.Turno}");
+
+                    object? cellValue = r.Cells[d_i].Value;
+
+                    int actualTurno;
+                    if (cellValue is null || String.IsNullOrEmpty(cellValue.ToString()!.Trim()))
+                        actualTurno = 0; // Asignamos turno 0 si la celda está vacía o nula
+                    else
+                        actualTurno = Convert.ToInt32(cellValue.ToString());
+
+                    // LINEA DE CODIGO VIEJA, SE MANTIENE POR COMPATIBILIDAD HEREDADA FUTURA
+                    //obj.Turno = String.IsNullOrEmpty(r.Cells[d_i].Value.ToString()!.Trim()) ? 0 : Int32.Parse(r.Cells[d_i].Value.ToString()!);
+                    obj.Turno = actualTurno;
+                    //Debug.WriteLine($"Guardado: {obj.NoEmp}.{obj.Nombre} // {obj.Dia.ToString("dddd, dd - MMMM - yyyy")} ===> {obj.Turno}");
                     turnos.Add(obj);
                 }
             }

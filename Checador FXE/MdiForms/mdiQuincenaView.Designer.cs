@@ -67,6 +67,7 @@
             panel1 = new Panel();
             dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
             colTurnoNom = new DataGridViewTextBoxColumn();
+            colNombre = new DataGridViewTextBoxColumn();
             colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
             colHorarioUno_Salida = new DataGridViewTextBoxColumn();
             colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
@@ -133,6 +134,7 @@
             flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
             flExtendedTabControl1.TabIndex = 0;
             flExtendedTabControl1.UnselectionColor = Color.LightGray;
+            flExtendedTabControl1.SelectedIndexChanged += flExtendedTabControl1_SelectedIndexChanged;
             // 
             // pageGeneral
             // 
@@ -536,7 +538,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
+            dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.White;
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
@@ -573,6 +575,14 @@
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
             colTurnoNom.Width = 106;
+            // 
+            // colNombre
+            // 
+            colNombre.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            colNombre.HeaderText = "Nombre";
+            colNombre.MinimumWidth = 6;
+            colNombre.Name = "colNombre";
+            colNombre.Width = 96;
             // 
             // colHorarioUno_Entrada
             // 
@@ -924,11 +934,6 @@
         private TabPage pageCastingSetting;
         private FlowControls.flLabelHeader flLabelHeader1;
         private FlowControls.flCustomButton btnSincronizarAjustes;
-        private DataGridViewTextBoxColumn colTurnoNom;
-        private DataGridViewTextBoxColumn colHorarioUno_Entrada;
-        private DataGridViewTextBoxColumn colHorarioUno_Salida;
-        private DataGridViewTextBoxColumn colHorarioDos_Entrada;
-        private DataGridViewTextBoxColumn colHorarioDos_Salida;
         private TabPage pageCastingResults;
         private SplitContainer splitResultadosCasting_Background;
         private TableLayoutPanel tableLayoutPanel3;
@@ -953,5 +958,11 @@
         public FlowControls.flTextBoxLabelJoint txtNombreElaborador;
         public FlowControls.flTextBoxLabelJoint txtAutorizador;
         public FlowControls.flExtendedDataGridView dgvTurnosHorarios;
+        private DataGridViewTextBoxColumn colTurnoNom;
+        private DataGridViewTextBoxColumn colNombre;
+        private DataGridViewTextBoxColumn colHorarioUno_Entrada;
+        private DataGridViewTextBoxColumn colHorarioUno_Salida;
+        private DataGridViewTextBoxColumn colHorarioDos_Entrada;
+        private DataGridViewTextBoxColumn colHorarioDos_Salida;
     }
 }

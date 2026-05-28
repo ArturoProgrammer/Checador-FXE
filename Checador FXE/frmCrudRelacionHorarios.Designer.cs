@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCrudRelacionHorarios));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
             flCustomToolStrip1 = new FlowControls.flCustomToolStrip();
-            toolStripButton1 = new ToolStripButton();
-            toolStripButton2 = new ToolStripButton();
+            toolStrpBtn_Guardar = new ToolStripButton();
+            toolStrpBtn_RevertirCambios = new ToolStripButton();
             flCustomToolStripSeparator1 = new FlowControls.flCustomToolStripSeparator();
             cboxMonth = new ToolStripComboBox();
             txtYear = new ToolStripTextBox();
@@ -52,6 +52,7 @@
             lblStatus = new ToolStripStatusLabel();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblMessage = new ToolStripStatusLabel();
+            toolStrpBtn_NuevoTurno = new ToolStripButton();
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
             statusStrip1.SuspendLayout();
@@ -62,33 +63,33 @@
             flCustomToolStrip1.BackColor = SystemColors.ActiveCaption;
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { this.toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
             flCustomToolStrip1.Size = new Size(897, 25);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
-            // toolStripButton1
+            // toolStrpBtn_Guardar
             // 
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(25, 22);
-            toolStripButton1.Text = "Guardar cambios";
-            toolStripButton1.Click += toolStripButton1_Click;
+            this.toolStrpBtn_Guardar.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            this.toolStrpBtn_Guardar.Image = (Image)resources.GetObject("toolStrpBtn_Guardar.Image");
+            this.toolStrpBtn_Guardar.ImageTransparentColor = Color.Magenta;
+            this.toolStrpBtn_Guardar.Name = "toolStrpBtn_Guardar";
+            this.toolStrpBtn_Guardar.Size = new Size(25, 22);
+            this.toolStrpBtn_Guardar.Text = "Guardar cambios";
+            this.toolStrpBtn_Guardar.Click += this.toolStripButton1_Click;
             // 
-            // toolStripButton2
+            // toolStrpBtn_RevertirCambios
             // 
-            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton2.Enabled = false;
-            toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
-            toolStripButton2.ImageTransparentColor = Color.Magenta;
-            toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(25, 22);
-            toolStripButton2.Text = "Revertir cambios";
-            toolStripButton2.Click += toolStripButton2_Click;
+            toolStrpBtn_RevertirCambios.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStrpBtn_RevertirCambios.Enabled = false;
+            toolStrpBtn_RevertirCambios.Image = (Image)resources.GetObject("toolStrpBtn_RevertirCambios.Image");
+            toolStrpBtn_RevertirCambios.ImageTransparentColor = Color.Magenta;
+            toolStrpBtn_RevertirCambios.Name = "toolStrpBtn_RevertirCambios";
+            toolStrpBtn_RevertirCambios.Size = new Size(25, 22);
+            toolStrpBtn_RevertirCambios.Text = "Revertir cambios";
+            toolStrpBtn_RevertirCambios.Click += toolStripButton2_Click;
             // 
             // flCustomToolStripSeparator1
             // 
@@ -178,11 +179,11 @@
             // dgvRelacionDeHorarios
             // 
             dgvRelacionDeHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvRelacionDeHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle9.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle9.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle9.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvRelacionDeHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             dgvRelacionDeHorarios.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvRelacionDeHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRelacionDeHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
@@ -192,24 +193,24 @@
             dgvRelacionDeHorarios.ButtonRemoveEnabled = false;
             dgvRelacionDeHorarios.ButtonViewEnabled = false;
             dgvRelacionDeHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvRelacionDeHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle10.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle10.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle10.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle10.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
+            dgvRelacionDeHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             dgvRelacionDeHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvRelacionDeHorarios.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = Color.White;
+            dataGridViewCellStyle11.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle11.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle11.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle11.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle11.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.False;
+            dgvRelacionDeHorarios.DefaultCellStyle = dataGridViewCellStyle11;
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
@@ -219,8 +220,8 @@
             dgvRelacionDeHorarios.Name = "dgvRelacionDeHorarios";
             dgvRelacionDeHorarios.RowHeadersVisible = false;
             dgvRelacionDeHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
-            dgvRelacionDeHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.SelectionBackColor = Color.Orange;
+            dgvRelacionDeHorarios.RowsDefaultCellStyle = dataGridViewCellStyle12;
             dgvRelacionDeHorarios.SelectedCellColor = Color.Moccasin;
             dgvRelacionDeHorarios.SelectedRowColor = Color.SteelBlue;
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
@@ -265,6 +266,16 @@
             lblMessage.Size = new Size(83, 17);
             lblMessage.Text = "%Message%";
             // 
+            // toolStrpBtn_NuevoTurno
+            // 
+            toolStrpBtn_NuevoTurno.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStrpBtn_NuevoTurno.Image = (Image)resources.GetObject("toolStrpBtn_NuevoTurno.Image");
+            toolStrpBtn_NuevoTurno.ImageTransparentColor = Color.Magenta;
+            toolStrpBtn_NuevoTurno.Name = "toolStrpBtn_NuevoTurno";
+            toolStrpBtn_NuevoTurno.Size = new Size(25, 22);
+            toolStrpBtn_NuevoTurno.Text = "toolStripButton3";
+            toolStrpBtn_NuevoTurno.Click += toolStrpBtn_NuevoTurno_Click;
+            // 
             // frmCrudRelacionHorarios
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -290,8 +301,8 @@
 
         #endregion
         private FlowControls.flCustomToolStrip flCustomToolStrip1;
-        private ToolStripButton toolStripButton1;
-        private ToolStripButton toolStripButton2;
+        private ToolStripButton toolStrpBtn_Guardar;
+        private ToolStripButton toolStrpBtn_RevertirCambios;
         private ImageList imageList1;
         private FlowControls.flExtendedDataGridView dgvRelacionDeHorarios;
         private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator1;
@@ -307,5 +318,6 @@
         private ToolStripComboBox cboxParametroLimitacion;
         private ToolStripTextBox txtValorLimitacion;
         private ToolStripButton btnLimitarAmbito;
+        private ToolStripButton toolStrpBtn_NuevoTurno;
     }
 }

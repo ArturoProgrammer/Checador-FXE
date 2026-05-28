@@ -4,6 +4,7 @@ using FlowControls;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Checador_FXE.MdiForms
 {
@@ -69,6 +70,7 @@ namespace Checador_FXE.MdiForms
                 dgv.Rows.Add(new[]
                 {
                     $"{i.ID}",
+                    $"{i.Nombre}",
                     $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida)}",
                     $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida)}"
                 });
@@ -241,10 +243,12 @@ namespace Checador_FXE.MdiForms
 
                         if (SavedFlag)
                             this.Close();
-                    } else if (d_r == DialogResult.Yes)
+                    }
+                    else if (d_r == DialogResult.Yes)
                     {
                         this.Close(); // Solo salimos
-                    } else
+                    }
+                    else
                     {
                         return; // Cancelamos la operacion
                     }
@@ -328,6 +332,18 @@ namespace Checador_FXE.MdiForms
                         return (real > ideal);
                     };
 
+                    Func<int, DateOnly, TipoAsistencia> _HaveToWorkToday = delegate (int NoEmp, DateOnly dia)
+                    {
+                        RelacionHorarios _relac = RelacionHorarios.Get(new RelacionHorarioID(DateTime.Parse($"{dia.Day}-{dia.Month}-{dia.Year}", new CultureInfo("es-MX")).ToString("MMMM"), dia.Year)).Object!;
+
+                        TurnoEmpleado? _target = _relac.Relacion[NoEmp, dia.Day];
+
+                        if (_target is not null && _target.Turno == -1)
+                            return TipoAsistencia.NINGUNO;
+
+                        return TipoAsistencia.FALTA;
+                    };
+
                     // Construye el diccionario correspondiente de fechas del periodo correspondiente
                     Func<Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>> BuildPeriodTimeList = delegate ()
                     {
@@ -340,7 +356,10 @@ namespace Checador_FXE.MdiForms
                             // Agregamos todos los dias del periodo a reportear
                             for (DateTime dia = Report.ReportPeriod.Start; dia <= Report.ReportPeriod.End; dia = dia.AddDays(1))
                             {
-                                TipoAsistencia a = TipoAsistencia.FALTA;
+                                TipoAsistencia a = _HaveToWorkToday(Report.Chequeos[empNombre].Where(t => t.Empleado == empNombre)
+                                                                                            .Select(t => t.NumEmpleado)
+                                                                                            .FirstOrDefault(),
+                                                                    DateOnly.Parse($"{dia.ToString("d")}"));    // Buscamos si era un dia laborable segun su turno asignado
 
                                 if (dia.DayOfWeek is DayOfWeek.Sunday)
                                     a = TipoAsistencia.NINGUNO;
@@ -359,11 +378,12 @@ namespace Checador_FXE.MdiForms
                     #endregion
 
                     Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
+                    //PeriodoCasteadoCollection _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
 
                     if (!projByCafOpened)
                     {
                         #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
-                        Turno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);
+                        Turno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);   // Hay que modificar aqui
 
                         foreach (var i in Report.Chequeos)
                         {
@@ -371,11 +391,21 @@ namespace Checador_FXE.MdiForms
 
                             foreach (Checada j in i.Value)
                             {
+                                /*
+                                 * Hay que encontrar la manera de hacerlo funcional y encontrar el numero de empleado correspondiente
+                                 * */
                                 DateOnly today = DateOnly.Parse(j.Fecha.ToString("d"));
-                                int turnOfToday = _GetTurn(Report.Turnos, today, empleado);
+                                int noEmp = j.NumEmpleado;
+                                int turnOfToday = this.RelacionHorarioSelected.Relacion[noEmp, today.Day]?.Turno ?? -1;
+                                //MessageBox.Show($"***{empleado} - {noEmp} para {today.Day} = {turnOfToday}***");
 
                                 if (turnOfToday == -1)
-                                    throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
+                                {
+                                    //throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
+                                    //MessageBox.Show($"No se ha encontrado el turno correspondiente al día indicado para '{empleado}' (No. Emp.: {noEmp})");
+                                    _PeriodoCasteado[empleado][today] = TipoAsistencia.NINGUNO;
+                                    continue;
+                                }
 
                                 TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<Turno>()
                                                                                 .Where(h => h.ID == turnOfToday)
@@ -493,6 +523,7 @@ namespace Checador_FXE.MdiForms
              * MOSTRAMOS LOS REGISTROS DEL EMPLEADO SELECCIONADO
              * */
             this.calendarEmpleadoCasteado.ClearEvents();
+
             Dictionary<DateOnly, TipoAsistencia> registros = e.Object.GenericObject as Dictionary<DateOnly, TipoAsistencia>;
 
             try
@@ -606,6 +637,11 @@ namespace Checador_FXE.MdiForms
         }
 
         private void splitResultadosCasting_Background_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void flExtendedTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

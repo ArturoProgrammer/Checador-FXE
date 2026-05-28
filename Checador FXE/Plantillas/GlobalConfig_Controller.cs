@@ -1,9 +1,7 @@
-﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
-using FlowCommonWorkcore;
+﻿using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using Microsoft.Data.Sqlite;
-using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.Plantillas
 {
@@ -49,10 +47,11 @@ namespace Checador_FXE.Plantillas
 
         static void AssignDbDefaultValues()
         {
+            #region
             GlobalConfig conf = new GlobalConfig()
             {
                 ID = 1,
-                LocalidadesCompatibles = new string[] { "Hermosillo, Nogales, Sufragio" },
+                LocalidadesCompatibles = new string[] { "Hermosillo", "Nogales", "Sufragio" },
                 TituloConfiguracion = "Default"
             };
 
@@ -67,10 +66,7 @@ namespace Checador_FXE.Plantillas
                                                                                 .AddParsingProcess(new ParsingProcess()
                                                                                 {
                                                                                     Type = typeof(string[]),
-                                                                                    Process = (object a) =>
-                                                                                    {
-                                                                                        return String.Join(";", (a as string[])!);
-                                                                                    }
+                                                                                    Process = (object a) => String.Join(";", (a as string[])!)
                                                                                 });
             // Validamos que no tenga los valores correspondientes
             Server.GeneralQuery query = new Server.GeneralQuery(new ConnectionsData(GlobalConfig.DB_PATH, GlobalConfig.TABLE_NAME));
@@ -89,14 +85,14 @@ SET
     {columnNames[2]} = CASE 
                   WHEN {columnNames[2]} IS NULL OR {columnNames[2]} = '' THEN {columnValues[2]}
                   ELSE {columnNames[2]} 
-               END,
+               END
 ",
-                ShowCommandPreview: true,
-                Common.BuildParamsArray<GlobalConfig>(conf, _scpConfig));
-
-            MessageBox.Show(_resp.GetBuildedLog());
+                ShowCommandPreview: false,
+                Common.BuildParamsArray<GlobalConfig>(conf, _scpConfig)
+            );
 
             conf.Save();
+            #endregion
         }
 
         public static Response<GlobalConfig[]> GetAll(bool ShowObjectLog = false)
