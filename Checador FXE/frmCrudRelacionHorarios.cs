@@ -220,8 +220,10 @@ namespace Checador_FXE
             //
             // BOTON DE GUARDADO
             //
-            actualSelected.UpdateByGrid(actualView.ToArray());
-            Response _resp = actualSelected.Save(ShowObjectLog: true);
+            MessageBox.Show($"{String.Join("\n", this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Where(a => a.Cells[1].Value.ToString() == "2422").FirstOrDefault().Cells.Cast<DataGridViewCell>().Select(c => $"* {c.Value}").ToArray())}");
+
+            Response _resp = actualSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray())
+                                            .Save(ShowObjectLog: false);
             WriteStatus(_resp.Success, _resp.Message);
 
             if (_resp.Success is false)
@@ -250,9 +252,15 @@ namespace Checador_FXE
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
+            {
+                WriteStatus(false, "No se puede editar esta celda!");
                 return;
+            }
 
             flExtendedDataGridView grid = (flExtendedDataGridView)sender;
+
+            string oldValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
+            string newValue = e.FormattedValue!.ToString()!.Trim();
 
             // Limpiar antes de validar
             var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -261,10 +269,10 @@ namespace Checador_FXE
             // Toma lo que el usuario está intentando dejar en la celda
             int input = -1;
 
-            if (e.FormattedValue?.ToString()?.Trim() == String.Empty)
+            if (String.IsNullOrEmpty(newValue))
                 return;
 
-            if (!int.TryParse(e.FormattedValue?.ToString(), out input))
+            if (!int.TryParse(newValue, out input))
             {
                 e.Cancel = true;
                 grid.Rows[e.RowIndex]
@@ -289,6 +297,8 @@ namespace Checador_FXE
 
             // Guardamos la nueva informacion
             actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
+
+            WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
         }
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
@@ -314,6 +324,10 @@ namespace Checador_FXE
             Dgv
         }
 
+        /// <summary>
+        /// Funcion helper para los procesos de validacion de los controles
+        /// </summary>
+        /// <returns></returns>
         Control[] getLocalsControls()
         {
             List<Control> lsControls = new List<Control>();

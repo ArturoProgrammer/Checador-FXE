@@ -75,6 +75,8 @@ namespace Checador_FXE.Plantillas
                     _employeeSections.Add($"\"{n_E}\":[{string.Join(",\n", _turnosParts)}]");
                 }
 
+                MessageBox.Show("{" + string.Join(",\n", _employeeSections) + "}");
+
                 return "{" + string.Join(",\n", _employeeSections) + "}";
             }
             catch
@@ -369,22 +371,16 @@ namespace Checador_FXE.Plantillas
             #endregion
         }
 
-        public void UpdateByGrid(DataGridViewRow[] rows)
+        public RelacionHorarios UpdateByGrid(DataGridViewRow[] rows)
         {
             #region
             List<TurnoEmpleado> turnos = new List<TurnoEmpleado>();
             foreach (DataGridViewRow r in rows)
             {
-                TurnoEmpleado obj = new TurnoEmpleado()
-                {
-                    NoEmp = int.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!),
-                    Nombre = r.Cells[RelacionHorariosGridCells.NOMBRE_COMP.GetIndex()].Value.ToString()!,
-                };
-
                 // Recorremos los dias
                 for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
                 {
-                    obj.Dia = new DateOnly(this.ID.Year, 
+                    DateOnly dia = new DateOnly(this.ID.Year, 
                                            DateTime.ParseExact(this.ID.Month, "MMMM", new CultureInfo("es-MX")).Month, 
                                            d_i - 2);
 
@@ -396,9 +392,15 @@ namespace Checador_FXE.Plantillas
                     else
                         actualTurno = Convert.ToInt32(cellValue.ToString());
 
+                    TurnoEmpleado obj = new TurnoEmpleado()
+                    {
+                        NoEmp = int.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!),
+                        Nombre = r.Cells[RelacionHorariosGridCells.NOMBRE_COMP.GetIndex()].Value.ToString()!,
+                        Dia = dia,
+                        Turno = actualTurno
+                    };
+
                     // LINEA DE CODIGO VIEJA, SE MANTIENE POR COMPATIBILIDAD HEREDADA FUTURA
-                    //obj.Turno = String.IsNullOrEmpty(r.Cells[d_i].Value.ToString()!.Trim()) ? 0 : Int32.Parse(r.Cells[d_i].Value.ToString()!);
-                    obj.Turno = actualTurno;
                     //Debug.WriteLine($"Guardado: {obj.NoEmp}.{obj.Nombre} // {obj.Dia.ToString("dddd, dd - MMMM - yyyy")} ===> {obj.Turno}");
                     turnos.Add(obj);
                 }
@@ -406,6 +408,7 @@ namespace Checador_FXE.Plantillas
 
             this.Relacion = new TurnoEmpleadoCollection(turnos.ToArray());
             #endregion
+            return this;
         }
 
         public Response Save(bool ShowObjectLog = false)
