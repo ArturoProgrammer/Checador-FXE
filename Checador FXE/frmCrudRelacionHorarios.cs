@@ -220,8 +220,6 @@ namespace Checador_FXE
             //
             // BOTON DE GUARDADO
             //
-            MessageBox.Show($"{String.Join("\n", this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Where(a => a.Cells[1].Value.ToString() == "2422").FirstOrDefault().Cells.Cast<DataGridViewCell>().Select(c => $"* {c.Value}").ToArray())}");
-
             Response _resp = actualSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray())
                                             .Save(ShowObjectLog: false);
             WriteStatus(_resp.Success, _resp.Message);

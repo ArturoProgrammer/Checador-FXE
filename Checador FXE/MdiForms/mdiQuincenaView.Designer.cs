@@ -62,8 +62,8 @@
             txtEmpleadoSeleccionado = new FlowControls.flTextBoxLabelJoint();
             lviewRegistros = new ListView();
             pageCastingSetting = new TabPage();
-            chckDomingosNoLaborables = new FlowControls.flCheckBoxLabelJoint();
-            txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            flLabelHeader1 = new FlowControls.flLabelHeader();
             panel1 = new Panel();
             dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
             colTurnoNom = new DataGridViewTextBoxColumn();
@@ -73,7 +73,8 @@
             colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
             colHorarioDos_Salida = new DataGridViewTextBoxColumn();
             btnSincronizarAjustes = new FlowControls.flCustomButton();
-            flLabelHeader1 = new FlowControls.flLabelHeader();
+            txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
+            chckDomingosNoLaborables = new FlowControls.flCheckBoxLabelJoint();
             pageCastingResults = new TabPage();
             splitResultadosCasting_Background = new SplitContainer();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -99,6 +100,7 @@
             splitContainer2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             pageCastingSetting.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).BeginInit();
             pageCastingResults.SuspendLayout();
@@ -464,51 +466,51 @@
             // 
             pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
-            pageCastingSetting.Controls.Add(chckDomingosNoLaborables);
-            pageCastingSetting.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
-            pageCastingSetting.Controls.Add(panel1);
-            pageCastingSetting.Controls.Add(btnSincronizarAjustes);
-            pageCastingSetting.Controls.Add(flLabelHeader1);
-            pageCastingSetting.Location = new Point(4, 29);
+            pageCastingSetting.Controls.Add(flowLayoutPanel1);
+            pageCastingSetting.Location = new Point(4, 44);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(192, 67);
+            pageCastingSetting.Size = new Size(819, 427);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
-            // chckDomingosNoLaborables
+            // flowLayoutPanel1
             // 
-            chckDomingosNoLaborables.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
-            chckDomingosNoLaborables.Checked = true;
-            chckDomingosNoLaborables.Label = "Dias domingos NO laborables:";
-            chckDomingosNoLaborables.Location = new Point(23, 376);
-            chckDomingosNoLaborables.MinimumSize = new Size(150, 30);
-            chckDomingosNoLaborables.Name = "chckDomingosNoLaborables";
-            chckDomingosNoLaborables.RootLineColor = Color.Gray;
-            chckDomingosNoLaborables.Size = new Size(364, 33);
-            chckDomingosNoLaborables.TabIndex = 6;
+            flowLayoutPanel1.Controls.Add(flLabelHeader1);
+            flowLayoutPanel1.Controls.Add(panel1);
+            flowLayoutPanel1.Controls.Add(btnSincronizarAjustes);
+            flowLayoutPanel1.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
+            flowLayoutPanel1.Controls.Add(chckDomingosNoLaborables);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(3, 3);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(811, 419);
+            flowLayoutPanel1.TabIndex = 7;
             // 
-            // txtMaximoRetrasoMinutosPermitidos
+            // flLabelHeader1
             // 
-            txtMaximoRetrasoMinutosPermitidos.Enabled = false;
-            txtMaximoRetrasoMinutosPermitidos.EntryFont = new Font("Consolas", 10F);
-            txtMaximoRetrasoMinutosPermitidos.Label = "Tiempo maximo de retraso permitido:";
-            txtMaximoRetrasoMinutosPermitidos.Location = new Point(22, 336);
-            txtMaximoRetrasoMinutosPermitidos.MinimumSize = new Size(100, 34);
-            txtMaximoRetrasoMinutosPermitidos.Name = "txtMaximoRetrasoMinutosPermitidos";
-            txtMaximoRetrasoMinutosPermitidos.RootLineColor = Color.Gray;
-            txtMaximoRetrasoMinutosPermitidos.ShowSeconds = false;
-            txtMaximoRetrasoMinutosPermitidos.Size = new Size(365, 34);
-            txtMaximoRetrasoMinutosPermitidos.TabIndex = 5;
-            txtMaximoRetrasoMinutosPermitidos.TextBoxBackColor = SystemColors.GradientActiveCaption;
-            txtMaximoRetrasoMinutosPermitidos.TextBoxWidth = 75;
-            txtMaximoRetrasoMinutosPermitidos.Value = null;
+            flLabelHeader1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flLabelHeader1.BackColor = SystemColors.GradientInactiveCaption;
+            flLabelHeader1.Font = new Font("Segoe UI", 14F);
+            flLabelHeader1.HeaderText = "Turnos y Horarios";
+            flLabelHeader1.HeaderTextAlign = ContentAlignment.BottomLeft;
+            flLabelHeader1.HeaderTextColor = SystemColors.ControlText;
+            flLabelHeader1.LabelImage = (Image)resources.GetObject("flLabelHeader1.LabelImage");
+            flLabelHeader1.LineColor = Color.Black;
+            flLabelHeader1.LineThickness = 1;
+            flLabelHeader1.Location = new Point(0, 0);
+            flLabelHeader1.Margin = new Padding(0);
+            flLabelHeader1.MinimumSize = new Size(0, 45);
+            flLabelHeader1.Name = "flLabelHeader1";
+            flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
+            flLabelHeader1.Size = new Size(811, 45);
+            flLabelHeader1.TabIndex = 2;
             // 
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(dgvTurnosHorarios);
-            panel1.Location = new Point(22, 53);
+            panel1.Location = new Point(3, 48);
             panel1.Name = "panel1";
             panel1.Size = new Size(634, 261);
             panel1.TabIndex = 4;
@@ -560,6 +562,7 @@
             dgvTurnosHorarios.RowHeadersWidth = 45;
             dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
             dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvTurnosHorarios.ScrollBars = ScrollBars.Vertical;
             dgvTurnosHorarios.SelectedCellColor = Color.Moccasin;
             dgvTurnosHorarios.SelectedRowColor = Color.SteelBlue;
             dgvTurnosHorarios.SelectionForeColor = Color.Black;
@@ -622,32 +625,42 @@
             btnSincronizarAjustes.FlatStyle = FlatStyle.Flat;
             btnSincronizarAjustes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnSincronizarAjustes.Image = Properties.Resources.sync2_16;
-            btnSincronizarAjustes.Location = new Point(662, 54);
+            btnSincronizarAjustes.Location = new Point(643, 48);
             btnSincronizarAjustes.Name = "btnSincronizarAjustes";
-            btnSincronizarAjustes.Size = new Size(138, 46);
+            btnSincronizarAjustes.Size = new Size(162, 50);
             btnSincronizarAjustes.TabIndex = 3;
             btnSincronizarAjustes.Text = " Sincronizar    Parametros";
             btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSincronizarAjustes.UseVisualStyleBackColor = false;
             btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
             // 
-            // flLabelHeader1
+            // txtMaximoRetrasoMinutosPermitidos
             // 
-            flLabelHeader1.BackColor = SystemColors.GradientInactiveCaption;
-            flLabelHeader1.Dock = DockStyle.Top;
-            flLabelHeader1.Font = new Font("Segoe UI", 14F);
-            flLabelHeader1.HeaderText = "Turnos y Horarios";
-            flLabelHeader1.HeaderTextAlign = ContentAlignment.BottomLeft;
-            flLabelHeader1.HeaderTextColor = SystemColors.ControlText;
-            flLabelHeader1.LabelImage = (Image)resources.GetObject("flLabelHeader1.LabelImage");
-            flLabelHeader1.LineColor = Color.Black;
-            flLabelHeader1.LineThickness = 1;
-            flLabelHeader1.Location = new Point(3, 3);
-            flLabelHeader1.MinimumSize = new Size(0, 45);
-            flLabelHeader1.Name = "flLabelHeader1";
-            flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(184, 45);
-            flLabelHeader1.TabIndex = 1;
+            txtMaximoRetrasoMinutosPermitidos.Enabled = false;
+            txtMaximoRetrasoMinutosPermitidos.EntryFont = new Font("Consolas", 10F);
+            txtMaximoRetrasoMinutosPermitidos.Label = "Tiempo maximo de retraso permitido:";
+            txtMaximoRetrasoMinutosPermitidos.Location = new Point(3, 315);
+            txtMaximoRetrasoMinutosPermitidos.MinimumSize = new Size(100, 34);
+            txtMaximoRetrasoMinutosPermitidos.Name = "txtMaximoRetrasoMinutosPermitidos";
+            txtMaximoRetrasoMinutosPermitidos.RootLineColor = Color.Gray;
+            txtMaximoRetrasoMinutosPermitidos.ShowSeconds = false;
+            txtMaximoRetrasoMinutosPermitidos.Size = new Size(365, 34);
+            txtMaximoRetrasoMinutosPermitidos.TabIndex = 5;
+            txtMaximoRetrasoMinutosPermitidos.TextBoxBackColor = SystemColors.GradientActiveCaption;
+            txtMaximoRetrasoMinutosPermitidos.TextBoxWidth = 75;
+            txtMaximoRetrasoMinutosPermitidos.Value = null;
+            // 
+            // chckDomingosNoLaborables
+            // 
+            chckDomingosNoLaborables.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
+            chckDomingosNoLaborables.Checked = true;
+            chckDomingosNoLaborables.Label = "Dias domingos NO laborables:";
+            chckDomingosNoLaborables.Location = new Point(374, 315);
+            chckDomingosNoLaborables.MinimumSize = new Size(150, 30);
+            chckDomingosNoLaborables.Name = "chckDomingosNoLaborables";
+            chckDomingosNoLaborables.RootLineColor = Color.Gray;
+            chckDomingosNoLaborables.Size = new Size(364, 33);
+            chckDomingosNoLaborables.TabIndex = 6;
             // 
             // pageCastingResults
             // 
@@ -904,6 +917,7 @@
             splitContainer2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             pageCastingSetting.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).EndInit();
             pageCastingResults.ResumeLayout(false);
@@ -932,7 +946,6 @@
         private TableLayoutPanel tableLayoutPanel2;
         private FlowControls.flQuickAccessPanel flQuickAccessPanel1;
         private TabPage pageCastingSetting;
-        private FlowControls.flLabelHeader flLabelHeader1;
         private FlowControls.flCustomButton btnSincronizarAjustes;
         private TabPage pageCastingResults;
         private SplitContainer splitResultadosCasting_Background;
@@ -964,5 +977,7 @@
         private DataGridViewTextBoxColumn colHorarioUno_Salida;
         private DataGridViewTextBoxColumn colHorarioDos_Entrada;
         private DataGridViewTextBoxColumn colHorarioDos_Salida;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowControls.flLabelHeader flLabelHeader1;
     }
 }
