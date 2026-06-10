@@ -1,6 +1,6 @@
 ﻿namespace Checador_FXE
 {
-    internal class SectionsContainer : Control
+    public class SectionsContainer : Control
     {
 
     }

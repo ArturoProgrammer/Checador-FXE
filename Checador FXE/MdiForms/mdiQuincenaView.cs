@@ -30,7 +30,7 @@ namespace Checador_FXE.MdiForms
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
-            this.RelacionHorarioSelected = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!;
+            this.RelacionHorarioSelected = RelacionHorarios.Get(rpt.RelacionID).Object ?? throw new Exception("Error durante el parseo de datos");
 
             LoadAllData();
 
@@ -332,18 +332,39 @@ namespace Checador_FXE.MdiForms
                         return (real > ideal);
                     };
 
+                    // Determina si el empleado debe trabajar ese día.
+                    // Devuelve NINGUNO si no hay turno asignado o si el turno es -1 (descanso),
+                    // devuelve FALTA por defecto cuando se sabe que debía trabajar y no hay registro.
                     Func<int, DateOnly, TipoAsistencia> _HaveToWorkToday = delegate (int NoEmp, DateOnly dia)
                     {
-                        RelacionHorarios _relac = RelacionHorarios.Get(new RelacionHorarioID(DateTime.Parse($"{dia.Day}-{dia.Month}-{dia.Year}", new CultureInfo("es-MX")).ToString("MMMM"), dia.Year)).Object!;
+                        // Si NoEmp no es válido, asumimos que no hay asignación y por tanto es descanso
+                        if (NoEmp <= 0)
+                            return TipoAsistencia.NINGUNO;
 
-                        TurnoEmpleado? _target = _relac.Relacion[NoEmp, dia.Day];
+                        // Usar la relación ya cargada cuando esté disponible evita reconstruirla por mes/año
+                        //RelacionHorarios _relac = this.RelacionHorarioSelected ?? RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!;
+                        RelacionHorarios _relac = this.RelacionHorarioSelected ?? throw new Exception("No se obtuvo la relacion correspondiente");
 
-                        if (_target is not null && _target.Turno == -1)
+                        TurnoEmpleado? _target = null;
+                        try
+                        {
+                            _target = _relac.Relacion[NoEmp, dia.Day];
+                        }
+                        catch
+                        {
+                            // Si no se encuentra la asociación, considerarlo como descanso
+                            return TipoAsistencia.NINGUNO;
+                        }
+
+                        if (_target is null)
+                            return TipoAsistencia.NINGUNO;
+
+                        if (_target.Turno <= 0)
                             return TipoAsistencia.NINGUNO;
 
                         return TipoAsistencia.FALTA;
                     };
-
+                    
                     // Construye el diccionario correspondiente de fechas del periodo correspondiente
                     Func<Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>> BuildPeriodTimeList = delegate ()
                     {
@@ -356,10 +377,10 @@ namespace Checador_FXE.MdiForms
                             // Agregamos todos los dias del periodo a reportear
                             for (DateTime dia = Report.ReportPeriod.Start; dia <= Report.ReportPeriod.End; dia = dia.AddDays(1))
                             {
-                                TipoAsistencia a = _HaveToWorkToday(Report.Chequeos[empNombre].Where(t => t.Empleado == empNombre)
-                                                                                            .Select(t => t.NumEmpleado)
-                                                                                            .FirstOrDefault(),
-                                                                    DateOnly.Parse($"{dia.ToString("d")}"));    // Buscamos si era un dia laborable segun su turno asignado
+                                // Obtener número de empleado preferentemente desde registros de checadas; si no existe, será 0
+                                int numEmp = Report.Chequeos[empNombre].Select(t => t.NumEmpleado).FirstOrDefault();
+
+                                TipoAsistencia a = _HaveToWorkToday(numEmp, DateOnly.FromDateTime(dia)); // Buscamos si era un dia laborable segun su turno asignado
 
                                 if (dia.DayOfWeek is DayOfWeek.Sunday)
                                     a = TipoAsistencia.NINGUNO;
@@ -397,7 +418,6 @@ namespace Checador_FXE.MdiForms
                                 DateOnly today = DateOnly.Parse(j.Fecha.ToString("d"));
                                 int noEmp = j.NumEmpleado;
                                 int turnOfToday = this.RelacionHorarioSelected.Relacion[noEmp, today.Day]?.Turno ?? -1;
-                                //MessageBox.Show($"***{empleado} - {noEmp} para {today.Day} = {turnOfToday}***");
 
                                 if (turnOfToday == -1)
                                 {
@@ -432,6 +452,12 @@ namespace Checador_FXE.MdiForms
 
                     foreach (string empleado in _PeriodoCasteado.Keys)
                         _list.Add(InteropGenericObject.Compatibilize(empleado, "", _PeriodoCasteado[empleado], new HexaHash().ToString(), 1, 1));
+
+                    MessageBox.Show($"{String.Join("\n", _PeriodoCasteado.Cast<KeyValuePair<string, Dictionary<DateOnly, TipoAsistencia>>>()
+                                                                        .FirstOrDefault(s => s.Key == "Moises Duarte").Value
+                                                                        .Select(kvp => $"{kvp.Key} : {kvp.Value}")
+                                                                        .ToArray()) // TODO: ELIMINAR AQUI
+                        }");
 
                     PairEmpleado_FechaAsistencia = _PeriodoCasteado;
                     CASTING_RESULT = _list;

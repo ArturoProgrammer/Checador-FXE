@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using SpreadsheetLight;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Security.Principal;
 
@@ -420,6 +421,10 @@ namespace Checador_FXE
         /// Fecha de inicio y fin del periodo reporteado
         /// </summary>
         internal (DateTime Start, DateTime End) ReportPeriod { get; }
+        /// <summary>
+        /// RelacionID para el turno correspondiente
+        /// </summary>
+        internal RelacionHorarioID RelacionID { get; }
 
         /// <summary>
         /// 
@@ -443,6 +448,8 @@ namespace Checador_FXE
             ReportPeriod = parser.PeriodTime;
             DeviceModel = sourceDevice;
             SourcePath = path;
+            RelacionID = new RelacionHorarioID(parser.PeriodTime.Start.ToString("MMMM", new CultureInfo("es-MX")), 
+                                                int.Parse(parser.PeriodTime.Start.ToString("yyyy", new CultureInfo("es-MX"))));
         }
 
         /// <summary>
@@ -627,7 +634,6 @@ namespace Checador_FXE
 
                     ACTUAL_RPT_YEAR = period.Start.Year;
                     (int Start, int End)[] _MONTH_COORDS = MakeMonthCoordsArray(PERIOD_DAYS_ROW, 1, TRGT_LIMIT, sl);
-                    
 
                     #region FUNCIONES ANONIMAS PRIVADAS REQUERIDAS
                     // Funcion para crear un DateTime a partir de dia, mes y año

@@ -84,7 +84,7 @@ namespace Checador_FXE
                 string targetPath = $"{absPath.Replace(".pdf", $"_{quincenaNumber}.pdf")}";
 
                 // HACK: Para evitar errores, añadimos este "guard clause" para saltarnos en caso de que el formato no exista
-                if (!File.Exists(nombresCompletosFormatos[quincenaNumber - 1]))
+                if (!File.Exists(pdfTemplatePath))
                     continue;
 
                 /* 
@@ -117,7 +117,10 @@ namespace Checador_FXE
                 }
                 #endregion
 
-                // ✅ Sustituimos FileStream por MemoryStream
+                // Cacheamos la fuente y el color para evitar recrearlos en cada iteración
+                BaseFont cachedBaseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                var cachedColor = Utils.GetBaseColorByName(Properties.Settings.Default.COLOR_PINCEL);
+
                 using (MemoryStream ms = new MemoryStream())
                 {
                     using (PdfReader pdfReader = new PdfReader(pdfTemplatePath))
@@ -145,8 +148,8 @@ namespace Checador_FXE
                                 frmFields.SetField($"nombre_trabajador_{A_L}", empName);
 
                                 // Llenamos las asistencias
-                                cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 7);
-                                cb.SetColorFill(Utils.GetBaseColorByName(Properties.Settings.Default.COLOR_PINCEL));
+                                cb.SetFontAndSize(cachedBaseFont, 7);
+                                cb.SetColorFill(cachedColor);
 
                                 (int X, int Y) INITIAL_COORDS = (319, 422);
                                 (int X, int Y) JUMP_ON_COORDS = (11, 7);
@@ -155,7 +158,14 @@ namespace Checador_FXE
                                 (int X, int Y) IHC_E = (510, 405); // INITIAL_HOURS_COORDS_END
                                 int IHC_JUMPS = 29;
 
-                                foreach (DateOnly j in _RelacionAsistencias[empName].Keys)
+                                int dayIndex = 1;
+                                // Obtenemos de forma segura las asistencias por fecha para el empleado
+                                if (!_RelacionAsistencias.TryGetValue(empName, out var asistenciaPorFechas))
+                                {
+                                    asistenciaPorFechas = new Dictionary<DateOnly, TipoAsistencia>();
+                                }
+
+                                foreach (DateOnly j in asistenciaPorFechas.Keys)
                                 {
                                     // TODO: Validar que la fecha pertenezca a la quincena actual
 
@@ -168,15 +178,20 @@ namespace Checador_FXE
                                     if (!j.Month.Equals(rpt.ReportPeriod.Start.Month))
                                         continue;
 
-                                    TipoAsistencia T_P = _RelacionAsistencias[empName][j];
+                                    TipoAsistencia T_P = asistenciaPorFechas[j];
                                     T_P = T_P is TipoAsistencia.RETARDO ? TipoAsistencia.ASISTENCIA : T_P;
 
                                     cb.ShowTextAligned(
                                         PdfContentByte.ALIGN_LEFT,
                                         T_P.GetShort(),
-                                        INITIAL_COORDS.X + ((JUMP_ON_COORDS.X * Utils.TranslateDayOnCell(j, quincenaNumber)) - JUMP_ON_COORDS.X),
+                                        INITIAL_COORDS.X + ((JUMP_ON_COORDS.X * Utils.TranslateDayOnCell(j, quincenaNumber)) - JUMP_ON_COORDS.X + (dayIndex >= 6 ? 2 : 0)),
                                         INITIAL_COORDS.Y - ((A_L > 1 ? (JUMP_ON_COORDS.Y * 4) * (A_L > 2 ? A_L - 1 : 1) : 0) + (A_L - 1)), 0
                                     );
+
+                                    if (j.Day == 15)
+                                        dayIndex = 0;   // Restauramos por defecto al terminar de analizar la primer quincena
+
+                                    dayIndex++;
                                 }
 
                                 // Escribimos el horario del empleado
@@ -193,7 +208,8 @@ namespace Checador_FXE
                                         break;
                                     }
 
-                                    return tipo == 0 ? t.Entrada : t.Entrada;
+                                    // tipo: 0 -> Entrada, 1 -> Salida
+                                    return tipo == 0 ? t.Entrada : t.Salida;
                                 };
 
                                 //TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos[empName], 0);
@@ -226,9 +242,7 @@ namespace Checador_FXE
                         // Quitamos el atributo ReadOnly si lo tiene
                         var attrs = File.GetAttributes(targetPath);
                         if ((attrs & FileAttributes.ReadOnly) != 0)
-                        {
                             File.SetAttributes(targetPath, attrs & ~FileAttributes.ReadOnly);
-                        }
 
                         // Eliminamos el archivo
                         File.Delete(targetPath);

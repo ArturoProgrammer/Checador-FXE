@@ -1,11 +1,11 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
-using FlowControls;
+﻿using FlowControls;
 
 namespace Checador_FXE
 {
-    internal class ControlsContainer : FlowLayoutPanel
+    public class ControlsContainer : FlowLayoutPanel
     {
         private flLabelHeader lblHeader;
+
 
         public ControlsContainer()
         {
@@ -21,8 +21,6 @@ namespace Checador_FXE
             this.FlowDirection = FlowDirection.TopDown;
             this.WrapContents = false;
             this.AutoScroll = true;
-            lblHeader = new flLabelHeader();
-            this.Controls.Add(lblHeader);
         }
 
         protected override void OnResize(EventArgs eventargs)
