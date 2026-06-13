@@ -2,6 +2,7 @@ using Checador_FXE.Plantillas;
 using DocumentFormat.OpenXml.InkML;
 using FlowCommonWorkcore.HelperAssets;
 using Org.BouncyCastle.Tls;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Web;
 
@@ -13,6 +14,7 @@ namespace Checador_FXE
         internal static ToolStripStatusLabel? lblOperation;
         private static readonly string _MutexName = $"ChecadorFXE-{Environment.Version}";
         internal static string DbPath = $@"{Application.StartupPath}\dbs";
+        internal static CultureInfo CurrentCultureInfo { get; }  = new CultureInfo("es-MX");
 
         /// <summary>
         /// Nombre del recurso del formato de asistencia de la primer quincena del mes

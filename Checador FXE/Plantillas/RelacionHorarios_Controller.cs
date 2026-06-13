@@ -1,11 +1,9 @@
 ﻿using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
+using FlowControls;
 using Microsoft.Data.Sqlite;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using ZstdSharp.Unsafe;
 using static Checador_FXE.Plantillas.RelacionHorarios;
 
 namespace Checador_FXE.Plantillas
@@ -93,7 +91,7 @@ namespace Checador_FXE.Plantillas
             TurnoEmpleadoCollection _collection = new TurnoEmpleadoCollection();
             foreach (Empleado e in _actualEmpelados)
             {
-                int actualMonthNumber = DateTime.ParseExact(id.Month, "MMMM", CultureInfo.CurrentCulture).Month;
+                int actualMonthNumber = DateTime.ParseExact(id.Month, "MMMM", Program.CurrentCultureInfo).Month;
                 for (int day = 1; day <= DateTime.DaysInMonth(id.Year, actualMonthNumber); day++)
                 {
                     DateOnly d_Only = new DateOnly(id.Year, actualMonthNumber, day);
@@ -127,7 +125,7 @@ namespace Checador_FXE.Plantillas
         /// Obtiene el ID de relacion de horarios correspondiente al mes y año actual
         /// </summary>
         /// <returns></returns>
-        public static RelacionHorarioID GetActualId() => new RelacionHorarioID(DateTime.Now.ToString("MMMM", new CultureInfo("es-MX")), DateTime.Now.Year);
+        public static RelacionHorarioID GetActualId() => new RelacionHorarioID(DateTime.Now.ToString("MMMM", Program.CurrentCultureInfo), DateTime.Now.Year);
     }
 
     public class TurnoEmpleado
@@ -323,6 +321,11 @@ namespace Checador_FXE.Plantillas
             #endregion
         }
 
+        /// <summary>
+        /// Obtiene todas las relaciones de horarios existentes en las bases de datos
+        /// </summary>
+        /// <param name="ShowObjectLog"></param>
+        /// <returns></returns>
         public static Response<RelacionHorarios[]> GetAll(bool ShowObjectLog = false)
         {
             #region
@@ -371,6 +374,11 @@ namespace Checador_FXE.Plantillas
             #endregion
         }
 
+        /// <summary>
+        /// Builder que actualiza el objeto en base a un CRUD correspondiente a este objeto
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         public RelacionHorarios UpdateByGrid(DataGridViewRow[] rows)
         {
             #region
@@ -381,7 +389,7 @@ namespace Checador_FXE.Plantillas
                 for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
                 {
                     DateOnly dia = new DateOnly(this.ID.Year, 
-                                           DateTime.ParseExact(this.ID.Month, "MMMM", new CultureInfo("es-MX")).Month, 
+                                           DateTime.ParseExact(this.ID.Month, "MMMM", Program.CurrentCultureInfo).Month, 
                                            d_i - 2);
 
                     object? cellValue = r.Cells[d_i].Value;
@@ -411,6 +419,121 @@ namespace Checador_FXE.Plantillas
             return this;
         }
 
+
+        public Response LoadCrudBaseView(flExtendedDataGridView dgv, int month, int year, string localidad)
+        {
+            #region CARGA DE LA UI
+            Response _resp = new Response(false, "Iniciando carga de los datos");
+
+            try
+            {
+
+                DataGridViewColumn[] colBaseTemplate = {
+                new DataGridViewImageColumn() {
+                    Name = "colIcon",
+                    HeaderText = "",
+                    ReadOnly = true,
+                    Width = 32,
+                    Resizable = DataGridViewTriState.False,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    ImageLayout = DataGridViewImageCellLayout.Zoom
+                }, new DataGridViewTextBoxColumn() {
+                    Name = "colNumEmp",
+                    HeaderText = "No. Emp.",
+                    ReadOnly = true,
+                    Width = 60,
+                    Resizable = DataGridViewTriState.False,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                }, new DataGridViewTextBoxColumn() {
+                    Name = "colNombre",
+                    HeaderText = "Nombre",
+                    ReadOnly = true,
+                    Width = 250,
+                    Resizable = DataGridViewTriState.False,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                }
+            };
+
+                Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
+
+                dgv.Rows.Clear();
+                _resp.Log.Add($"Filas eliminadas...");
+                dgv.Columns.Clear();
+                _resp.Log.Add($"Columnas eliminadas...");
+
+                if (!_SERV_RESP.Success)
+                {
+                    MessageBox.Show(_SERV_RESP.Message);
+                    return _resp;
+                }
+
+                /* 
+                 * Indices de las celdas de las filas que pertenecen a los dias domingos
+                 * */
+                List<int> _sundays = new List<int>();
+
+                // Preparamos primero las columnas del DGV
+                dgv.Columns.AddRange(colBaseTemplate);
+                for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
+                {
+                    DateOnly _day = new DateOnly(year, month, i);
+
+                    dgv.Columns.Add(new DataGridViewTextBoxColumn()
+                    {
+                        HeaderText = $"{_day.ToString("dddd", Program.CurrentCultureInfo)}, {_day.Day}",
+                        Name = $"colDay{i.ToString()}",
+                        Width = 70,
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                        Resizable = DataGridViewTriState.False,
+                    });
+
+                    if (_day.DayOfWeek == DayOfWeek.Sunday)
+                        _sundays.Add(i);
+                }
+
+                // Cargamos las filas
+                foreach (Empleado j in _SERV_RESP.Object!)
+                {
+                    DataGridViewRow _row = new DataGridViewRow();
+                    _row.Cells.AddRange(
+                        new DataGridViewImageCell()
+                        {
+                            Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                            ImageLayout = DataGridViewImageCellLayout.Zoom,
+                        },
+                        new DataGridViewTextBoxCell() { Value = j.NoEmp },
+                        new DataGridViewTextBoxCell() { Value = $"{j.Nombres} {j.Apellidos}" }
+                    );
+
+                    // Agregamos las celdas de los dias
+                    for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
+                        _row.Cells.Add(new DataGridViewTextBoxCell());
+
+                    // Pintamos los dias domingos
+                    foreach (int i in _sundays)
+                        _row.Cells[2 + i].Style.BackColor = Color.LightPink;
+
+                    dgv.Rows.Add(_row);
+                }
+
+                _resp.Success = true;
+                _resp.Message = $"Base de la visualizacion cargada correctamente!";
+            }
+            catch (Exception ex)
+            {
+                _resp.Log.Add(ex.ToString());
+                _resp.Success = false;
+                _resp.Message = $"No se pudo cargar la base de la visualizacion por un error inesperado. {ex.Message}";
+            }
+            #endregion
+            return _resp;
+        }
+
+        /// <summary>
+        /// Guarda el objeto en la base de datos
+        /// </summary>
+        /// <param name="ShowObjectLog"></param>
+        /// <returns></returns>
         public Response Save(bool ShowObjectLog = false)
         {
             #region

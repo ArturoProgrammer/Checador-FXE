@@ -66,9 +66,8 @@ namespace Checador_FXE.Plantillas
             /// <summary>
             /// ID de la relacion actual. Corresponde al struct RelacionHorarioID
             /// </summary>
-            public required string RelacionID { get; set; }
-            public required string RelacionHASH { get; set; }
-
+            public required RelacionHorarios Relacion { get; set; }
+            
             public string MakeJson() => JsonSerializer.Serialize<ConfiguracionCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static ConfiguracionCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ConfiguracionCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
@@ -227,8 +226,7 @@ namespace Checador_FXE.Plantillas
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
                 DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
                 TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson(),
-                RelacionID = MdiForm.RelacionHorarioSelected.ID.ToString(),
-                RelacionHASH = MdiForm.RelacionHorarioSelected.HASH.ToString()
+                Relacion = ,
             };
             this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
@@ -238,6 +236,7 @@ namespace Checador_FXE.Plantillas
                 Device = MdiForm.Report.DeviceModel,
             };
         }
+
         /// <summary>
         /// 
         /// </summary>

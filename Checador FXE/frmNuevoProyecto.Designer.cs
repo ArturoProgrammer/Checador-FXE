@@ -36,7 +36,6 @@
             txtTitulo = new FlowControls.flTextBoxLabelJoint();
             label1 = new Label();
             btnExaminar = new FlowControls.flCustomButton();
-            lblRelacionIdEsperada = new FlowControls.flLabelJoint();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -112,7 +111,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(lblRelacionIdEsperada);
             groupBox1.Controls.Add(txtTitulo);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(txtRutaArchivo);
@@ -164,20 +162,6 @@
             btnExaminar.UseVisualStyleBackColor = false;
             btnExaminar.Click += btnExaminar_Click;
             // 
-            // lblRelacionIdEsperada
-            // 
-            lblRelacionIdEsperada.EntryFont = new Font("Segoe UI", 10F);
-            lblRelacionIdEsperada.InfoLabelFont = new Font("Consolas", 9F);
-            lblRelacionIdEsperada.InfoLabelForeColor = SystemColors.MenuHighlight;
-            lblRelacionIdEsperada.InfoLabelText = "-";
-            lblRelacionIdEsperada.Label = "Texto:";
-            lblRelacionIdEsperada.Location = new Point(6, 140);
-            lblRelacionIdEsperada.MinimumSize = new Size(150, 30);
-            lblRelacionIdEsperada.Name = "lblRelacionIdEsperada";
-            lblRelacionIdEsperada.RootLineColor = Color.Gray;
-            lblRelacionIdEsperada.Size = new Size(226, 33);
-            lblRelacionIdEsperada.TabIndex = 7;
-            // 
             // frmNuevoProyecto
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -212,6 +196,5 @@
         private FlowControls.flCustomButton btnExaminar;
         private Label label1;
         private FlowControls.flTextBoxLabelJoint txtTitulo;
-        private FlowControls.flLabelJoint lblRelacionIdEsperada;
     }
 }

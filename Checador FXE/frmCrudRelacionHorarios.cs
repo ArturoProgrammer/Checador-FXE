@@ -14,7 +14,10 @@ namespace Checador_FXE
         /// </summary>
         List<DataGridViewRow> actualView = new List<DataGridViewRow>();
         RelacionHorarios actualSelected = new RelacionHorarios();
-
+        /*
+         * 
+         * TODO QUITAR AQUI
+         * 
         DataGridViewColumn[] colBaseTemplate = {
             new DataGridViewImageColumn() {
                 Name = "colIcon",
@@ -40,6 +43,7 @@ namespace Checador_FXE
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
             }
         };
+        */
 
         public frmCrudRelacionHorarios()
         {
@@ -53,7 +57,6 @@ namespace Checador_FXE
                                                             .Cast<LimitationParam>()
                                                             .Select(l => l.GetText())
                                                             .ToArray());
-
             this.cboxParametroLimitacion.SelectedIndex = 0;
             this.txtValorLimitacion.Text = "";
         }
@@ -123,67 +126,9 @@ namespace Checador_FXE
             {
                 this.Cursor = Cursors.WaitCursor;
 
-                #region CARGA DE LA UI
-                Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
-
-                this.dgvRelacionDeHorarios.Rows.Clear();
-                this.dgvRelacionDeHorarios.Columns.Clear();
-
-                if (!_SERV_RESP.Success)
-                {
-                    MessageBox.Show(_SERV_RESP.Message);
-                    return;
-                }
-
-                /* 
-                 * Indices de las celdas de las filas que pertenecen a los dias domingos
-                 * */
-                List<int> _sundays = new List<int>();
-
-                // Preparamos primero las columnas del DGV
-                this.dgvRelacionDeHorarios.Columns.AddRange(colBaseTemplate);
-                for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
-                {
-                    DateOnly _day = new DateOnly(year, month, i);
-
-                    this.dgvRelacionDeHorarios.Columns.Add(new DataGridViewTextBoxColumn()
-                    {
-                        HeaderText = $"{_day.ToString("dddd", new CultureInfo("es-MX"))}, {_day.Day}",
-                        Name = $"colDay{i.ToString()}",
-                        Width = 70,
-                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                        Resizable = DataGridViewTriState.False,
-                    });
-
-                    if (_day.DayOfWeek == DayOfWeek.Sunday)
-                        _sundays.Add(i);
-                }
-
-                // Cargamos las filas
-                foreach (Empleado j in _SERV_RESP.Object!)
-                {
-                    DataGridViewRow _row = new DataGridViewRow();
-                    _row.Cells.AddRange(
-                        new DataGridViewImageCell()
-                        {
-                            Value = IconGallery.Size64.NeutralObjectGreenUnselected,
-                            ImageLayout = DataGridViewImageCellLayout.Zoom,
-                        },
-                        new DataGridViewTextBoxCell() { Value = j.NoEmp },
-                        new DataGridViewTextBoxCell() { Value = $"{j.Nombres} {j.Apellidos}" }
-                    );
-
-                    // Agregamos las celdas de los dias
-                    for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
-                        _row.Cells.Add(new DataGridViewTextBoxCell());
-
-                    // Pintamos los dias domingos
-                    foreach (int i in _sundays)
-                        _row.Cells[2 + i].Style.BackColor = Color.LightPink;
-
-                    this.dgvRelacionDeHorarios.Rows.Add(_row);
-                }
-                #endregion
+                if (actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad).Success)
+                    throw new Exception("No se cargo correctamente la vista de la grilla de datos");
+                
                 #region CARGA DE DATOS EN LA UI
                 // Recorremos todas las filas para ir llenando los turnos asignados a esos dias
                 actualSelected = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year),
@@ -223,7 +168,7 @@ namespace Checador_FXE
             Response _resp = actualSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray())
                                             .Save(ShowObjectLog: false);
             WriteStatus(_resp.Success, _resp.Message);
-
+            
             if (_resp.Success is false)
                 MessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

@@ -506,7 +506,7 @@
             panel4.Controls.Add(dgvRelacionDeHorarios);
             panel4.Location = new Point(7, 406);
             panel4.Name = "panel4";
-            panel4.Size = new Size(726, 298);
+            panel4.Size = new Size(688, 298);
             panel4.TabIndex = 7;
             // 
             // dgvRelacionDeHorarios
@@ -560,7 +560,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(724, 296);
+            dgvRelacionDeHorarios.Size = new Size(686, 296);
             dgvRelacionDeHorarios.TabIndex = 5;
             // 
             // flLabelHeader1
@@ -579,7 +579,7 @@
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(730, 45);
+            flLabelHeader1.Size = new Size(692, 45);
             flLabelHeader1.TabIndex = 2;
             // 
             // panel1
@@ -726,7 +726,7 @@
             flLabelHeader2.MinimumSize = new Size(0, 45);
             flLabelHeader2.Name = "flLabelHeader2";
             flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader2.Size = new Size(730, 45);
+            flLabelHeader2.Size = new Size(692, 45);
             flLabelHeader2.TabIndex = 3;
             // 
             // txtMaximoRetrasoMinutosPermitidos

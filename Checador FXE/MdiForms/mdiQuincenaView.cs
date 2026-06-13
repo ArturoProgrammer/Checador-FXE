@@ -55,9 +55,12 @@ namespace Checador_FXE.MdiForms
             this.LegacyParent = mdiParent;
             projCaf.MdiForm = this; this.ActualCafProject = projCaf;
             this.ProjectFullname = projFullname;
+            this.RelacionHorarioSelected = projCaf.ConfiguracionCasting.Relacion ?? throw new Exception("Error durante el parseo de datos");
+            /*
             this.RelacionHorarioSelected = RelacionHorarios.Parse(projCaf.ConfiguracionCasting.RelacionID,
                                                                     projCaf.ConfiguracionCasting.TurnosEmpleadoJson,
                                                                     projCaf.ConfiguracionCasting.RelacionHASH, ShowObjectLog: true).Object ?? throw new Exception("Error durante el parseo de datos");
+            */
             LoadAllData();
         }
 
@@ -453,11 +456,13 @@ namespace Checador_FXE.MdiForms
                     foreach (string empleado in _PeriodoCasteado.Keys)
                         _list.Add(InteropGenericObject.Compatibilize(empleado, "", _PeriodoCasteado[empleado], new HexaHash().ToString(), 1, 1));
 
+                    /*
                     MessageBox.Show($"{String.Join("\n", _PeriodoCasteado.Cast<KeyValuePair<string, Dictionary<DateOnly, TipoAsistencia>>>()
                                                                         .FirstOrDefault(s => s.Key == "Moises Duarte").Value
                                                                         .Select(kvp => $"{kvp.Key} : {kvp.Value}")
                                                                         .ToArray()) // TODO: ELIMINAR AQUI
                         }");
+                    */
 
                     PairEmpleado_FechaAsistencia = _PeriodoCasteado;
                     CASTING_RESULT = _list;

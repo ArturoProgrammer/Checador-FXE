@@ -426,8 +426,12 @@ namespace Checador_FXE
         /// </summary>
         internal RelacionHorarioID RelacionID { get; }
 
+        Func<DateTime, RelacionHorarioID> _GetRelacionIdByXlsx = (DateTime date) => 
+            new RelacionHorarioID(date.ToString("MMMM", Program.CurrentCultureInfo), 
+                                  int.Parse(date.ToString("yyyy", Program.CurrentCultureInfo)));
+
         /// <summary>
-        /// 
+        /// Constructor para un nuevo proyecto
         /// </summary>
         /// <param name="path">Ruta del archivo .xls o .xlsx</param>
         /// <param name="sourceDevice">Modelo del dispositivo de origen de archivo de chequeos</param>
@@ -448,8 +452,7 @@ namespace Checador_FXE
             ReportPeriod = parser.PeriodTime;
             DeviceModel = sourceDevice;
             SourcePath = path;
-            RelacionID = new RelacionHorarioID(parser.PeriodTime.Start.ToString("MMMM", new CultureInfo("es-MX")), 
-                                                int.Parse(parser.PeriodTime.Start.ToString("yyyy", new CultureInfo("es-MX"))));
+            RelacionID = _GetRelacionIdByXlsx(parser.PeriodTime.Start);
         }
 
         /// <summary>
@@ -475,9 +478,9 @@ namespace Checador_FXE
             ReportPeriod = parser.PeriodTime;
             DeviceModel = proj.AssetsFile.Device;
             SourcePath = path;
+            RelacionID = _GetRelacionIdByXlsx(parser.PeriodTime.Start);
         }
 
-        
 
         /// <summary>
         /// Lector e interprete del formato
