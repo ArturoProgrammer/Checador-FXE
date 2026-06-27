@@ -33,6 +33,7 @@
             btnAceptar = new FlowControls.flCustomButton();
             btnCerrar = new FlowControls.flCustomButton();
             groupBox1 = new GroupBox();
+            cboxLocalidadRemitente = new FlowControls.flComboBoxLabelJoint();
             txtTitulo = new FlowControls.flTextBoxLabelJoint();
             label1 = new Label();
             btnExaminar = new FlowControls.flCustomButton();
@@ -52,7 +53,7 @@
             txtRutaArchivo.Placeholder = "";
             txtRutaArchivo.RootLineColor = Color.Gray;
             txtRutaArchivo.Size = new Size(435, 31);
-            txtRutaArchivo.TabIndex = 3;
+            txtRutaArchivo.TabIndex = 4;
             txtRutaArchivo.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtRutaArchivo.TextBoxWidth = 300;
             txtRutaArchivo.Value = "";
@@ -87,7 +88,7 @@
             btnAceptar.Location = new Point(314, 266);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(110, 34);
-            btnAceptar.TabIndex = 7;
+            btnAceptar.TabIndex = 8;
             btnAceptar.Text = " Aceptar";
             btnAceptar.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAceptar.UseVisualStyleBackColor = false;
@@ -103,7 +104,7 @@
             btnCerrar.Location = new Point(430, 266);
             btnCerrar.Name = "btnCerrar";
             btnCerrar.Size = new Size(110, 34);
-            btnCerrar.TabIndex = 8;
+            btnCerrar.TabIndex = 9;
             btnCerrar.Text = " Cerrar";
             btnCerrar.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnCerrar.UseVisualStyleBackColor = false;
@@ -111,6 +112,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnExaminar);
+            groupBox1.Controls.Add(cboxLocalidadRemitente);
             groupBox1.Controls.Add(txtTitulo);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(txtRutaArchivo);
@@ -121,6 +124,24 @@
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Propiedades";
+            // 
+            // cboxLocalidadRemitente
+            // 
+            cboxLocalidadRemitente.ComboBoxBackColor = SystemColors.GradientActiveCaption;
+            cboxLocalidadRemitente.ComboBoxWidth = 300;
+            cboxLocalidadRemitente.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboxLocalidadRemitente.EnableItemSearch = true;
+            cboxLocalidadRemitente.EnableSelectionConfirmation = false;
+            cboxLocalidadRemitente.EntryFont = new Font("Consolas", 10F);
+            cboxLocalidadRemitente.Items.Add("(Seleccione un elemento...)");
+            cboxLocalidadRemitente.Label = "Localidad:";
+            cboxLocalidadRemitente.Location = new Point(6, 140);
+            cboxLocalidadRemitente.MinimumSize = new Size(118, 28);
+            cboxLocalidadRemitente.Name = "cboxLocalidadRemitente";
+            cboxLocalidadRemitente.RootLineColor = Color.Gray;
+            cboxLocalidadRemitente.Size = new Size(435, 31);
+            cboxLocalidadRemitente.TabIndex = 6;
+            cboxLocalidadRemitente.Value = "(Seleccione un elemento...)";
             // 
             // txtTitulo
             // 
@@ -146,7 +167,7 @@
             label1.Location = new Point(6, 188);
             label1.Name = "label1";
             label1.Size = new Size(516, 49);
-            label1.TabIndex = 6;
+            label1.TabIndex = 7;
             label1.Text = "** ADVERTENCIA: Selecciona el modelo de dispositivo correcto con el que se genero el reporte de chequeos para procesar el documento correctamente con el algoritmo correspondiente.";
             // 
             // btnExaminar
@@ -155,20 +176,21 @@
             btnExaminar.FlatStyle = FlatStyle.Flat;
             btnExaminar.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminar.Image = Properties.Resources.buscar_16;
-            btnExaminar.Location = new Point(458, 80);
+            btnExaminar.Location = new Point(446, 69);
             btnExaminar.Name = "btnExaminar";
             btnExaminar.Size = new Size(52, 25);
-            btnExaminar.TabIndex = 4;
+            btnExaminar.TabIndex = 3;
             btnExaminar.UseVisualStyleBackColor = false;
             btnExaminar.Click += btnExaminar_Click;
             // 
             // frmNuevoProyecto
             // 
+            AcceptButton = btnAceptar;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
+            CancelButton = btnCerrar;
             ClientSize = new Size(552, 312);
-            Controls.Add(btnExaminar);
             Controls.Add(groupBox1);
             Controls.Add(btnAceptar);
             Controls.Add(btnCerrar);
@@ -196,5 +218,6 @@
         private FlowControls.flCustomButton btnExaminar;
         private Label label1;
         private FlowControls.flTextBoxLabelJoint txtTitulo;
+        private FlowControls.flComboBoxLabelJoint cboxLocalidadRemitente;
     }
 }

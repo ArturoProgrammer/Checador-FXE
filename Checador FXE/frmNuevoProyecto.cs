@@ -1,8 +1,10 @@
-﻿namespace Checador_FXE
+﻿using Checador_FXE.Plantillas;
+
+namespace Checador_FXE
 {
     internal partial class frmNuevoProyecto : Form
     {
-        public (string Titulo, string Path, Dispositivo Device) Response;
+        public (string Titulo, string Path, Dispositivo Device, string LocalidadRemitente) Response;
 
         public frmNuevoProyecto()
         {
@@ -14,6 +16,10 @@
             // Cargamos los modelos de dispositivos soportados
             this.cboxModeloDispositivo.Items.AddRange(DispositivoExtensions.GetSupportedModels());
             this.cboxModeloDispositivo.Value = Properties.Settings.Default.DISPOSITIVO_DEFAULT; // Seleccionamos el dispositivo por default
+
+            // Cargamos las localidades compatibles
+            this.cboxLocalidadRemitente.Items.AddRange(GlobalConfig.Get("1").Object!.LocalidadesCompatibles);
+            this.cboxLocalidadRemitente.Value = Properties.Settings.Default.LOCALIDAD_DEFAULT; // Seleccionamos la localidad por default
 
             this.txtTitulo.Focus();
         }
@@ -56,7 +62,8 @@
             bool flag = false;
             if (!String.IsNullOrEmpty(this.txtTitulo.Value.Trim()) && 
                 !String.IsNullOrEmpty(this.txtRutaArchivo.Value.Trim()) && 
-                !this.cboxModeloDispositivo.IsNonSelectedTextSelected)
+                !this.cboxModeloDispositivo.IsNonSelectedTextSelected &&
+                !this.cboxLocalidadRemitente.IsNonSelectedTextSelected)
             {
                 flag = true;
             }
@@ -75,7 +82,7 @@
             if (this.DialogResult != DialogResult.OK)
                 return;
 
-            Response = (this.txtTitulo.Value.Trim(), this.txtRutaArchivo.Value, DispositivoExtensions.Parse(this.cboxModeloDispositivo.Value));
+            Response = (this.txtTitulo.Value.Trim(), this.txtRutaArchivo.Value, DispositivoExtensions.Parse(this.cboxModeloDispositivo.Value), this.cboxLocalidadRemitente.Value);
         }
 
         private void cboxModeloDispositivo_OnSelectedIndexChanged(object sender, EventArgs e)

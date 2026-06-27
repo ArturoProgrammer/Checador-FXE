@@ -36,6 +36,7 @@ namespace Checador_FXE.Plantillas
             }
         }
 
+
         internal class GeneralTab
         {
             public static readonly string FILEPATH = @"data\general.json";
@@ -64,9 +65,13 @@ namespace Checador_FXE.Plantillas
             /// </summary>
             public required string TurnosEmpleadoJson { get; set; }
             /// <summary>
-            /// ID de la relacion actual. Corresponde al struct RelacionHorarioID
+            /// ID de la relacion de turnos
             /// </summary>
-            public required RelacionHorarios Relacion { get; set; }
+            public required string RelacionTurnosID { get; set; }
+            /// <summary>
+            /// Identificador HASH del mes casteado
+            /// </summary>
+            public required HexaHash RelacionHash { get; set; }
             
             public string MakeJson() => JsonSerializer.Serialize<ConfiguracionCastingTab>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static ConfiguracionCastingTab? Build(string jsonText) => JsonSerializer.Deserialize<ConfiguracionCastingTab>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -191,6 +196,7 @@ namespace Checador_FXE.Plantillas
             public static Assets? Build(string jsonText) => JsonSerializer.Deserialize<Assets>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
         
+
         public mdiQuincenaView MdiForm { get; set; }
         public GeneralTab General { get; private set; }
         public ConfiguracionCastingTab ConfiguracionCasting { get; private set; }
@@ -201,7 +207,6 @@ namespace Checador_FXE.Plantillas
         /// Directorio de archivos temporales
         /// </summary>
         public string TempDir { get; private set; }
-        
 
         /// <summary>
         /// Constructor basado en un nuevo proyecto
@@ -226,7 +231,8 @@ namespace Checador_FXE.Plantillas
                 TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
                 DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
                 TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson(),
-                Relacion = ,
+                RelacionTurnosID = MdiForm.RelacionHorarioSelected.ID.ToString(),
+                RelacionHash = MdiForm.RelacionHorarioSelected.HASH,
             };
             this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));

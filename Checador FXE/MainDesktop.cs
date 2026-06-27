@@ -46,7 +46,7 @@ namespace Checador_FXE
             }
 
             // Abrimos el proyecto
-            mdiQuincenaView frm = new mdiQuincenaView(frm_n.Response.Titulo, report, this);
+            mdiQuincenaView frm = new mdiQuincenaView(frm_n.Response.Titulo, report, this, frm_n.Response.LocalidadRemitente);
             frm.TopLevel = false;
             frm.Tag = UtilityFunctions.HASHGenerator();
             frm.Dock = DockStyle.Fill;
@@ -153,6 +153,8 @@ namespace Checador_FXE
         /// <param name="path"></param>
         bool _CommonSaveMethod(string path)
         {
+            // TOOD: FALTA ACTUALIZAR EN ESTA PARTE LOS VALORES DEL PROYECTO CON LOS DE LA VISUALIZACION ACTUAL PARA PODER GUARDAR EL PROYECTO
+
             Response funcResp = actualView!.ActualCafProject.Save(path);
 
             string resultText = funcResp.Success ? $"Proyecto guardado en '{funcResp.Tag}'!" : funcResp.Message;

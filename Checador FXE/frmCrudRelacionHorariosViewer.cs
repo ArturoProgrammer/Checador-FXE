@@ -7,15 +7,16 @@ using System.Globalization;
 
 namespace Checador_FXE
 {
-    public partial class frmCrudRelacionHorarios : Form
+    public partial class frmCrudRelacionHorariosViewer : Form
     {
         /// <summary>
         /// Arreglo de las columnas actualmente cargadas, no la vista actual.
         /// </summary>
         List<DataGridViewRow> actualView = new List<DataGridViewRow>();
-        RelacionHorarios actualSelected = new RelacionHorarios();
 
-        public frmCrudRelacionHorarios()
+        internal Response<DataGridViewRow[]> Response { get; private set; } = new Response<DataGridViewRow[]>(false, "-1", null);
+
+        public frmCrudRelacionHorariosViewer(DataGridViewColumn[] cols, DataGridViewRow[] rows)
         {
             InitializeComponent();
 
@@ -29,6 +30,12 @@ namespace Checador_FXE
                                                             .ToArray());
             this.cboxParametroLimitacion.SelectedIndex = 0;
             this.txtValorLimitacion.Text = "";
+
+            this.dgvRelacionDeHorarios.Columns.Clear();
+            foreach (DataGridViewColumn col in cols)
+                this.dgvRelacionDeHorarios.Columns.Add(col);
+
+            actualView = rows.ToList();
         }
 
         void WriteStatus(bool status, string message)
@@ -40,17 +47,12 @@ namespace Checador_FXE
 
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
-            WriteStatus(true, "Inicializacion exitosa");
-
-            this.cboxMonth.SelectedIndex = DateTime.Now.Month - 1;
-            this.txtYear.Text = DateTime.Now.Year.ToString();
-
-            this.btnIrAMes.PerformClick();
+            LoadView();
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
 
@@ -90,23 +92,17 @@ namespace Checador_FXE
 
         }
 
-        void LoadView(int month, int year, string localidad = "Sufragio")
+        void LoadView()
         {
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                actualSelected = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year),
-                                                                        ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
-                Response loadViewProcess = actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad);
+                
+                this.dgvRelacionDeHorarios.Rows.Clear();
+                foreach (DataGridViewRow r in actualView)
+                    this.dgvRelacionDeHorarios.Rows.Add(r);
 
-                if (!loadViewProcess.Success)
-                    throw new Exception("No se cargo correctamente la vista de la grilla de datos");
-
-                actualView.Clear();
-                foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
-                    actualView.Add(r);
-
-                WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
+                WriteStatus(true, $"Visualizacion cargada con exito!");
             }
             catch (Exception ex)
             {
@@ -118,22 +114,51 @@ namespace Checador_FXE
             }
         }
 
+        DataGridViewRow[] _CloneRows()
+        {
+            var clones = new List<DataGridViewRow>();
+
+            foreach (DataGridViewRow src in this.dgvRelacionDeHorarios.Rows)
+            {
+                // Clonar la estructura de la fila
+                var newRow = (DataGridViewRow)src.Clone();
+
+                // Asegurar que existan las celdas clonadas
+                for (int i = 0; i < src.Cells.Count; i++)
+                {
+                    // Copiar valor
+                    newRow.Cells[i].Value = src.Cells[i].Value;
+
+                    // Copiar estilo visual básico
+                    newRow.Cells[i].Style = src.Cells[i].Style;
+                    newRow.Cells[i].ToolTipText = src.Cells[i].ToolTipText;
+
+                    // Copiar Tag si existe (por seguridad, no referencia a controles)
+                    try
+                    {
+                        newRow.Cells[i].Tag = src.Cells[i].Tag;
+                    }
+                    catch { }
+                }
+
+                // Copiar propiedades de fila
+                newRow.HeaderCell.Value = src.HeaderCell.Value;
+                try { newRow.Tag = src.Tag; } catch { }
+
+                clones.Add(newRow);
+            }
+
+            return clones.ToArray();
+        }
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             //
             // BOTON DE GUARDADO
             //
-            Response _resp = actualSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray())
-                                            .Save(ShowObjectLog: false);
-            WriteStatus(_resp.Success, _resp.Message);
-            
-            if (_resp.Success is false)
-                MessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException("Funcion proxima a implementar!");
+            this.Response = new Response<DataGridViewRow[]>(true, "Filas de la visualizacion actual cargada!", _CloneRows());
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
@@ -152,20 +177,30 @@ namespace Checador_FXE
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
+            var grid = (flExtendedDataGridView)sender;
+
+            // Validar índices
+            if (e.RowIndex < 0 || e.RowIndex >= grid.Rows.Count)
+                return;
+
+            var row = grid.Rows[e.RowIndex];
+
+            // Ignorar fila nueva o columnas no editables
+            if (row.IsNewRow || e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
             {
                 WriteStatus(false, "No se puede editar esta celda!");
                 return;
             }
 
-            flExtendedDataGridView grid = (flExtendedDataGridView)sender;
+            var cell = row.Cells[e.ColumnIndex];
 
-            string oldValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
-            string newValue = e.FormattedValue!.ToString()!.Trim();
+            // Obtener valores sin llamar ToString() sobre null
+            string oldValue = Convert.ToString(cell?.Value) ?? string.Empty;
+            string newValue = e.FormattedValue?.ToString()?.Trim() ?? string.Empty;
 
             // Limpiar antes de validar
-            var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            cell.ErrorText = string.Empty;
+            if (cell != null)
+                cell.ErrorText = string.Empty;
 
             // Toma lo que el usuario está intentando dejar en la celda
             int input = -1;
@@ -176,8 +211,8 @@ namespace Checador_FXE
             if (!int.TryParse(newValue, out input))
             {
                 e.Cancel = true;
-                grid.Rows[e.RowIndex]
-                    .Cells[e.ColumnIndex].ErrorText = "Debe ingresar un número entero válido.";
+                if (cell != null)
+                    cell.ErrorText = "Debe ingresar un número entero válido.";
                 return;
             }
 
@@ -194,10 +229,14 @@ namespace Checador_FXE
             }
 
             // Limpia error si es valido
-            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+            if (cell != null)
+                cell.ErrorText = string.Empty;
 
             // Guardamos la nueva informacion
-            actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
+            if (actualView != null && e.RowIndex >= 0 && e.RowIndex < actualView.Count)
+            {
+                actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
+            }
 
             WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
         }
@@ -225,103 +264,6 @@ namespace Checador_FXE
             Dgv
         }
 
-        /// <summary>
-        /// Funcion helper para los procesos de validacion de los controles
-        /// </summary>
-        /// <returns></returns>
-        Control[] getLocalsControls()
-        {
-            List<Control> lsControls = new List<Control>();
-
-            foreach (Control c in this.Controls)
-                lsControls.Add(c);
-
-            // Conversiones dinamicas de prueba
-            ComboBox cboxMonth_Dynamic = new ComboBox() { Name = this.cboxMonth.Name };
-            TextBox txtYear_Dynamic = new TextBox() { Name = this.txtYear.Name };
-
-            lsControls.AddRange(new Control[] { cboxMonth_Dynamic, txtYear_Dynamic });
-
-            return lsControls.ToArray();
-        }
-
-        bool ValidateFields(Fields f)
-        {
-            bool flag;
-
-            Multivalidator mv = new Multivalidator(this, getLocalsControls());
-
-            switch (f)
-            {
-                case Fields.Month:
-                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
-                    {
-                        return true;    // Por defecto, solo de manera momentanea
-                    }).Success;
-                    break;
-                case Fields.Year:
-                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
-                    {
-                        return (String.IsNullOrEmpty(this.txtYear.Text.Trim()) || !int.TryParse(this.txtYear.Text.Trim(), out _));
-                    }).Success;
-                    break;
-                case Fields.Dgv:
-                    flag = mv.Validate<Fields>(f, invalidValues: null, customValidation: () =>
-                    {
-                        return true;
-                    }, ValidationParams.CUSTOM_ACTION).Success;
-                    break;
-                default:
-                    flag = true;
-                    break;
-            }
-
-            return flag;
-        }
-
-
-        private void txtYear_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                // Cargamos la nueva vista de horario
-                this.btnIrAMes.PerformClick();
-                return;
-            }
-
-            // Permitir números del teclado principal (0–9)
-            bool isNumberKey = e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9;
-
-            // Permitir números del teclado numérico
-            bool isNumpadKey = e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9;
-
-            // Permitir teclas de control
-            bool isControlKey =
-                e.KeyCode == Keys.Back ||
-                e.KeyCode == Keys.Delete ||
-                e.KeyCode == Keys.Left ||
-                e.KeyCode == Keys.Right ||
-                e.KeyCode == Keys.Tab;
-
-            if (!isNumberKey && !isNumpadKey && !isControlKey)
-            {
-                e.SuppressKeyPress = true; // Bloquea el input
-                e.Handled = true;
-            }
-        }
-
-        private void btnIrAMes_Click(object sender, EventArgs e)
-        {
-            if (!ValidateFields(Fields.Year))
-            {
-                WriteStatus(false, "Año invalido!");
-                return;
-            }
-
-            DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
-            LoadView(dt.Month, dt.Year);
-        }
-
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             LoadLimitedView(LimitationParamExtensions.Parse(this.cboxParametroLimitacion.Text),
@@ -343,16 +285,5 @@ namespace Checador_FXE
                 this.btnLimitarAmbito.PerformClick();
         }
 
-        private void toolStrpBtn_NuevoTurno_Click(object sender, EventArgs e)
-        {
-            frmConfiguraciones frm = new frmConfiguraciones("tabAjustesHorario");
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                // En caso de que se haya eliminado un turno, eliminamos las referencias de ese turno
-                #region
-                throw new NotImplementedException();
-                #endregion
-            }
-        }
     }
 }

@@ -4,11 +4,12 @@ using FlowCommonWorkcore.SqlUtils.SQLite;
 using FlowControls;
 using Microsoft.Data.Sqlite;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using static Checador_FXE.Plantillas.RelacionHorarios;
 
 namespace Checador_FXE.Plantillas
 {
-    internal static class Helpers
+    internal static partial class Helpers
     {
         #region
         public static Func<string, TurnoEmpleadoCollection> parseJsonRelacion = (json) =>
@@ -249,6 +250,14 @@ namespace Checador_FXE.Plantillas
             public int Turno { get; set; }
         }
 
+        #region BUILDERS
+        public RelacionHorarios SetRelacionID(RelacionHorarioID rel)
+        {
+            this.ID = rel;
+            return this;
+        }
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
@@ -419,53 +428,62 @@ namespace Checador_FXE.Plantillas
             return this;
         }
 
-
+        /// <summary>
+        /// Carga la base de la visualizacion del CRUD de relacion de horarios en el DataGridView proporcionado, con base en el mes, año y localidad indicados.
+        /// </summary>
+        /// <param name="dgv"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="localidad"></param>
+        /// <returns></returns>
         public Response LoadCrudBaseView(flExtendedDataGridView dgv, int month, int year, string localidad)
         {
-            #region CARGA DE LA UI
+            #region CODIGO
             Response _resp = new Response(false, "Iniciando carga de los datos");
 
             try
             {
-
+                #region CARGA DE LA UI
                 DataGridViewColumn[] colBaseTemplate = {
-                new DataGridViewImageColumn() {
-                    Name = "colIcon",
-                    HeaderText = "",
-                    ReadOnly = true,
-                    Width = 32,
-                    Resizable = DataGridViewTriState.False,
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                    ImageLayout = DataGridViewImageCellLayout.Zoom
-                }, new DataGridViewTextBoxColumn() {
-                    Name = "colNumEmp",
-                    HeaderText = "No. Emp.",
-                    ReadOnly = true,
-                    Width = 60,
-                    Resizable = DataGridViewTriState.False,
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                }, new DataGridViewTextBoxColumn() {
-                    Name = "colNombre",
-                    HeaderText = "Nombre",
-                    ReadOnly = true,
-                    Width = 250,
-                    Resizable = DataGridViewTriState.False,
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                }
-            };
+                    new DataGridViewImageColumn() {
+                        Name = "colIcon",
+                        HeaderText = "",
+                        ReadOnly = true,
+                        Width = 32,
+                        Resizable = DataGridViewTriState.False,
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                        ImageLayout = DataGridViewImageCellLayout.Zoom
+                    }, new DataGridViewTextBoxColumn() {
+                        Name = "colNumEmp",
+                        HeaderText = "No. Emp.",
+                        ReadOnly = true,
+                        Width = 60,
+                        Resizable = DataGridViewTriState.False,
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    }, new DataGridViewTextBoxColumn() {
+                        Name = "colNombre",
+                        HeaderText = "Nombre",
+                        ReadOnly = true,
+                        Width = 250,
+                        Resizable = DataGridViewTriState.False,
+                        AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    }
+                };
 
-                Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
+                Response<Empleado[]> queryGetAllEmpleados = Empleado.GetAll(localidad, ShowObjectLog: false);
 
                 dgv.Rows.Clear();
                 _resp.Log.Add($"Filas eliminadas...");
                 dgv.Columns.Clear();
                 _resp.Log.Add($"Columnas eliminadas...");
 
-                if (!_SERV_RESP.Success)
+                if (!queryGetAllEmpleados.Success)
                 {
-                    MessageBox.Show(_SERV_RESP.Message);
+                    _resp.Log.Add($"No se pudieron obtener los empleados para la localidad '{localidad}'! {queryGetAllEmpleados.Message}");
                     return _resp;
-                }
+                } else 
+                    _resp.Log.Add($"Empleados obtenidos para la localidad '{localidad}'...");
+
 
                 /* 
                  * Indices de las celdas de las filas que pertenecen a los dias domingos
@@ -473,8 +491,9 @@ namespace Checador_FXE.Plantillas
                 List<int> _sundays = new List<int>();
 
                 // Preparamos primero las columnas del DGV
-                dgv.Columns.AddRange(colBaseTemplate);
-                for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
+                dgv.Columns.AddRange(colBaseTemplate); _resp.Log.Add($"Columnas base agregadas...");
+                int monthTotalDays = DateTime.DaysInMonth(year, month);
+                for (int i = 1; i <= monthTotalDays; i++)
                 {
                     DateOnly _day = new DateOnly(year, month, i);
 
@@ -489,10 +508,12 @@ namespace Checador_FXE.Plantillas
 
                     if (_day.DayOfWeek == DayOfWeek.Sunday)
                         _sundays.Add(i);
-                }
-
-                // Cargamos las filas
-                foreach (Empleado j in _SERV_RESP.Object!)
+                } _resp.Log.Add($"Columnas de {monthTotalDays} dias agregadas...");
+                #endregion
+                #region CARGA USUARIOS EN LA VISUALIZACION
+                // Cargamos las filas con la informacion
+                _resp.Log.Add($"Comenzando adicion de '{queryGetAllEmpleados.Object!.Count()}' empleados...");
+                foreach (Empleado j in queryGetAllEmpleados.Object!)
                 {
                     DataGridViewRow _row = new DataGridViewRow();
                     _row.Cells.AddRange(
@@ -515,9 +536,22 @@ namespace Checador_FXE.Plantillas
 
                     dgv.Rows.Add(_row);
                 }
+                #endregion
+                #region CARGA DE VALORES
+                // Recorremos todas las filas para ir llenando los turnos asignados a esos dias
+                foreach (DataGridViewRow r in dgv.Rows)
+                {
+                    int noEmp = Int32.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
+                    for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
+                    {
+                        TurnoEmpleado targetTurno = this.Relacion[noEmp, d_i - 2];
+                        r.Cells[d_i].Value = targetTurno.Turno == 0 ? "" : targetTurno.Turno;   // Escribimos el turno asignado
+                    }
+                }
+                #endregion
 
                 _resp.Success = true;
-                _resp.Message = $"Base de la visualizacion cargada correctamente!";
+                _resp.Message = $"Base de la visualizacion cargada correctamente para '{month:00}/{year}'!";
             }
             catch (Exception ex)
             {

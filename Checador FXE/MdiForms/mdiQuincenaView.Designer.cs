@@ -66,10 +66,10 @@
             txtEmpleadoSeleccionado = new FlowControls.flTextBoxLabelJoint();
             lviewRegistros = new ListView();
             pageCastingSetting = new TabPage();
-            label1 = new Label();
-            panel4 = new Panel();
-            dgvRelacionDeHorarios = new FlowControls.flExtendedDataGridView();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            panel5 = new Panel();
             flLabelHeader1 = new FlowControls.flLabelHeader();
+            btnSincronizarAjustes = new FlowControls.flCustomButton();
             panel1 = new Panel();
             dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
             colTurnoNom = new DataGridViewTextBoxColumn();
@@ -78,10 +78,15 @@
             colHorarioUno_Salida = new DataGridViewTextBoxColumn();
             colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
             colHorarioDos_Salida = new DataGridViewTextBoxColumn();
-            btnSincronizarAjustes = new FlowControls.flCustomButton();
-            flLabelHeader2 = new FlowControls.flLabelHeader();
             txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
             chckDomingosNoLaborables = new FlowControls.flCheckBoxLabelJoint();
+            panel6 = new Panel();
+            btnDefinirRelacionMensual = new FlowControls.flCustomButton();
+            btnExpandir = new FlowControls.flCustomButton();
+            label1 = new Label();
+            flLabelHeader2 = new FlowControls.flLabelHeader();
+            panel4 = new Panel();
+            dgvRelacionDeHorarios = new FlowControls.flExtendedDataGridView();
             pageCastingResults = new TabPage();
             splitResultadosCasting_Background = new SplitContainer();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -107,10 +112,13 @@
             splitContainer2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             pageCastingSetting.SuspendLayout();
-            panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
+            tableLayoutPanel5.SuspendLayout();
+            panel5.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).BeginInit();
+            panel6.SuspendLayout();
+            panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
             pageCastingResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitResultadosCasting_Background).BeginInit();
             splitResultadosCasting_Background.Panel1.SuspendLayout();
@@ -140,7 +148,7 @@
             flExtendedTabControl1.Name = "flExtendedTabControl1";
             flExtendedTabControl1.SelectedIndex = 0;
             flExtendedTabControl1.SelectionColor = Color.DeepSkyBlue;
-            flExtendedTabControl1.Size = new Size(825, 546);
+            flExtendedTabControl1.Size = new Size(830, 586);
             flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
             flExtendedTabControl1.TabIndex = 0;
             flExtendedTabControl1.UnselectionColor = Color.LightGray;
@@ -153,7 +161,7 @@
             pageGeneral.Controls.Add(tableLayoutPanel4);
             pageGeneral.Location = new Point(4, 44);
             pageGeneral.Name = "pageGeneral";
-            pageGeneral.Size = new Size(817, 498);
+            pageGeneral.Size = new Size(822, 538);
             pageGeneral.TabIndex = 0;
             pageGeneral.Text = "General";
             // 
@@ -169,7 +177,7 @@
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 83.1579F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 16.8421059F));
-            tableLayoutPanel4.Size = new Size(815, 496);
+            tableLayoutPanel4.Size = new Size(820, 536);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // panel3
@@ -183,7 +191,7 @@
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.Size = new Size(809, 406);
+            panel3.Size = new Size(814, 439);
             panel3.TabIndex = 0;
             // 
             // txtAutorizador
@@ -282,7 +290,7 @@
             headerAsistencias.MinimumSize = new Size(0, 45);
             headerAsistencias.Name = "headerAsistencias";
             headerAsistencias.Padding = new Padding(20, 3, 20, 5);
-            headerAsistencias.Size = new Size(809, 45);
+            headerAsistencias.Size = new Size(814, 45);
             headerAsistencias.TabIndex = 1;
             // 
             // pageParsingResults
@@ -475,98 +483,47 @@
             pageCastingSetting.AutoScroll = true;
             pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
-            pageCastingSetting.Controls.Add(label1);
-            pageCastingSetting.Controls.Add(panel4);
-            pageCastingSetting.Controls.Add(flLabelHeader1);
-            pageCastingSetting.Controls.Add(panel1);
-            pageCastingSetting.Controls.Add(btnSincronizarAjustes);
-            pageCastingSetting.Controls.Add(flLabelHeader2);
-            pageCastingSetting.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
-            pageCastingSetting.Controls.Add(chckDomingosNoLaborables);
+            pageCastingSetting.Controls.Add(tableLayoutPanel5);
             pageCastingSetting.Location = new Point(4, 44);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(817, 498);
+            pageCastingSetting.Size = new Size(822, 538);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
-            // label1
+            // tableLayoutPanel5
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Bottom;
-            label1.Location = new Point(3, 701);
-            label1.Name = "label1";
-            label1.Size = new Size(0, 20);
-            label1.TabIndex = 8;
+            tableLayoutPanel5.AutoScroll = true;
+            tableLayoutPanel5.ColumnCount = 1;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.Controls.Add(panel5, 0, 0);
+            tableLayoutPanel5.Controls.Add(panel6, 0, 1);
+            tableLayoutPanel5.Dock = DockStyle.Fill;
+            tableLayoutPanel5.Location = new Point(3, 3);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            tableLayoutPanel5.RowCount = 2;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 357F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 500F));
+            tableLayoutPanel5.Size = new Size(814, 530);
+            tableLayoutPanel5.TabIndex = 9;
             // 
-            // panel4
+            // panel5
             // 
-            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            panel4.BorderStyle = BorderStyle.FixedSingle;
-            panel4.Controls.Add(dgvRelacionDeHorarios);
-            panel4.Location = new Point(7, 406);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(688, 298);
-            panel4.TabIndex = 7;
-            // 
-            // dgvRelacionDeHorarios
-            // 
-            dgvRelacionDeHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvRelacionDeHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgvRelacionDeHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvRelacionDeHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
-            dgvRelacionDeHorarios.BorderStyle = BorderStyle.None;
-            dgvRelacionDeHorarios.ButtonAddEnabled = true;
-            dgvRelacionDeHorarios.ButtonEditEnabled = false;
-            dgvRelacionDeHorarios.ButtonRemoveEnabled = false;
-            dgvRelacionDeHorarios.ButtonViewEnabled = false;
-            dgvRelacionDeHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvRelacionDeHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dgvRelacionDeHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvRelacionDeHorarios.DefaultCellStyle = dataGridViewCellStyle3;
-            dgvRelacionDeHorarios.Dock = DockStyle.Fill;
-            dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
-            dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
-            dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvRelacionDeHorarios.Location = new Point(0, 0);
-            dgvRelacionDeHorarios.Margin = new Padding(0);
-            dgvRelacionDeHorarios.MultiSelect = false;
-            dgvRelacionDeHorarios.Name = "dgvRelacionDeHorarios";
-            dgvRelacionDeHorarios.RowHeadersVisible = false;
-            dgvRelacionDeHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
-            dgvRelacionDeHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            dgvRelacionDeHorarios.SelectedCellColor = Color.Moccasin;
-            dgvRelacionDeHorarios.SelectedRowColor = Color.SteelBlue;
-            dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
-            dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(686, 296);
-            dgvRelacionDeHorarios.TabIndex = 5;
+            panel5.Controls.Add(flLabelHeader1);
+            panel5.Controls.Add(btnSincronizarAjustes);
+            panel5.Controls.Add(panel1);
+            panel5.Controls.Add(txtMaximoRetrasoMinutosPermitidos);
+            panel5.Controls.Add(chckDomingosNoLaborables);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(3, 3);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(808, 351);
+            panel5.TabIndex = 0;
             // 
             // flLabelHeader1
             // 
-            flLabelHeader1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             flLabelHeader1.BackColor = SystemColors.GradientInactiveCaption;
+            flLabelHeader1.Dock = DockStyle.Top;
             flLabelHeader1.Font = new Font("Segoe UI", 14F);
             flLabelHeader1.HeaderText = "Turnos y Horarios";
             flLabelHeader1.HeaderTextAlign = ContentAlignment.BottomLeft;
@@ -574,19 +531,34 @@
             flLabelHeader1.LabelImage = (Image)resources.GetObject("flLabelHeader1.LabelImage");
             flLabelHeader1.LineColor = Color.Black;
             flLabelHeader1.LineThickness = 1;
-            flLabelHeader1.Location = new Point(3, 3);
+            flLabelHeader1.Location = new Point(0, 0);
             flLabelHeader1.Margin = new Padding(0);
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(692, 45);
+            flLabelHeader1.Size = new Size(808, 45);
             flLabelHeader1.TabIndex = 2;
+            // 
+            // btnSincronizarAjustes
+            // 
+            btnSincronizarAjustes.BackColor = SystemColors.ActiveCaption;
+            btnSincronizarAjustes.FlatStyle = FlatStyle.Flat;
+            btnSincronizarAjustes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnSincronizarAjustes.Image = Properties.Resources.sync2_16;
+            btnSincronizarAjustes.Location = new Point(646, 50);
+            btnSincronizarAjustes.Name = "btnSincronizarAjustes";
+            btnSincronizarAjustes.Size = new Size(131, 50);
+            btnSincronizarAjustes.TabIndex = 3;
+            btnSincronizarAjustes.Text = " Sincronizar    Parametros";
+            btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnSincronizarAjustes.UseVisualStyleBackColor = false;
+            btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
             // 
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(dgvTurnosHorarios);
-            panel1.Location = new Point(6, 51);
+            panel1.Location = new Point(6, 50);
             panel1.Name = "panel1";
             panel1.Size = new Size(634, 261);
             panel1.TabIndex = 4;
@@ -594,11 +566,11 @@
             // dgvTurnosHorarios
             // 
             dgvTurnosHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle5.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle5.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle5.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvTurnosHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvTurnosHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvTurnosHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvTurnosHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
             dgvTurnosHorarios.BorderStyle = BorderStyle.None;
@@ -607,25 +579,25 @@
             dgvTurnosHorarios.ButtonRemoveEnabled = false;
             dgvTurnosHorarios.ButtonViewEnabled = false;
             dgvTurnosHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle6.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle6.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvTurnosHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.White;
-            dataGridViewCellStyle7.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle7.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle7.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle7.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.White;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle3;
             dgvTurnosHorarios.Dock = DockStyle.Fill;
             dgvTurnosHorarios.EnableHeadersVisualStyles = false;
             dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
@@ -636,8 +608,8 @@
             dgvTurnosHorarios.Name = "dgvTurnosHorarios";
             dgvTurnosHorarios.RowHeadersVisible = false;
             dgvTurnosHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle8.SelectionBackColor = Color.Orange;
-            dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
+            dgvTurnosHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvTurnosHorarios.ScrollBars = ScrollBars.Vertical;
             dgvTurnosHorarios.SelectedCellColor = Color.Moccasin;
             dgvTurnosHorarios.SelectedRowColor = Color.SteelBlue;
@@ -695,46 +667,12 @@
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
             colHorarioDos_Salida.Width = 126;
             // 
-            // btnSincronizarAjustes
-            // 
-            btnSincronizarAjustes.BackColor = SystemColors.ActiveCaption;
-            btnSincronizarAjustes.FlatStyle = FlatStyle.Flat;
-            btnSincronizarAjustes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnSincronizarAjustes.Image = Properties.Resources.sync2_16;
-            btnSincronizarAjustes.Location = new Point(646, 51);
-            btnSincronizarAjustes.Name = "btnSincronizarAjustes";
-            btnSincronizarAjustes.Size = new Size(144, 50);
-            btnSincronizarAjustes.TabIndex = 3;
-            btnSincronizarAjustes.Text = " Sincronizar    Parametros";
-            btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnSincronizarAjustes.UseVisualStyleBackColor = false;
-            btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
-            // 
-            // flLabelHeader2
-            // 
-            flLabelHeader2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            flLabelHeader2.BackColor = SystemColors.GradientInactiveCaption;
-            flLabelHeader2.Font = new Font("Segoe UI", 14F);
-            flLabelHeader2.HeaderText = "Relacion Mensual";
-            flLabelHeader2.HeaderTextAlign = ContentAlignment.BottomLeft;
-            flLabelHeader2.HeaderTextColor = SystemColors.ControlText;
-            flLabelHeader2.LabelImage = (Image)resources.GetObject("flLabelHeader2.LabelImage");
-            flLabelHeader2.LineColor = Color.Black;
-            flLabelHeader2.LineThickness = 1;
-            flLabelHeader2.Location = new Point(3, 355);
-            flLabelHeader2.Margin = new Padding(0);
-            flLabelHeader2.MinimumSize = new Size(0, 45);
-            flLabelHeader2.Name = "flLabelHeader2";
-            flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader2.Size = new Size(692, 45);
-            flLabelHeader2.TabIndex = 3;
-            // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
             txtMaximoRetrasoMinutosPermitidos.Enabled = false;
             txtMaximoRetrasoMinutosPermitidos.EntryFont = new Font("Consolas", 10F);
             txtMaximoRetrasoMinutosPermitidos.Label = "Tiempo maximo de retraso permitido:";
-            txtMaximoRetrasoMinutosPermitidos.Location = new Point(6, 318);
+            txtMaximoRetrasoMinutosPermitidos.Location = new Point(3, 317);
             txtMaximoRetrasoMinutosPermitidos.MinimumSize = new Size(100, 34);
             txtMaximoRetrasoMinutosPermitidos.Name = "txtMaximoRetrasoMinutosPermitidos";
             txtMaximoRetrasoMinutosPermitidos.RootLineColor = Color.Gray;
@@ -750,12 +688,151 @@
             chckDomingosNoLaborables.CheckBoxBackColor = SystemColors.GradientInactiveCaption;
             chckDomingosNoLaborables.Checked = true;
             chckDomingosNoLaborables.Label = "Dias domingos NO laborables:";
-            chckDomingosNoLaborables.Location = new Point(377, 318);
+            chckDomingosNoLaborables.Location = new Point(374, 317);
             chckDomingosNoLaborables.MinimumSize = new Size(150, 30);
             chckDomingosNoLaborables.Name = "chckDomingosNoLaborables";
             chckDomingosNoLaborables.RootLineColor = Color.Gray;
             chckDomingosNoLaborables.Size = new Size(364, 33);
             chckDomingosNoLaborables.TabIndex = 6;
+            // 
+            // panel6
+            // 
+            panel6.Controls.Add(btnDefinirRelacionMensual);
+            panel6.Controls.Add(btnExpandir);
+            panel6.Controls.Add(label1);
+            panel6.Controls.Add(flLabelHeader2);
+            panel6.Controls.Add(panel4);
+            panel6.Location = new Point(3, 360);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(789, 494);
+            panel6.TabIndex = 1;
+            // 
+            // btnDefinirRelacionMensual
+            // 
+            btnDefinirRelacionMensual.BackColor = SystemColors.ActiveCaption;
+            btnDefinirRelacionMensual.FlatStyle = FlatStyle.Flat;
+            btnDefinirRelacionMensual.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnDefinirRelacionMensual.Image = Properties.Resources.check;
+            btnDefinirRelacionMensual.Location = new Point(249, 344);
+            btnDefinirRelacionMensual.Margin = new Padding(3, 3, 8, 3);
+            btnDefinirRelacionMensual.Name = "btnDefinirRelacionMensual";
+            btnDefinirRelacionMensual.Size = new Size(231, 45);
+            btnDefinirRelacionMensual.TabIndex = 10;
+            btnDefinirRelacionMensual.Text = " Definir Relacion Mensual";
+            btnDefinirRelacionMensual.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnDefinirRelacionMensual.UseVisualStyleBackColor = false;
+            btnDefinirRelacionMensual.Click += btnDefinirRelacionMensual_Click;
+            // 
+            // btnExpandir
+            // 
+            btnExpandir.BackColor = SystemColors.ActiveCaption;
+            btnExpandir.FlatStyle = FlatStyle.Flat;
+            btnExpandir.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnExpandir.Image = Properties.Resources.exportar_16;
+            btnExpandir.Location = new Point(7, 344);
+            btnExpandir.Margin = new Padding(3, 3, 8, 3);
+            btnExpandir.Name = "btnExpandir";
+            btnExpandir.Size = new Size(231, 45);
+            btnExpandir.TabIndex = 9;
+            btnExpandir.Text = " Expandir Visualizacion";
+            btnExpandir.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnExpandir.UseVisualStyleBackColor = false;
+            btnExpandir.Click += btnExpandir_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Bottom;
+            label1.Location = new Point(0, 474);
+            label1.Name = "label1";
+            label1.Size = new Size(13, 20);
+            label1.TabIndex = 8;
+            label1.Text = " ";
+            // 
+            // flLabelHeader2
+            // 
+            flLabelHeader2.BackColor = SystemColors.GradientInactiveCaption;
+            flLabelHeader2.Dock = DockStyle.Top;
+            flLabelHeader2.Font = new Font("Segoe UI", 14F);
+            flLabelHeader2.HeaderText = "Relacion Mensual";
+            flLabelHeader2.HeaderTextAlign = ContentAlignment.BottomLeft;
+            flLabelHeader2.HeaderTextColor = SystemColors.ControlText;
+            flLabelHeader2.LabelImage = (Image)resources.GetObject("flLabelHeader2.LabelImage");
+            flLabelHeader2.LineColor = Color.Black;
+            flLabelHeader2.LineThickness = 1;
+            flLabelHeader2.Location = new Point(0, 0);
+            flLabelHeader2.Margin = new Padding(0);
+            flLabelHeader2.MinimumSize = new Size(0, 45);
+            flLabelHeader2.Name = "flLabelHeader2";
+            flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
+            flLabelHeader2.Size = new Size(789, 45);
+            flLabelHeader2.TabIndex = 3;
+            // 
+            // panel4
+            // 
+            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel4.BorderStyle = BorderStyle.FixedSingle;
+            panel4.Controls.Add(dgvRelacionDeHorarios);
+            panel4.Location = new Point(7, 48);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(779, 294);
+            panel4.TabIndex = 7;
+            // 
+            // dgvRelacionDeHorarios
+            // 
+            dgvRelacionDeHorarios.AllowUserToAddRows = false;
+            dataGridViewCellStyle5.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle5.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle5.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.ActiveCaptionText;
+            dgvRelacionDeHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dgvRelacionDeHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvRelacionDeHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
+            dgvRelacionDeHorarios.BorderStyle = BorderStyle.None;
+            dgvRelacionDeHorarios.ButtonAddEnabled = true;
+            dgvRelacionDeHorarios.ButtonEditEnabled = false;
+            dgvRelacionDeHorarios.ButtonRemoveEnabled = false;
+            dgvRelacionDeHorarios.ButtonViewEnabled = false;
+            dgvRelacionDeHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = Color.SteelBlue;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle6.ForeColor = SystemColors.ButtonFace;
+            dataGridViewCellStyle6.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dgvRelacionDeHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dgvRelacionDeHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.White;
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle7.ForeColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle7.Padding = new Padding(3, 0, 3, 0);
+            dataGridViewCellStyle7.SelectionBackColor = Color.Orange;
+            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dgvRelacionDeHorarios.DefaultCellStyle = dataGridViewCellStyle7;
+            dgvRelacionDeHorarios.Dock = DockStyle.Fill;
+            dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
+            dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
+            dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
+            dgvRelacionDeHorarios.Location = new Point(0, 0);
+            dgvRelacionDeHorarios.Margin = new Padding(0);
+            dgvRelacionDeHorarios.MultiSelect = false;
+            dgvRelacionDeHorarios.Name = "dgvRelacionDeHorarios";
+            dgvRelacionDeHorarios.RowHeadersVisible = false;
+            dgvRelacionDeHorarios.RowHeadersWidth = 45;
+            dataGridViewCellStyle8.SelectionBackColor = Color.Orange;
+            dgvRelacionDeHorarios.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dgvRelacionDeHorarios.SelectedCellColor = Color.Moccasin;
+            dgvRelacionDeHorarios.SelectedRowColor = Color.SteelBlue;
+            dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
+            dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvRelacionDeHorarios.ShowContextMenu = true;
+            dgvRelacionDeHorarios.Size = new Size(777, 292);
+            dgvRelacionDeHorarios.TabIndex = 5;
+            dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
+            dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             // 
             // pageCastingResults
             // 
@@ -908,7 +985,7 @@
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 39F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(831, 591);
+            tableLayoutPanel2.Size = new Size(836, 631);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // flQuickAccessPanel1
@@ -979,7 +1056,7 @@
             flQuickAccessPanel1.Location = new Point(3, 3);
             flQuickAccessPanel1.MinimumSize = new Size(0, 34);
             flQuickAccessPanel1.Name = "flQuickAccessPanel1";
-            flQuickAccessPanel1.Size = new Size(825, 34);
+            flQuickAccessPanel1.Size = new Size(830, 34);
             flQuickAccessPanel1.TabIndex = 1;
             flQuickAccessPanel1.OnButtonClicked += flQuickAccessPanel1_OnButtonClicked;
             // 
@@ -988,7 +1065,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(851, 611);
+            ClientSize = new Size(856, 651);
             Controls.Add(tableLayoutPanel2);
             Font = new Font("Segoe UI", 10F);
             FormBorderStyle = FormBorderStyle.None;
@@ -1012,11 +1089,14 @@
             splitContainer2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             pageCastingSetting.ResumeLayout(false);
-            pageCastingSetting.PerformLayout();
-            panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).EndInit();
+            tableLayoutPanel5.ResumeLayout(false);
+            panel5.ResumeLayout(false);
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvTurnosHorarios).EndInit();
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
+            panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).EndInit();
             pageCastingResults.ResumeLayout(false);
             splitResultadosCasting_Background.Panel1.ResumeLayout(false);
             splitResultadosCasting_Background.Panel2.ResumeLayout(false);
@@ -1075,9 +1155,14 @@
         private DataGridViewTextBoxColumn colHorarioDos_Entrada;
         private DataGridViewTextBoxColumn colHorarioDos_Salida;
         private FlowControls.flLabelHeader flLabelHeader1;
+        private TableLayoutPanel tableLayoutPanel5;
+        private Panel panel5;
+        private Panel panel6;
         private FlowControls.flLabelHeader flLabelHeader2;
-        private Label label1;
         private Panel panel4;
         private FlowControls.flExtendedDataGridView dgvRelacionDeHorarios;
+        private FlowControls.flCustomButton btnExpandir;
+        private Label label1;
+        private FlowControls.flCustomButton btnDefinirRelacionMensual;
     }
 }

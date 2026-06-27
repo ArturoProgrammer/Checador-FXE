@@ -1,10 +1,10 @@
 ﻿using Checador_FXE.Plantillas;
+using DocumentFormat.OpenXml.Bibliography;
 using FlowCommonWorkcore;
 using FlowControls;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace Checador_FXE.MdiForms
 {
@@ -15,6 +15,7 @@ namespace Checador_FXE.MdiForms
         internal CafProjFile ActualCafProject { get; set; }
         internal RelacionHorarios RelacionHorarioSelected { get; set; }
         internal string ProjectFullname { get; set; } = "-1";
+        internal string LugarRemitente { get; set; } = Properties.Settings.Default.LOCALIDAD_DEFAULT;
 
         bool projByCafOpened = false;
 
@@ -24,13 +25,14 @@ namespace Checador_FXE.MdiForms
         /// <param name="title"></param>
         /// <param name="rpt"></param>
         /// <param name="mdiParent"></param>
-        internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent)
+        internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent, string localidadRemitente)
         {
             InitializeComponent();
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
             this.RelacionHorarioSelected = RelacionHorarios.Get(rpt.RelacionID).Object ?? throw new Exception("Error durante el parseo de datos");
+            this.LugarRemitente = localidadRemitente;
 
             LoadAllData();
 
@@ -55,12 +57,11 @@ namespace Checador_FXE.MdiForms
             this.LegacyParent = mdiParent;
             projCaf.MdiForm = this; this.ActualCafProject = projCaf;
             this.ProjectFullname = projFullname;
-            this.RelacionHorarioSelected = projCaf.ConfiguracionCasting.Relacion ?? throw new Exception("Error durante el parseo de datos");
-            /*
-            this.RelacionHorarioSelected = RelacionHorarios.Parse(projCaf.ConfiguracionCasting.RelacionID,
+            this.LugarRemitente = projCaf.General.LugarRemitente;
+            //this.RelacionHorarioSelected = projCaf.ConfiguracionCasting.Relacion ?? throw new Exception("Error durante el parseo de datos");
+            this.RelacionHorarioSelected = RelacionHorarios.Parse(projCaf.ConfiguracionCasting.RelacionTurnosID,
                                                                     projCaf.ConfiguracionCasting.TurnosEmpleadoJson,
-                                                                    projCaf.ConfiguracionCasting.RelacionHASH, ShowObjectLog: true).Object ?? throw new Exception("Error durante el parseo de datos");
-            */
+                                                                    projCaf.ConfiguracionCasting.RelacionHash.ToString(), ShowObjectLog: true).Object ?? throw new Exception("Error durante el parseo de datos");
             LoadAllData();
         }
 
@@ -88,7 +89,7 @@ namespace Checador_FXE.MdiForms
 
             // Cargamos los valores de las propiedades
             this.txtAreaRemitente.Value = "";
-            this.txtLugarRemitente.Value = Properties.Settings.Default.LUGAR_REMITENTE_DEFAULT;
+            this.txtLugarRemitente.Value = LugarRemitente;
             this.dateFechaRemitente.Value = DateTime.Now;
 
             // Cargamos los chequeos obtenidos del analisis
@@ -116,12 +117,22 @@ namespace Checador_FXE.MdiForms
             this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
             this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
             */
+
+            // Carga de la relacion mensual correspondiente al proyecto
+            int _year = RelacionHorarioSelected.ID.Year;
+            int _month = DateTime.Parse($"01-{RelacionHorarioSelected.ID.Month}-0001").Month;
+            Response loadProccess = RelacionHorarioSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, _month, _year, LugarRemitente);
+
+            this.flLabelHeader2.HeaderText += $" ({RelacionHorarioSelected.ID.Month}/{_year})";
+
+            if (!loadProccess.Success)
+                Program.WriteStatus(false, $"Error inesperado. {loadProccess.Message}!");
         }
 
         private void mdiQuincenaView_Load(object sender, EventArgs e)
         {
             this.splitContainer2.SplitterDistance = 570;
-            this.splitContainer1.SplitterDistance = 280;
+            this.splitContainer1.SplitterDistance = 400;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
 
             #region Coloreamos los dias del reporte en ambos EventCalendar
@@ -220,6 +231,27 @@ namespace Checador_FXE.MdiForms
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Control | Keys.G:
+                    this.flQuickAccessPanel1.PerformButtonClick("btnGuardar");
+                    break;
+                case Keys.Control | Keys.P:
+                    this.flQuickAccessPanel1.PerformButtonClick("btnImprimir");
+                    break;
+                case Keys.F5:
+                    this.flQuickAccessPanel1.PerformButtonClick("btnGenerar");
+                    break;
+                case Keys.Control | Keys.E:
+                    this.flQuickAccessPanel1.PerformButtonClick("btnEjecutar");
+                    break;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         /// <summary>
         /// Bandera para saber si el archivo esta guardado
         /// </summary>
@@ -269,7 +301,6 @@ namespace Checador_FXE.MdiForms
 
                     // Abrimos los archivos generados
                     if (Properties.Settings.Default.ABRIR_SIEMPRE_AL_GENERAR)
-                    {
                         foreach (string i in paths)
                         {
                             ProcessStartInfo psi = new ProcessStartInfo()
@@ -280,7 +311,6 @@ namespace Checador_FXE.MdiForms
 
                             Process.Start(psi);
                         }
-                    }
 
                     Program.WriteStatus(true, "Generacion de informe finalizado con exito!");
                     #endregion
@@ -295,32 +325,16 @@ namespace Checador_FXE.MdiForms
                     PairEmpleado_FechaAsistencia = null;    // Establecemos este valor default para evitar conflictos
 
                     #region HELPERS DE CODIGO
+                    RelacionHorarios _relac = this.RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Select(r => r).ToArray());
+
                     // Obtiene el tiempo de entrada maximo permitido para la asistencia
                     Func<TimeSpan, TimeSpan> _GetMaximumTime = (TimeSpan entradaNormal) => entradaNormal.Add(new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0));
 
                     // Obtiene el turno correspondiente del dia y el usuario indicado
-                    /*
-                     * 
-                     * FUNCION ANTIGUA, SE MANTIENE POR COMPATIBILIDAD HEREDADA, 
-                     * PERO SE RECOMIENDA USAR LA NUEVA FUNCION DEBAJO DE ESTA
-                     * 
-                    Func<Dictionary<string, List<(DateOnly, int)>>, DateOnly, string, int> _GetTurn = delegate (Dictionary<string, List<(DateOnly, int)>> c, DateOnly fecha, string empNombre)
-                    {
-                        foreach (var o in c[empNombre])
-                        {
-                            if (o.Item1.Equals(fecha))
-                                return o.Item2;
-                        }
-
-                        return -1;
-                    };
-                    */
-
                     /* 
                      * VERSION NUEVA DE LA FUNCION EN LA CUAL YA SE IMPLEMENTA LA CLASE DE TURNOS, 
                      * POR LO QUE SE SIMPLIFICA BASTANTE EL PROCESO DE OBTENCION DEL TURNO CORRESPONDIENTE
                      * */
-
                     Func<TurnoEmpleadoCollection, DateOnly, string, int> _GetTurn = delegate (TurnoEmpleadoCollection c, DateOnly fecha, string empNombre)
                     {
                         return c[c.Items.Cast<TurnoEmpleado>().FirstOrDefault(e => e.Nombre == empNombre).NoEmp, fecha.Day].Turno;
@@ -345,8 +359,8 @@ namespace Checador_FXE.MdiForms
                             return TipoAsistencia.NINGUNO;
 
                         // Usar la relación ya cargada cuando esté disponible evita reconstruirla por mes/año
-                        //RelacionHorarios _relac = this.RelacionHorarioSelected ?? RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!;
-                        RelacionHorarios _relac = this.RelacionHorarioSelected ?? throw new Exception("No se obtuvo la relacion correspondiente");
+                        //RelacionHorarios _relac = this.RelacionHorarioSelected ?? throw new Exception("No se obtuvo la relacion correspondiente");
+
 
                         TurnoEmpleado? _target = null;
                         try
@@ -367,7 +381,7 @@ namespace Checador_FXE.MdiForms
 
                         return TipoAsistencia.FALTA;
                     };
-                    
+
                     // Construye el diccionario correspondiente de fechas del periodo correspondiente
                     Func<Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>> BuildPeriodTimeList = delegate ()
                     {
@@ -675,6 +689,90 @@ namespace Checador_FXE.MdiForms
         private void flExtendedTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
+        {
+            // Establecemos el icono de seleccionado
+            if (this.dgvRelacionDeHorarios.Rows.Count > 0)
+                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+        }
+
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            // Establecemos el icono de no seleccionado
+            if (this.dgvRelacionDeHorarios.Rows.Count > 0)
+                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+        }
+
+        DataGridViewRow[] _CloneRows()
+        {
+            var clones = new List<DataGridViewRow>();
+
+            foreach (DataGridViewRow src in this.dgvRelacionDeHorarios.Rows)
+            {
+                // Clonar la estructura de la fila
+                var newRow = (DataGridViewRow)src.Clone();
+
+                // Asegurar que existan las celdas clonadas
+                for (int i = 0; i < src.Cells.Count; i++)
+                {
+                    // Copiar valor
+                    newRow.Cells[i].Value = src.Cells[i].Value;
+
+                    // Copiar estilo visual básico
+                    newRow.Cells[i].Style = src.Cells[i].Style;
+                    newRow.Cells[i].ToolTipText = src.Cells[i].ToolTipText;
+
+                    // Copiar Tag si existe (por seguridad, no referencia a controles)
+                    try
+                    {
+                        newRow.Cells[i].Tag = src.Cells[i].Tag;
+                    }
+                    catch { }
+                }
+
+                // Copiar propiedades de fila
+                newRow.HeaderCell.Value = src.HeaderCell.Value;
+                try { newRow.Tag = src.Tag; } catch { }
+
+                clones.Add(newRow);
+            }
+
+            return clones.ToArray();
+        }
+
+        private void btnExpandir_Click(object sender, EventArgs e)
+        {
+            // Visualizamos la relacion en una ventana externa
+
+            frmCrudRelacionHorariosViewer frm = new frmCrudRelacionHorariosViewer(
+                this.dgvRelacionDeHorarios.Columns.Cast<DataGridViewColumn>().Select(c => (DataGridViewColumn)c.Clone()).ToArray(),
+                _CloneRows()
+            );
+
+            if (frm.ShowDialog() == DialogResult.Cancel)
+            {
+                Program.WriteStatus(true, "Operacion cancelada por el usuario!");
+                return;
+            }
+
+            // Actualizamos la relacion de horarios
+            if (!frm.Response.Success)
+                return;
+
+            this.dgvRelacionDeHorarios.Rows.Clear();
+            foreach (DataGridViewRow r in frm.Response.Object!)
+                this.dgvRelacionDeHorarios.Rows.Add(r);
+
+            Program.WriteStatus(true, "Relación de horarios actualizada!");
+        }
+
+        private void btnDefinirRelacionMensual_Click(object sender, EventArgs e)
+        {
+            // Actualizamos la relacion de horario actualmente seleccionado
+            RelacionHorarioSelected = RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray());
+            Program.WriteStatus(true, $"Relacion de horario actualizada!");
         }
     }
 }
