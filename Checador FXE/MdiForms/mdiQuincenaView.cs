@@ -1,5 +1,4 @@
-﻿using Checador_FXE.Plantillas;
-using DocumentFormat.OpenXml.Bibliography;
+﻿using Checador_FXE.Plantillas; 
 using FlowCommonWorkcore;
 using FlowControls;
 using System.Collections.ObjectModel;

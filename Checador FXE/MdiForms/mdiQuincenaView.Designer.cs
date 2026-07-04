@@ -347,12 +347,14 @@
             // 
             // calendarAsistencias
             // 
+            calendarAsistencias.CalendarCulture = new System.Globalization.CultureInfo("es-MX");
             calendarAsistencias.ColorBorde = Color.Gray;
             calendarAsistencias.ColorDiasSemana = Color.White;
             calendarAsistencias.ColorDomingos = Color.LightCoral;
             calendarAsistencias.ColorEncabezado = Color.SteelBlue;
             calendarAsistencias.ColorEventoPredeterminado = Color.Blue;
             calendarAsistencias.ColorTextoEncabezado = Color.White;
+            calendarAsistencias.DayNameSize = FlowControls.DayNameDisplaySize.SHORT;
             calendarAsistencias.Dock = DockStyle.Fill;
             calendarAsistencias.FechaActual = new DateOnly(2026, 2, 4);
             calendarAsistencias.FuenteEventos = new Font("Segoe UI", 8F);
@@ -600,6 +602,7 @@
             dgvTurnosHorarios.DefaultCellStyle = dataGridViewCellStyle3;
             dgvTurnosHorarios.Dock = DockStyle.Fill;
             dgvTurnosHorarios.EnableHeadersVisualStyles = false;
+            dgvTurnosHorarios.ExtraReservedBottomHeight = 0;
             dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvTurnosHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvTurnosHorarios.Location = new Point(0, 0);
@@ -702,13 +705,15 @@
             panel6.Controls.Add(label1);
             panel6.Controls.Add(flLabelHeader2);
             panel6.Controls.Add(panel4);
+            panel6.Dock = DockStyle.Fill;
             panel6.Location = new Point(3, 360);
             panel6.Name = "panel6";
-            panel6.Size = new Size(789, 494);
+            panel6.Size = new Size(808, 494);
             panel6.TabIndex = 1;
             // 
             // btnDefinirRelacionMensual
             // 
+            btnDefinirRelacionMensual.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnDefinirRelacionMensual.BackColor = SystemColors.ActiveCaption;
             btnDefinirRelacionMensual.FlatStyle = FlatStyle.Flat;
             btnDefinirRelacionMensual.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -725,6 +730,7 @@
             // 
             // btnExpandir
             // 
+            btnExpandir.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnExpandir.BackColor = SystemColors.ActiveCaption;
             btnExpandir.FlatStyle = FlatStyle.Flat;
             btnExpandir.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -765,7 +771,7 @@
             flLabelHeader2.MinimumSize = new Size(0, 45);
             flLabelHeader2.Name = "flLabelHeader2";
             flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader2.Size = new Size(789, 45);
+            flLabelHeader2.Size = new Size(808, 45);
             flLabelHeader2.TabIndex = 3;
             // 
             // panel4
@@ -775,7 +781,7 @@
             panel4.Controls.Add(dgvRelacionDeHorarios);
             panel4.Location = new Point(7, 48);
             panel4.Name = "panel4";
-            panel4.Size = new Size(779, 294);
+            panel4.Size = new Size(798, 294);
             panel4.TabIndex = 7;
             // 
             // dgvRelacionDeHorarios
@@ -786,6 +792,7 @@
             dataGridViewCellStyle5.SelectionBackColor = Color.Orange;
             dataGridViewCellStyle5.SelectionForeColor = SystemColors.ActiveCaptionText;
             dgvRelacionDeHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dgvRelacionDeHorarios.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvRelacionDeHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRelacionDeHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
             dgvRelacionDeHorarios.BorderStyle = BorderStyle.None;
@@ -812,8 +819,8 @@
             dataGridViewCellStyle7.SelectionForeColor = Color.Black;
             dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
             dgvRelacionDeHorarios.DefaultCellStyle = dataGridViewCellStyle7;
-            dgvRelacionDeHorarios.Dock = DockStyle.Fill;
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
+            dgvRelacionDeHorarios.ExtraReservedBottomHeight = 0;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvRelacionDeHorarios.Location = new Point(0, 0);
@@ -829,7 +836,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(777, 292);
+            dgvRelacionDeHorarios.Size = new Size(796, 292);
             dgvRelacionDeHorarios.TabIndex = 5;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
@@ -953,12 +960,14 @@
             // 
             // calendarEmpleadoCasteado
             // 
+            calendarEmpleadoCasteado.CalendarCulture = new System.Globalization.CultureInfo("es-MX");
             calendarEmpleadoCasteado.ColorBorde = Color.Gray;
             calendarEmpleadoCasteado.ColorDiasSemana = Color.White;
             calendarEmpleadoCasteado.ColorDomingos = Color.LightCoral;
             calendarEmpleadoCasteado.ColorEncabezado = Color.SteelBlue;
             calendarEmpleadoCasteado.ColorEventoPredeterminado = Color.Blue;
             calendarEmpleadoCasteado.ColorTextoEncabezado = Color.White;
+            calendarEmpleadoCasteado.DayNameSize = FlowControls.DayNameDisplaySize.SHORT;
             calendarEmpleadoCasteado.Dock = DockStyle.Fill;
             calendarEmpleadoCasteado.FechaActual = new DateOnly(2026, 2, 4);
             calendarEmpleadoCasteado.FuenteEventos = new Font("Segoe UI", 8F);
