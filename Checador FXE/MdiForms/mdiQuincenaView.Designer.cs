@@ -152,7 +152,7 @@
             flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
             flExtendedTabControl1.TabIndex = 0;
             flExtendedTabControl1.UnselectionColor = Color.LightGray;
-            flExtendedTabControl1.SelectedIndexChanged += flExtendedTabControl1_SelectedIndexChanged;
+            flExtendedTabControl1.SelectedIndexChanged += this.flExtendedTabControl1_SelectedIndexChanged;
             // 
             // pageGeneral
             // 
@@ -366,7 +366,7 @@
             calendarAsistencias.Size = new Size(23, 23);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
-            calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
+            calendarAsistencias.OnDayDoubleClick += this.calendarAsistencias_OnDayDoubleClick;
             // 
             // tableLayoutPanel1
             // 
@@ -486,10 +486,10 @@
             pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
             pageCastingSetting.Controls.Add(tableLayoutPanel5);
-            pageCastingSetting.Location = new Point(4, 44);
+            pageCastingSetting.Location = new Point(4, 29);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(822, 538);
+            pageCastingSetting.Size = new Size(192, 67);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
@@ -506,7 +506,7 @@
             tableLayoutPanel5.RowCount = 2;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 357F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 500F));
-            tableLayoutPanel5.Size = new Size(814, 530);
+            tableLayoutPanel5.Size = new Size(184, 59);
             tableLayoutPanel5.TabIndex = 9;
             // 
             // panel5
@@ -519,7 +519,7 @@
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(3, 3);
             panel5.Name = "panel5";
-            panel5.Size = new Size(808, 351);
+            panel5.Size = new Size(178, 351);
             panel5.TabIndex = 0;
             // 
             // flLabelHeader1
@@ -538,7 +538,7 @@
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(808, 45);
+            flLabelHeader1.Size = new Size(178, 45);
             flLabelHeader1.TabIndex = 2;
             // 
             // btnSincronizarAjustes
@@ -554,7 +554,7 @@
             btnSincronizarAjustes.Text = " Sincronizar    Parametros";
             btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSincronizarAjustes.UseVisualStyleBackColor = false;
-            btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
+            btnSincronizarAjustes.Click += this.btnSincronizarAjustes_Click;
             // 
             // panel1
             // 
@@ -708,7 +708,7 @@
             panel6.Dock = DockStyle.Fill;
             panel6.Location = new Point(3, 360);
             panel6.Name = "panel6";
-            panel6.Size = new Size(808, 494);
+            panel6.Size = new Size(178, 494);
             panel6.TabIndex = 1;
             // 
             // btnDefinirRelacionMensual
@@ -726,7 +726,7 @@
             btnDefinirRelacionMensual.Text = " Definir Relacion Mensual";
             btnDefinirRelacionMensual.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDefinirRelacionMensual.UseVisualStyleBackColor = false;
-            btnDefinirRelacionMensual.Click += btnDefinirRelacionMensual_Click;
+            btnDefinirRelacionMensual.Click += this.btnDefinirRelacionMensual_Click;
             // 
             // btnExpandir
             // 
@@ -743,7 +743,7 @@
             btnExpandir.Text = " Expandir Visualizacion";
             btnExpandir.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExpandir.UseVisualStyleBackColor = false;
-            btnExpandir.Click += btnExpandir_Click;
+            btnExpandir.Click += this.btnExpandir_Click;
             // 
             // label1
             // 
@@ -771,7 +771,7 @@
             flLabelHeader2.MinimumSize = new Size(0, 45);
             flLabelHeader2.Name = "flLabelHeader2";
             flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader2.Size = new Size(808, 45);
+            flLabelHeader2.Size = new Size(178, 45);
             flLabelHeader2.TabIndex = 3;
             // 
             // panel4
@@ -781,7 +781,7 @@
             panel4.Controls.Add(dgvRelacionDeHorarios);
             panel4.Location = new Point(7, 48);
             panel4.Name = "panel4";
-            panel4.Size = new Size(798, 294);
+            panel4.Size = new Size(168, 294);
             panel4.TabIndex = 7;
             // 
             // dgvRelacionDeHorarios
@@ -836,10 +836,10 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(796, 292);
+            dgvRelacionDeHorarios.Size = new Size(166, 292);
             dgvRelacionDeHorarios.TabIndex = 5;
-            dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
-            dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
+            dgvRelacionDeHorarios.RowValidating += this.dgvAjustesHorarios_RowValidating;
+            dgvRelacionDeHorarios.SelectionChanged += this.dgvAjustesHorarios_SelectionChanged;
             // 
             // pageCastingResults
             // 
@@ -908,7 +908,7 @@
             txtBusqueda.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtBusqueda.TextBoxWidth = 175;
             txtBusqueda.Value = "";
-            txtBusqueda.OnTextChanged += txtBusqueda_OnTextChanged;
+            txtBusqueda.OnTextChanged += this.txtBusqueda_OnTextChanged;
             // 
             // lblTotalDeEmpleados
             // 
@@ -946,7 +946,7 @@
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
-            treePagingResultadosCasting.ItemDoubleClick += treePagingResultadosCasting_ItemDoubleClick;
+            treePagingResultadosCasting.ItemDoubleClick += this.treePagingResultadosCasting_ItemDoubleClick;
             // 
             // panel2
             // 
@@ -979,7 +979,7 @@
             calendarEmpleadoCasteado.Size = new Size(23, 63);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
-            calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
+            calendarEmpleadoCasteado.OnDayDoubleClick += this.calendarEmpleadoCasteado_OnDayDoubleClick;
             // 
             // tableLayoutPanel2
             // 
@@ -1067,7 +1067,7 @@
             flQuickAccessPanel1.Name = "flQuickAccessPanel1";
             flQuickAccessPanel1.Size = new Size(830, 34);
             flQuickAccessPanel1.TabIndex = 1;
-            flQuickAccessPanel1.OnButtonClicked += flQuickAccessPanel1_OnButtonClicked;
+            flQuickAccessPanel1.OnButtonClicked += this.flQuickAccessPanel1_OnButtonClicked;
             // 
             // mdiQuincenaView
             // 

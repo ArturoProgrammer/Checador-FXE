@@ -1,6 +1,7 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
 using FlowControls;
+using FlowControls.Inputs;
 using System.Data;
 
 namespace Checador_FXE
@@ -51,6 +52,41 @@ namespace Checador_FXE
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
         {
+            var input = new flDataGridInputBox().SetLimitRow(1)
+                                                .SetRowGridValidation((row) =>
+                                                {
+                                                    // Validar no existencia de duplicados de numeros de empleados
+                                                    var _empleados = Empleado.GetAll(actualLocalidad);
+
+                                                    if (_empleados.Success)
+                                                        if (_empleados.Object!.Any(emp => emp.NoEmp == row.Cells[EmpleadosGridCells.NO_EMP.GetIndex()].Value?.ToString()))
+                                                            return false;
+
+                                                    // Validar el turno por defecto asignado a los empleados   
+                                                    if (row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value == null || 
+                                                        String.IsNullOrWhiteSpace(row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value.ToString().Trim()) ||
+                                                        !Utils.GetHorariosIDs().Contains(int.Parse(row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value.ToString().Trim())))
+                                                        return false;
+
+                                                    return true;
+                                                })
+                                                .;
+            flDialogResult<DataGridViewRow[]> resp = input.Show(
+                "Nuevo empleado",
+                new string[] { "No. Emp.", "Nombres", "Apellidos", "Puesto", "Region", "Division", "Localidad", "Turno Default" }
+            );
+
+            if (resp.DialogResult != DialogResult.OK)
+                return;
+
+            // Agregar el empleado correspondiente
+            this.dgvAjustesEmpleados.Rows.Add(resp.Response);
+            this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Selected = true;
+            this.dgvAjustesEmpleados.CurrentCell = this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Cells[1];
+
+            /*
+             * PENDIENTE MODIFICAR
+             * 
             DataGridViewRow _row = new DataGridViewRow();
             _row.Cells.Add(new DataGridViewImageCell()
             {
@@ -65,16 +101,16 @@ namespace Checador_FXE
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "Hermosillo" }); // Division
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = $"{Properties.Settings.Default.LOCALIDAD_DEFAULT}" }); // Localidad
             _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "1" });   // Turno Default
-
-            this.dgvAjustesEmpleados.Rows.Add(_row);
-            this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Selected = true;
-            this.dgvAjustesEmpleados.CurrentCell = this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Cells[1];
+            */
         }
+
+        private string actualLocalidad = "-1";
 
         void LoadView(string localidad)
         {
+            actualLocalidad = localidad;
             #region CODIGO
-            Response<Empleado[]> _SERV_RESP = Empleado.GetAll(localidad, ShowObjectLog: false);
+            Response<Empleado[]> _SERV_RESP = Empleado.GetAll(actualLocalidad, ShowObjectLog: false);
             this.dgvAjustesEmpleados.Rows.Clear();
 
             if (!_SERV_RESP.Success)
