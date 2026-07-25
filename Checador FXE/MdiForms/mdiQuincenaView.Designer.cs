@@ -59,6 +59,7 @@
             calendarAsistencias = new FlowControls.flEventCalendar();
             tableLayoutPanel1 = new TableLayoutPanel();
             lviewDayEvents = new FlowControls.flCustomListView();
+            colIcon = new ColumnHeader();
             colHora = new ColumnHeader();
             colTipo = new ColumnHeader();
             imageList1 = new ImageList(components);
@@ -152,7 +153,6 @@
             flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
             flExtendedTabControl1.TabIndex = 0;
             flExtendedTabControl1.UnselectionColor = Color.LightGray;
-            flExtendedTabControl1.SelectedIndexChanged += this.flExtendedTabControl1_SelectedIndexChanged;
             // 
             // pageGeneral
             // 
@@ -366,7 +366,8 @@
             calendarAsistencias.Size = new Size(23, 23);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
-            calendarAsistencias.OnDayDoubleClick += this.calendarAsistencias_OnDayDoubleClick;
+            calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
+            calendarAsistencias.Click += calendarAsistencias_Click;
             // 
             // tableLayoutPanel1
             // 
@@ -391,9 +392,8 @@
             lviewDayEvents.AlternateRowColor = SystemColors.GradientInactiveCaption;
             lviewDayEvents.BackColor = SystemColors.GradientActiveCaption;
             lviewDayEvents.BorderStyle = BorderStyle.None;
-            lviewDayEvents.Columns.AddRange(new ColumnHeader[] { colHora, colTipo });
+            lviewDayEvents.Columns.AddRange(new ColumnHeader[] { colIcon, colHora, colTipo });
             lviewDayEvents.Dock = DockStyle.Fill;
-            lviewDayEvents.Enabled = false;
             lviewDayEvents.Font = new Font("Segoe UI", 9F);
             lviewDayEvents.FullRowSelect = true;
             lviewDayEvents.HeaderBackColor = Color.SteelBlue;
@@ -413,6 +413,11 @@
             lviewDayEvents.UseAlternatingRowColors = true;
             lviewDayEvents.UseCompatibleStateImageBehavior = false;
             lviewDayEvents.View = View.Details;
+            // 
+            // colIcon
+            // 
+            colIcon.Text = "";
+            colIcon.Width = 32;
             // 
             // colHora
             // 
@@ -478,6 +483,7 @@
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
+            lviewRegistros.SelectedIndexChanged += lviewRegistros_SelectedIndexChanged;
             lviewRegistros.DoubleClick += lviewRegistros_DoubleClick;
             // 
             // pageCastingSetting
@@ -554,7 +560,7 @@
             btnSincronizarAjustes.Text = " Sincronizar    Parametros";
             btnSincronizarAjustes.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSincronizarAjustes.UseVisualStyleBackColor = false;
-            btnSincronizarAjustes.Click += this.btnSincronizarAjustes_Click;
+            btnSincronizarAjustes.Click += btnSincronizarAjustes_Click;
             // 
             // panel1
             // 
@@ -628,7 +634,6 @@
             colTurnoNom.HeaderText = "Turno No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 106;
             // 
             // colNombre
             // 
@@ -636,7 +641,7 @@
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 96;
+            colNombre.Width = 89;
             // 
             // colHorarioUno_Entrada
             // 
@@ -644,7 +649,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 122;
+            colHorarioUno_Entrada.Width = 116;
             // 
             // colHorarioUno_Salida
             // 
@@ -652,7 +657,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 121;
+            colHorarioUno_Salida.Width = 113;
             // 
             // colHorarioDos_Entrada
             // 
@@ -660,7 +665,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 127;
+            colHorarioDos_Entrada.Width = 120;
             // 
             // colHorarioDos_Salida
             // 
@@ -668,7 +673,7 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 126;
+            colHorarioDos_Salida.Width = 117;
             // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
@@ -726,7 +731,7 @@
             btnDefinirRelacionMensual.Text = " Definir Relacion Mensual";
             btnDefinirRelacionMensual.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDefinirRelacionMensual.UseVisualStyleBackColor = false;
-            btnDefinirRelacionMensual.Click += this.btnDefinirRelacionMensual_Click;
+            btnDefinirRelacionMensual.Click += btnDefinirRelacionMensual_Click;
             // 
             // btnExpandir
             // 
@@ -743,15 +748,15 @@
             btnExpandir.Text = " Expandir Visualizacion";
             btnExpandir.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnExpandir.UseVisualStyleBackColor = false;
-            btnExpandir.Click += this.btnExpandir_Click;
+            btnExpandir.Click += btnExpandir_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Bottom;
-            label1.Location = new Point(0, 474);
+            label1.Location = new Point(0, 475);
             label1.Name = "label1";
-            label1.Size = new Size(13, 20);
+            label1.Size = new Size(13, 19);
             label1.TabIndex = 8;
             label1.Text = " ";
             // 
@@ -838,8 +843,8 @@
             dgvRelacionDeHorarios.ShowContextMenu = true;
             dgvRelacionDeHorarios.Size = new Size(166, 292);
             dgvRelacionDeHorarios.TabIndex = 5;
-            dgvRelacionDeHorarios.RowValidating += this.dgvAjustesHorarios_RowValidating;
-            dgvRelacionDeHorarios.SelectionChanged += this.dgvAjustesHorarios_SelectionChanged;
+            dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
+            dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             // 
             // pageCastingResults
             // 
@@ -870,7 +875,6 @@
             splitResultadosCasting_Background.SplitterDistance = 161;
             splitResultadosCasting_Background.SplitterWidth = 6;
             splitResultadosCasting_Background.TabIndex = 0;
-            splitResultadosCasting_Background.SplitterMoved += splitResultadosCasting_Background_SplitterMoved;
             // 
             // tableLayoutPanel3
             // 
@@ -908,7 +912,7 @@
             txtBusqueda.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtBusqueda.TextBoxWidth = 175;
             txtBusqueda.Value = "";
-            txtBusqueda.OnTextChanged += this.txtBusqueda_OnTextChanged;
+            txtBusqueda.OnTextChanged += txtBusqueda_OnTextChanged;
             // 
             // lblTotalDeEmpleados
             // 
@@ -946,7 +950,7 @@
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
-            treePagingResultadosCasting.ItemDoubleClick += this.treePagingResultadosCasting_ItemDoubleClick;
+            treePagingResultadosCasting.ItemDoubleClick += treePagingResultadosCasting_ItemDoubleClick;
             // 
             // panel2
             // 
@@ -979,7 +983,7 @@
             calendarEmpleadoCasteado.Size = new Size(23, 63);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
-            calendarEmpleadoCasteado.OnDayDoubleClick += this.calendarEmpleadoCasteado_OnDayDoubleClick;
+            calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
             // 
             // tableLayoutPanel2
             // 
@@ -1024,7 +1028,7 @@
             quickAccessButton3.BackColor = SystemColors.ActiveCaption;
             quickAccessButton3.BorderLineColor = Color.Silver;
             quickAccessButton3.BorderLineThickness = 1;
-            quickAccessButton3.Enabled = false;
+            quickAccessButton3.Enabled = true;
             quickAccessButton3.FlatStyle = FlatStyle.Flat;
             quickAccessButton3.Font = new Font("Microsoft Sans Serif", 8.25F);
             quickAccessButton3.ForeColor = SystemColors.ControlText;
@@ -1067,11 +1071,11 @@
             flQuickAccessPanel1.Name = "flQuickAccessPanel1";
             flQuickAccessPanel1.Size = new Size(830, 34);
             flQuickAccessPanel1.TabIndex = 1;
-            flQuickAccessPanel1.OnButtonClicked += this.flQuickAccessPanel1_OnButtonClicked;
+            flQuickAccessPanel1.OnButtonClicked += flQuickAccessPanel1_OnButtonClicked;
             // 
             // mdiQuincenaView
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(856, 651);
@@ -1173,5 +1177,6 @@
         private FlowControls.flCustomButton btnExpandir;
         private Label label1;
         private FlowControls.flCustomButton btnDefinirRelacionMensual;
+        private ColumnHeader colIcon;
     }
 }

@@ -13,11 +13,12 @@
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <Platforms>AnyCPU;x64</Platforms>
-	
-	<VersionPrefix>1.0.1</VersionPrefix>
-	<VersionSuffix>beta</VersionSuffix>
-	<AssemblyVersion>1.0.1</AssemblyVersion>
-	<InformationalVersion>1.0.1.20260305-beta-dev</InformationalVersion>
+
+	<ManualVersion>1.0.1</ManualVersion>  
+	<VersionSuffix>beta-dev</VersionSuffix>
+	<AssemblyVersion>$(ManualVersion).$([System.DateTime]::Now.ToString('yyMM'))</AssemblyVersion>
+	<InformationalVersion>$(AssemblyVersion)-$(VersionSuffix)</InformationalVersion>
+	  
 	<Copyright>Arturo Venegas IDC</Copyright>
 
 	<NeutralLanguage>es-MX</NeutralLanguage>
@@ -28,7 +29,7 @@
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
     <PackageReference Include="FlowCommonWorkcore" Version="1.0.15" />
-    <PackageReference Include="FlowControls" Version="1.0.15.25" />
+    <PackageReference Include="FlowControls" Version="1.0.15.26" />
     <PackageReference Include="iTextSharp" Version="5.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SpreadsheetLight.Fork" Version="3.5.0" />

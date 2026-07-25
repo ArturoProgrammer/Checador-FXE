@@ -52,56 +52,83 @@ namespace Checador_FXE
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
         {
+            bool rowIsValid = false;
+
             var input = new flDataGridInputBox().SetLimitRow(1)
                                                 .SetRowGridValidation((row) =>
                                                 {
-                                                    // Validar no existencia de duplicados de numeros de empleados
                                                     var _empleados = Empleado.GetAll(actualLocalidad);
+                                                    int _turnoDefIndex = EmpleadosGridCells.TURNO_DEFAULT.GetIndex() - 1;
+                                                    int _noEmpDefIndex = EmpleadosGridCells.NO_EMP.GetIndex() - 1;
+                                                    List<string> fails = new List<string>();
 
+                                                    // Validar campos no vacios
+                                                    int index = 1;
+                                                    foreach (DataGridViewCell c in row.Cells)
+                                                    {
+                                                        if (c.Value is null || String.IsNullOrEmpty(c.Value.ToString()!.Trim()))
+                                                            fails.Add($"* No se pueden dejar celdas con informacion vacia (Col.: {index})");
+
+                                                        index++;
+                                                    }
+
+                                                    // Validar no existencia de duplicados de numeros de empleados
                                                     if (_empleados.Success)
-                                                        if (_empleados.Object!.Any(emp => emp.NoEmp == row.Cells[EmpleadosGridCells.NO_EMP.GetIndex()].Value?.ToString()))
-                                                            return false;
+                                                        if (_empleados.Object!.Any(emp => emp.NoEmp == row.Cells[_noEmpDefIndex].Value?.ToString()))
+                                                            fails.Add($"* Numero de empleado duplicado ({_empleados.Object!.FirstOrDefault(e => e.NoEmp == row.Cells[_noEmpDefIndex].Value.ToString())})");
 
                                                     // Validar el turno por defecto asignado a los empleados   
-                                                    if (row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value == null || 
-                                                        String.IsNullOrWhiteSpace(row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value.ToString().Trim()) ||
-                                                        !Utils.GetHorariosIDs().Contains(int.Parse(row.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value.ToString().Trim())))
-                                                        return false;
+                                                    if (row.Cells[_turnoDefIndex].Value == null ||
+                                                        String.IsNullOrWhiteSpace(row.Cells[_turnoDefIndex].Value.ToString().Trim()) ||
+                                                        !Utils.GetHorariosIDs().Contains(int.Parse(row.Cells[_turnoDefIndex].Value.ToString().Trim())))
+                                                        fails.Add("El turno por defecto asignado al empleado no es valido");
 
-                                                    return true;
+                                                    rowIsValid = fails.Count == 0; // Asignamos una identificacion que indique que la fila es valida
+
+                                                    if (!rowIsValid)
+                                                        MessageBox.Show($"La fila no es valida por los siguientes motivos:\n\n{String.Join('\n', fails)}", "Validacion de Fila Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                                    return rowIsValid;
                                                 })
-                                                .;
+                                                .SetDefaultValues(new flDefaultColumnValue[]
+                                                {
+                                                    new (4, "PACIFICO"),
+                                                    new (5, "HERMOSILLO"),
+                                                    new (6, actualLocalidad),
+                                                    new (7, Properties.Settings.Default.TURNO_DEFECTO)
+                                                })
+                                                .SetCloseEvenIfFails(true)
+                                                .SetGridStyle(DataGridStylesGallery.BlueStyle);
             flDialogResult<DataGridViewRow[]> resp = input.Show(
                 "Nuevo empleado",
-                new string[] { "No. Emp.", "Nombres", "Apellidos", "Puesto", "Region", "Division", "Localidad", "Turno Default" }
+                new[] { "No. Emp.", "Nombres", "Apellidos", "Puesto", "Region", "Division", "Localidad", "Turno Default" }
             );
 
-            if (resp.DialogResult != DialogResult.OK)
+            if (resp.DialogResult != DialogResult.OK || rowIsValid is false)
                 return;
 
+            // Agregamos el icono en la celda inicial
+            DataGridViewRow _row = new DataGridViewRow();
+            _row.Cells.AddRange(
+                new DataGridViewImageCell()
+                {
+                    Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                    ImageLayout = DataGridViewImageCellLayout.Zoom
+                },
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[0].Value },  // No. Emp.
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[1].Value },  // Nombre
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[2].Value },  // Apellidos
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[3].Value },  // Puesto
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[4].Value },  // Region
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[5].Value },  // Division
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[6].Value },  // Localidad
+                new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[7].Value }   // Turno Default
+            );
+
             // Agregar el empleado correspondiente
-            this.dgvAjustesEmpleados.Rows.Add(resp.Response);
+            this.dgvAjustesEmpleados.Rows.Add(_row);
             this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Selected = true;
             this.dgvAjustesEmpleados.CurrentCell = this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Cells[1];
-
-            /*
-             * PENDIENTE MODIFICAR
-             * 
-            DataGridViewRow _row = new DataGridViewRow();
-            _row.Cells.Add(new DataGridViewImageCell()
-            {
-                Value = IconGallery.Size64.NeutralObjectGreenUnselected,
-                ImageLayout = DataGridViewImageCellLayout.Zoom
-            });
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "" }); // No. Emp.
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "" }); // Nombre
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "" }); // Apellidos
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "" }); // Puesto
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "Pacifico" }); // Region
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "Hermosillo" }); // Division
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = $"{Properties.Settings.Default.LOCALIDAD_DEFAULT}" }); // Localidad
-            _row.Cells.Add(new DataGridViewTextBoxCell() { Value = "1" });   // Turno Default
-            */
         }
 
         private string actualLocalidad = "-1";
@@ -243,6 +270,19 @@ namespace Checador_FXE
         {
             //var grid = (flExtendedDataGridView)sender;
             //grid.Rows[e.RowIndex].Cells[e.ColumnIndex].;
+        }
+
+        private void dgvAjustesEmpleados_OnRemoveClick(object sender, EventArgs e)
+        {
+            if (flMessageBox.Show("¿estas seguro que deseas eliminar el elemento seleccionado?", 
+                                    "Confirmacion", 
+                                    MessageBoxButtons.YesNo, 
+                                    MessageBoxIcon.Question, 
+                                    FormStylesGallery.BlueStyle) is DialogResult.No)
+            {                
+                // Cancelamos la eliminacion de la fila
+
+            }
         }
     }
 }

@@ -46,7 +46,6 @@
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             exportarParaConfiguracionToolStripMenuItem = new ToolStripMenuItem();
             dgvAjustesEmpleados = new FlowControls.flExtendedDataGridView();
-            imageList1 = new ImageList(components);
             colImageIcon = new DataGridViewTextBoxColumn();
             colNumEmpleado = new DataGridViewTextBoxColumn();
             colNombres = new DataGridViewTextBoxColumn();
@@ -56,6 +55,7 @@
             colDivision = new DataGridViewTextBoxColumn();
             colLocalidad = new DataGridViewTextBoxColumn();
             colTurnoDefault = new DataGridViewTextBoxColumn();
+            imageList1 = new ImageList(components);
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAjustesEmpleados).BeginInit();
             SuspendLayout();
@@ -78,7 +78,7 @@
             toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
             toolStripButton1.ImageTransparentColor = Color.Magenta;
             toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(25, 27);
+            toolStripButton1.Size = new Size(23, 27);
             toolStripButton1.Text = "Guardar cambios";
             toolStripButton1.Click += toolStripButton1_Click;
             // 
@@ -89,7 +89,7 @@
             toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
             toolStripButton2.ImageTransparentColor = Color.Magenta;
             toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(25, 27);
+            toolStripButton2.Size = new Size(23, 27);
             toolStripButton2.Text = "Revertir cambios";
             toolStripButton2.Click += toolStripButton2_Click;
             // 
@@ -118,7 +118,7 @@
             btnEstablecerSeleccion.Image = (Image)resources.GetObject("btnEstablecerSeleccion.Image");
             btnEstablecerSeleccion.ImageTransparentColor = Color.Magenta;
             btnEstablecerSeleccion.Name = "btnEstablecerSeleccion";
-            btnEstablecerSeleccion.Size = new Size(25, 27);
+            btnEstablecerSeleccion.Size = new Size(23, 27);
             btnEstablecerSeleccion.Text = "Establecer como default";
             btnEstablecerSeleccion.Click += btnEstablecerSeleccion_Click;
             // 
@@ -138,14 +138,14 @@
             lblLocalidadDefaultActualmente.Font = new Font("Segoe UI", 8.830189F, FontStyle.Bold);
             lblLocalidadDefaultActualmente.ForeColor = SystemColors.HotTrack;
             lblLocalidadDefaultActualmente.Name = "lblLocalidadDefaultActualmente";
-            lblLocalidadDefaultActualmente.Size = new Size(104, 27);
+            lblLocalidadDefaultActualmente.Size = new Size(93, 27);
             lblLocalidadDefaultActualmente.Text = "%LOCALIDAD%";
             // 
             // toolStripLabel2
             // 
             toolStripLabel2.Alignment = ToolStripItemAlignment.Right;
             toolStripLabel2.Name = "toolStripLabel2";
-            toolStripLabel2.Size = new Size(112, 27);
+            toolStripLabel2.Size = new Size(102, 27);
             toolStripLabel2.Text = "Localidad Default:";
             // 
             // toolStripDropDownButton1
@@ -155,14 +155,14 @@
             toolStripDropDownButton1.Image = Properties.Resources.toolbox;
             toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(32, 27);
+            toolStripDropDownButton1.Size = new Size(31, 27);
             toolStripDropDownButton1.Text = "Herramientas";
             // 
             // exportarParaConfiguracionToolStripMenuItem
             // 
             exportarParaConfiguracionToolStripMenuItem.Image = Properties.Resources.exportar_16;
             exportarParaConfiguracionToolStripMenuItem.Name = "exportarParaConfiguracionToolStripMenuItem";
-            exportarParaConfiguracionToolStripMenuItem.Size = new Size(255, 24);
+            exportarParaConfiguracionToolStripMenuItem.Size = new Size(229, 22);
             exportarParaConfiguracionToolStripMenuItem.Text = "Exportar para configuracion...";
             exportarParaConfiguracionToolStripMenuItem.Click += exportarParaConfiguracionToolStripMenuItem_Click;
             // 
@@ -179,7 +179,7 @@
             dgvAjustesEmpleados.BorderStyle = BorderStyle.None;
             dgvAjustesEmpleados.ButtonAddEnabled = true;
             dgvAjustesEmpleados.ButtonEditEnabled = false;
-            dgvAjustesEmpleados.ButtonRemoveEnabled = false;
+            dgvAjustesEmpleados.ButtonRemoveEnabled = true;
             dgvAjustesEmpleados.ButtonViewEnabled = false;
             dgvAjustesEmpleados.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -203,6 +203,7 @@
             dgvAjustesEmpleados.DefaultCellStyle = dataGridViewCellStyle3;
             dgvAjustesEmpleados.Dock = DockStyle.Fill;
             dgvAjustesEmpleados.EnableHeadersVisualStyles = false;
+            dgvAjustesEmpleados.ExtraReservedBottomHeight = 0;
             dgvAjustesEmpleados.GridColor = Color.FromArgb(210, 210, 210);
             dgvAjustesEmpleados.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvAjustesEmpleados.Location = new Point(0, 30);
@@ -213,26 +214,21 @@
             dgvAjustesEmpleados.RowHeadersWidth = 45;
             dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
             dgvAjustesEmpleados.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvAjustesEmpleados.ScrollBars = ScrollBars.Vertical;
             dgvAjustesEmpleados.SelectedCellColor = Color.Moccasin;
             dgvAjustesEmpleados.SelectedRowColor = Color.SteelBlue;
             dgvAjustesEmpleados.SelectionForeColor = Color.Black;
             dgvAjustesEmpleados.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAjustesEmpleados.ShowContextMenu = true;
-            dgvAjustesEmpleados.Size = new Size(852, 414);
+            dgvAjustesEmpleados.Size = new Size(852, 362);
             dgvAjustesEmpleados.TabIndex = 4;
             dgvAjustesEmpleados.OnAddClick += dgvAjustesHorarios_OnAddClick;
+            dgvAjustesEmpleados.OnRemoveClick += dgvAjustesEmpleados_OnRemoveClick;
             dgvAjustesEmpleados.CellEndEdit += dgvAjustesEmpleados_CellEndEdit;
             dgvAjustesEmpleados.CellEnter += dgvAjustesEmpleados_CellEnter;
             dgvAjustesEmpleados.CellValidating += dgvAjustesEmpleados_CellValidating;
             dgvAjustesEmpleados.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvAjustesEmpleados.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
-            // 
-            // imageList1
-            // 
-            imageList1.ColorDepth = ColorDepth.Depth32Bit;
-            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
-            imageList1.TransparentColor = Color.Transparent;
-            imageList1.Images.SetKeyName(0, "solicitud-32.png");
             // 
             // colImageIcon
             // 
@@ -242,7 +238,7 @@
             colImageIcon.MinimumWidth = 6;
             colImageIcon.Name = "colImageIcon";
             colImageIcon.Resizable = DataGridViewTriState.False;
-            colImageIcon.Width = 8;
+            colImageIcon.Width = 24;
             // 
             // colNumEmpleado
             // 
@@ -251,7 +247,7 @@
             colNumEmpleado.HeaderText = "No. Emp.";
             colNumEmpleado.MinimumWidth = 6;
             colNumEmpleado.Name = "colNumEmpleado";
-            colNumEmpleado.Width = 101;
+            colNumEmpleado.Width = 94;
             // 
             // colNombres
             // 
@@ -260,7 +256,7 @@
             colNombres.HeaderText = "Nombres";
             colNombres.MinimumWidth = 6;
             colNombres.Name = "colNombres";
-            colNombres.Width = 102;
+            colNombres.Width = 95;
             // 
             // colApellidos
             // 
@@ -269,7 +265,7 @@
             colApellidos.HeaderText = "Apellidos";
             colApellidos.MinimumWidth = 6;
             colApellidos.Name = "colApellidos";
-            colApellidos.Width = 104;
+            colApellidos.Width = 94;
             // 
             // colPuesto
             // 
@@ -278,7 +274,7 @@
             colPuesto.HeaderText = "Puesto";
             colPuesto.MinimumWidth = 6;
             colPuesto.Name = "colPuesto";
-            colPuesto.Width = 85;
+            colPuesto.Width = 81;
             // 
             // colRegion
             // 
@@ -287,7 +283,7 @@
             colRegion.HeaderText = "Region";
             colRegion.MinimumWidth = 6;
             colRegion.Name = "colRegion";
-            colRegion.Width = 88;
+            colRegion.Width = 81;
             // 
             // colDivision
             // 
@@ -296,7 +292,7 @@
             colDivision.HeaderText = "Division";
             colDivision.MinimumWidth = 6;
             colDivision.Name = "colDivision";
-            colDivision.Width = 94;
+            colDivision.Width = 87;
             // 
             // colLocalidad
             // 
@@ -305,7 +301,7 @@
             colLocalidad.HeaderText = "Localidad";
             colLocalidad.MinimumWidth = 6;
             colLocalidad.Name = "colLocalidad";
-            colLocalidad.Width = 106;
+            colLocalidad.Width = 96;
             // 
             // colTurnoDefault
             // 
@@ -313,16 +309,23 @@
             colTurnoDefault.HeaderText = "Turno Def.";
             colTurnoDefault.MinimumWidth = 6;
             colTurnoDefault.Name = "colTurnoDefault";
-            colTurnoDefault.Width = 110;
+            colTurnoDefault.Width = 103;
+            // 
+            // imageList1
+            // 
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName(0, "solicitud-32.png");
             // 
             // frmCrudEmpleados
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(852, 444);
+            ClientSize = new Size(852, 392);
             Controls.Add(dgvAjustesEmpleados);
             Controls.Add(flCustomToolStrip1);
-            MinimumSize = new Size(675, 372);
+            MinimumSize = new Size(675, 333);
             Name = "frmCrudEmpleados";
             StartPosition = FormStartPosition.CenterParent;
             Text = "CRUD de Empleados";

@@ -2,14 +2,13 @@
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using Microsoft.Data.Sqlite;
-using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.Plantillas
 {
     public class Empleado
     {
-        public static readonly string DB_NAME = "EmpleadosSindicalizados.db";
-        public static readonly string DB_PATH = $@"{Program.DbPath}\{DB_NAME}";
+        public static readonly string DB_NAME = "EmpleadosSindicalizados";
+        public static readonly string DB_PATH = $@"{Program.DbPath}\{DB_NAME}.db";
         public static readonly string TABLE_NAME = "empleados_sind";
 
         [ParamSqlKey("@NoEmp")]
@@ -164,59 +163,6 @@ namespace Checador_FXE.Plantillas
         public Response Save(bool ShowObjectLog = false)
         {
             #region
-            /*
-            Response _resp = new Response(false, "Iniciando guardado del objeto...");
-
-            Server.SqlWriteConnection _connection = new Server.SqlWriteConnection(new ConnectionsData(
-               Properties.Settings.Default.SERVER_HOSTNAME,
-               Properties.Settings.Default.SERVER_USER,
-               Properties.Settings.Default.SERVER_PASS,
-               Int32.Parse(Properties.Settings.Default.SERVER_PORT),
-               Empleado.TABLE_NAME,
-               Empleado.DATABASE_NAME
-            ));
-
-            var parameters = new (string, object)[]
-            {
-                ("@NoEmp", NoEmp),
-                ("@Nombres", Nombres),
-                ("@Apellidos", Apellidos),
-                ("@Puesto", Puesto),
-                ("@Region", Region),
-                ("@Division", Division),
-                ("@Localidad", Localidad),
-                ("@Area", Area)
-            };
-
-            _resp.Log.Add("Parametros construidos...");
-
-            string ADDITION_QUERY = Common.BuildInsertQuery<Empleado>(this, Empleado.DATABASE_NAME, Empleado.TABLE_NAME);
-            _resp.Log.Add("Cadena de adicion construida...");
-            string UPDATE_QUERY = Common.BuildUpdateQuery<Empleado>(this, Empleado.DATABASE_NAME, Empleado.TABLE_NAME, conditional: "no_emp=@NoEmp");
-            _resp.Log.Add("Cadena de actualizacion construida...");
-
-            Response SERVER_RESPONSE = _connection.MakeQuery(
-                "no_emp",
-                NoEmp,
-                ADDITION_QUERY,
-                UPDATE_QUERY,
-                parameters
-            );
-            _resp.Log.Add($"Consulta al servidor realizada...");
-
-            _resp.Success = SERVER_RESPONSE.Success;
-            if (SERVER_RESPONSE.Success)
-                _resp.Message = $"Informacion del objeto actualizada/insertada con exito!";
-            else
-                _resp.Message = $"Error al actualizar/insertar la informacion del objeto!\n{SERVER_RESPONSE.GetBuildedLog()}";
-
-
-            if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
-
-            return _resp;
-            */
-
             Response _resp = new Response(false, "Iniciando guardado del objeto...");
             
             Server.SqlWriteConnection _connection = new Server.SqlWriteConnection(new ConnectionsData(DB_PATH, TABLE_NAME));
@@ -225,9 +171,9 @@ namespace Checador_FXE.Plantillas
             SqlCmdParam[] parameters = Common.BuildParamsArray<Empleado>(this);
             _resp.Log.Add($"Parametros construidos");
 
-            string ADDITION_QUERY = Common.BuildInsertQuery<Empleado>(this, Empleado.DB_NAME, Empleado.TABLE_NAME);
+            string ADDITION_QUERY = Common.BuildInsertQuery<Empleado>(this, Empleado.DB_NAME, Empleado.TABLE_NAME).Replace($"{DB_NAME}.", "");
             _resp.Log.Add("Cadena de adicion construida...");
-            string UPDATE_QUERY = Common.BuildUpdateQuery<Empleado>(this, Empleado.DB_NAME, Empleado.TABLE_NAME, conditional: "no_emp=@NoEmp");
+            string UPDATE_QUERY = Common.BuildUpdateQuery<Empleado>(this, Empleado.DB_NAME, Empleado.TABLE_NAME, conditional: "no_emp=@NoEmp").Replace($"{DB_NAME}.", "");
             _resp.Log.Add("Cadena de actualizacion construida...");
 
             Response SERVER_RESPONSE = _connection.MakeQuery(
@@ -260,5 +206,7 @@ namespace Checador_FXE.Plantillas
 
             return ((Empleado)obj).NoEmp == this.NoEmp;
         }
+
+        public override string ToString() => $"{Apellidos} {Nombres}";
     }
 }

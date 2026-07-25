@@ -2,7 +2,6 @@
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Utils;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace Checador_FXE
@@ -47,12 +46,6 @@ namespace Checador_FXE
 
             this.btnIrAMes.PerformClick();
         }
-
-        private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
-        {
-
-        }
-
 
         void LoadLimitedView(LimitationParam param, string value)
         {

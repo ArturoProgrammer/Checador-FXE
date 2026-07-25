@@ -4,6 +4,8 @@ using FlowControls;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.MdiForms
 {
@@ -97,7 +99,9 @@ namespace Checador_FXE.MdiForms
                 string employeeName = key;
                 ListViewItem lvitem = new ListViewItem(employeeName, 0)
                 {
-                    Tag = Report.Chequeos[key]
+                    Tag = Report.Chequeos[key],
+                    ImageIndex = 0,
+                    StateImageIndex = 1,
                 };
 
                 this.lviewRegistros.Items.Add(lvitem);
@@ -133,6 +137,20 @@ namespace Checador_FXE.MdiForms
             this.splitContainer2.SplitterDistance = 570;
             this.splitContainer1.SplitterDistance = 400;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
+
+            // Cargamos las imagenes del imageList1
+            this.imageList1.Images.Clear();
+            this.imageList1.Images.AddRange(new Image[]
+            {
+                IconGallery.Size32.NeutralObjectGreenUnselected,    // => 0
+                IconGallery.Size32.NeutralObjectGreenSelected,      // => 1
+                IconGallery.Size32.NeutralObjectYellowUnselected,   // => 2
+                IconGallery.Size32.NeutralObjectYellowSelected,     // => 3
+                IconGallery.Size32.NeutralObjectRedSelected,        // => 4
+                IconGallery.Size32.NeutralObjectRedUnselected,      // => 5
+                IconGallery.Size32.NeutralObjectOrangeSelected,     // => 6
+                IconGallery.Size32.NeutralObjectOrangeUnselected,   // => 7
+            });
 
             #region Coloreamos los dias del reporte en ambos EventCalendar
             Color BG_C = Color.Moccasin;
@@ -213,10 +231,10 @@ namespace Checador_FXE.MdiForms
                 {
                     ListViewItem item = new ListViewItem()
                     {
-                        Text = i.Fecha.ToString("t"),
-                        ImageIndex = 1,
-                        StateImageIndex = 1,
+                        ImageIndex = 2,
+                        StateImageIndex = 3,
                     };
+                    item.SubItems.Add(i.Fecha.ToString("t"));
                     item.SubItems.Add(i.Tipo.GetText());
 
                     this.lviewDayEvents.Items.Add(item);
@@ -289,7 +307,55 @@ namespace Checador_FXE.MdiForms
                     #endregion
                     break;
                 case "btnImprimir":
-                    Program.WriteStatus(false, "Proximamente", $"Funcion no implementada aun!", $"Funcion no implementada aun!");
+                    #region CODIGO
+                    {
+                        string[] _paths = GeneratePdf($@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\{Properties.Settings.Default.DEFAULT_FILENAME}.pdf");
+
+                        foreach (string filePath in _paths)
+                        {
+                            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                            {
+                                MessageBox.Show("No hay archivo disponible para imprimir.", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                break;
+                            }
+
+                            using (PrintDialog pd = new PrintDialog())
+                            {
+                                pd.AllowSomePages = false;
+                                pd.AllowSelection = false;
+                                pd.AllowCurrentPage = false;
+                                pd.PrinterSettings = new System.Drawing.Printing.PrinterSettings();
+
+                                if (pd.ShowDialog() != DialogResult.OK)
+                                    break;
+
+                                try
+                                {
+                                    // Otros formatos: usar la app asociada vía Shell (PrintTo) apuntando a la impresora seleccionada
+                                    var psi = new ProcessStartInfo
+                                    {
+                                        FileName = filePath,
+                                        Arguments = $"\"{pd.PrinterSettings.PrinterName}\"",
+                                        Verb = "printto",
+                                        CreateNoWindow = true,
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                        UseShellExecute = true
+                                    };
+                                    var p = Process.Start(psi);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"Error al imprimir: {ex.Message}", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+
+                        // Eliminamos los archivos correspondientes
+                        foreach (string p in _paths)
+                            if (File.Exists(p))
+                                File.Delete(p);
+                    }
+                    #endregion
                     break;
                 case "btnGenerar":
                     #region CODIGO PARA INVOCACION DE FUNCION DE GENERACION PDF
@@ -467,15 +533,11 @@ namespace Checador_FXE.MdiForms
                     ObservableCollection<InteropGenericObject> _list = new ObservableCollection<InteropGenericObject>();
 
                     foreach (string empleado in _PeriodoCasteado.Keys)
-                        _list.Add(InteropGenericObject.Compatibilize(empleado, "", _PeriodoCasteado[empleado], new HexaHash().ToString(), 1, 1));
-
-                    /*
-                    MessageBox.Show($"{String.Join("\n", _PeriodoCasteado.Cast<KeyValuePair<string, Dictionary<DateOnly, TipoAsistencia>>>()
-                                                                        .FirstOrDefault(s => s.Key == "Moises Duarte").Value
-                                                                        .Select(kvp => $"{kvp.Key} : {kvp.Value}")
-                                                                        .ToArray()) // TODO: ELIMINAR AQUI
-                        }");
-                    */
+                        _list.Add(InteropGenericObject.Compatibilize(empleado, 
+                                                                    "", 
+                                                                    _PeriodoCasteado[empleado], 
+                                                                    new HexaHash().Hash, 
+                                                                    0, 1));
 
                     PairEmpleado_FechaAsistencia = _PeriodoCasteado;
                     CASTING_RESULT = _list;
@@ -527,15 +589,6 @@ namespace Checador_FXE.MdiForms
             }
 
             return path;
-        }
-
-        /// <summary>
-        /// Ruta del documento PDF a imprimir
-        /// </summary>
-        /// <param name="pdf_path"></param>
-        void PrintReport(string pdf_path)
-        {
-            throw new NotImplementedException();
         }
 
         private void btnSincronizarAjustes_Click(object sender, EventArgs e)
@@ -680,16 +733,6 @@ namespace Checador_FXE.MdiForms
             }
         }
 
-        private void splitResultadosCasting_Background_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
-        private void flExtendedTabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
         {
             // Establecemos el icono de seleccionado
@@ -772,6 +815,24 @@ namespace Checador_FXE.MdiForms
             // Actualizamos la relacion de horario actualmente seleccionado
             RelacionHorarioSelected = RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray());
             Program.WriteStatus(true, $"Relacion de horario actualizada!");
+        }
+
+        private void lviewRegistros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.lviewRegistros.SelectedItems.Count == 0)
+                return;
+
+            // Regresamos a indice 0 todos los indices de imagenes
+            foreach (ListViewItem i in this.lviewRegistros.Items)
+                i.ImageIndex = 0;
+
+            int selectedIndex = this.lviewRegistros.SelectedItems[0].Index;
+            this.lviewRegistros.Items[selectedIndex].ImageIndex = 1;    // Cambiamos el indice de la seleccion
+        }
+
+        private void calendarAsistencias_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

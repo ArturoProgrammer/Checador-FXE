@@ -74,7 +74,7 @@ namespace Checador_FXE.Plantillas
                     _employeeSections.Add($"\"{n_E}\":[{string.Join(",\n", _turnosParts)}]");
                 }
 
-                MessageBox.Show("{" + string.Join(",\n", _employeeSections) + "}");
+                //MessageBox.Show("{" + string.Join(",\n", _employeeSections) + "}");
 
                 return "{" + string.Join(",\n", _employeeSections) + "}";
             }
@@ -84,6 +84,9 @@ namespace Checador_FXE.Plantillas
             }
             #endregion
         };
+        /// <summary>
+        /// Genera la plantilla de relaciones por defecto tomando como referencia para todos los dias el turno por defecto asignado al empleado
+        /// </summary>
         public static Func<RelacionHorarioID, TurnoEmpleadoCollection> makeDefaultRelacion = (id) =>
         {
             Empleado[] _actualEmpelados = Empleado.GetAll(Properties.Settings.Default.LOCALIDAD_DEFAULT).Object ??
@@ -544,8 +547,9 @@ namespace Checador_FXE.Plantillas
                     int noEmp = Int32.Parse(r.Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
                     for (int d_i = RelacionHorariosGridCells.DAYS_START.GetIndex(); d_i < r.Cells.Count; d_i++)
                     {
-                        TurnoEmpleado targetTurno = this.Relacion[noEmp, d_i - 2];
-                        r.Cells[d_i].Value = targetTurno.Turno == 0 ? "" : targetTurno.Turno;   // Escribimos el turno asignado
+                        TurnoEmpleado? targetTurno = this.Relacion[noEmp, d_i - 2];
+                        int turno = targetTurno?.Turno ?? 0;
+                        r.Cells[d_i].Value = turno == 0 ? "" : turno;   // Escribimos el turno asignado
                     }
                 }
                 #endregion

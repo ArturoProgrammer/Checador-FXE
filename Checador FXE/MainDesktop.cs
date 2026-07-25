@@ -124,7 +124,7 @@ namespace Checador_FXE
 
         private void editorDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
 
@@ -250,15 +250,19 @@ namespace Checador_FXE
         private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Abrimos el editor de personal
-            frmCrudEmpleados frm = new frmCrudEmpleados();
-            frm.ShowDialog();
+            new frmCrudEmpleados().ShowDialog();
         }
 
         private void relacionDeHorariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Abrimos el editor de horarios
-            frmCrudRelacionHorarios frm = new frmCrudRelacionHorarios();
-            frm.ShowDialog();
+            new frmCrudRelacionHorarios().ShowDialog();
+        }
+
+        private void acercaDeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // Abrimos el cuadro "Acerca de"
+            new AboutBox1().ShowDialog();
         }
     }
 }

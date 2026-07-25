@@ -229,7 +229,6 @@
             dgvRelacionDeHorarios.ShowContextMenu = true;
             dgvRelacionDeHorarios.Size = new Size(897, 362);
             dgvRelacionDeHorarios.TabIndex = 4;
-            dgvRelacionDeHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
             dgvRelacionDeHorarios.CellEnter += dgvAjustesEmpleados_CellEnter;
             dgvRelacionDeHorarios.CellValidating += dgvAjustesEmpleados_CellValidating;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;

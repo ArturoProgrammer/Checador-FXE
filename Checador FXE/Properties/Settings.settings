@@ -41,5 +41,8 @@
     <Setting Name="DEFAULT_FILENAME" Type="System.String" Scope="User">
       <Value Profile="(Default)">Reporte de Asistencias</Value>
     </Setting>
+    <Setting Name="TURNO_DEFECTO" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
