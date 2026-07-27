@@ -18,6 +18,7 @@
 	<VersionSuffix>beta-dev</VersionSuffix>
 	<AssemblyVersion>$(ManualVersion).$([System.DateTime]::Now.ToString('yyMM'))</AssemblyVersion>
 	<InformationalVersion>$(AssemblyVersion)-$(VersionSuffix)</InformationalVersion>
+	  <Description>Generador y gestor de asistencias de personal sindicalizado FXE con hardware ZKTeco.</Description>
 	  
 	<Copyright>Arturo Venegas IDC</Copyright>
 

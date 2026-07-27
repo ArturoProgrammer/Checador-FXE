@@ -11,11 +11,8 @@ namespace Checador_FXE
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Versión {0}", $"{AssemblyVersion} ({VersionSuffix})");
             this.labelCopyright.Text = AssemblyCopyright;
-            //this.labelCompanyName.Text = AssemblyCompany;
             this.labelCompanyName.Text = "Ferromex";
             this.textBoxDescription.Text = AssemblyDescription;
-
-            MessageBox.Show(VersionSuffix);
         }
 
         #region Descriptores de acceso de atributos de ensamblado

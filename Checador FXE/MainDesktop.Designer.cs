@@ -43,6 +43,8 @@
             editorDePersonalToolStripMenuItem = new ToolStripMenuItem();
             registroDePersonalToolStripMenuItem = new ToolStripMenuItem();
             relacionDeHorariosToolStripMenuItem = new ToolStripMenuItem();
+            acercaDeToolStripMenuItem = new ToolStripMenuItem();
+            acercaDeToolStripMenuItem1 = new ToolStripMenuItem();
             STATUS_BAR = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblStatusText = new ToolStripStatusLabel();
@@ -56,8 +58,6 @@
             imageList1 = new ImageList(components);
             MDI_PANEL = new Panel();
             lblBienvenido = new Label();
-            acercaDeToolStripMenuItem = new ToolStripMenuItem();
-            acercaDeToolStripMenuItem1 = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             STATUS_BAR.SuspendLayout();
             flCustomToolStrip1.SuspendLayout();
@@ -89,9 +89,10 @@
             // 
             // abrirToolStripMenuItem
             // 
+            abrirToolStripMenuItem.Enabled = false;
             abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             abrirToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.A;
-            abrirToolStripMenuItem.Size = new Size(177, 24);
+            abrirToolStripMenuItem.Size = new Size(182, 24);
             abrirToolStripMenuItem.Text = "Abrir";
             abrirToolStripMenuItem.Click += abrirToolStripMenuItem_Click;
             // 
@@ -99,20 +100,20 @@
             // 
             nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
             nuevoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            nuevoToolStripMenuItem.Size = new Size(177, 24);
+            nuevoToolStripMenuItem.Size = new Size(182, 24);
             nuevoToolStripMenuItem.Text = "Nuevo";
             nuevoToolStripMenuItem.Click += nuevoToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(174, 6);
+            toolStripSeparator1.Size = new Size(179, 6);
             // 
             // guardarToolStripMenuItem
             // 
             guardarToolStripMenuItem.Enabled = false;
             guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            guardarToolStripMenuItem.Size = new Size(177, 24);
+            guardarToolStripMenuItem.Size = new Size(182, 24);
             guardarToolStripMenuItem.Text = "Guardar";
             guardarToolStripMenuItem.Click += guardarToolStripMenuItem_Click;
             // 
@@ -120,20 +121,20 @@
             // 
             guardarComoToolStripMenuItem.Enabled = false;
             guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            guardarComoToolStripMenuItem.Size = new Size(177, 24);
+            guardarComoToolStripMenuItem.Size = new Size(182, 24);
             guardarComoToolStripMenuItem.Text = "Guardar como...";
             guardarComoToolStripMenuItem.Click += guardarComoToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(174, 6);
+            toolStripSeparator2.Size = new Size(179, 6);
             // 
             // propiedadesToolStripMenuItem
             // 
             propiedadesToolStripMenuItem.Image = Properties.Resources.settings2;
             propiedadesToolStripMenuItem.Name = "propiedadesToolStripMenuItem";
-            propiedadesToolStripMenuItem.Size = new Size(177, 24);
+            propiedadesToolStripMenuItem.Size = new Size(182, 24);
             propiedadesToolStripMenuItem.Text = "Propiedades";
             propiedadesToolStripMenuItem.Click += propiedadesToolStripMenuItem_Click;
             // 
@@ -164,6 +165,20 @@
             relacionDeHorariosToolStripMenuItem.Size = new Size(203, 24);
             relacionDeHorariosToolStripMenuItem.Text = "Relacion de Horarios";
             relacionDeHorariosToolStripMenuItem.Click += relacionDeHorariosToolStripMenuItem_Click;
+            // 
+            // acercaDeToolStripMenuItem
+            // 
+            acercaDeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { acercaDeToolStripMenuItem1 });
+            acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
+            acercaDeToolStripMenuItem.Size = new Size(60, 23);
+            acercaDeToolStripMenuItem.Text = "Ayuda";
+            // 
+            // acercaDeToolStripMenuItem1
+            // 
+            acercaDeToolStripMenuItem1.Name = "acercaDeToolStripMenuItem1";
+            acercaDeToolStripMenuItem1.Size = new Size(137, 24);
+            acercaDeToolStripMenuItem1.Text = "Acerca de";
+            acercaDeToolStripMenuItem1.Click += acercaDeToolStripMenuItem1_Click;
             // 
             // STATUS_BAR
             // 
@@ -301,20 +316,6 @@
             lblBienvenido.TabIndex = 0;
             lblBienvenido.Text = "Bienvenido";
             lblBienvenido.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // acercaDeToolStripMenuItem
-            // 
-            acercaDeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { acercaDeToolStripMenuItem1 });
-            acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            acercaDeToolStripMenuItem.Size = new Size(60, 23);
-            acercaDeToolStripMenuItem.Text = "Ayuda";
-            // 
-            // acercaDeToolStripMenuItem1
-            // 
-            acercaDeToolStripMenuItem1.Name = "acercaDeToolStripMenuItem1";
-            acercaDeToolStripMenuItem1.Size = new Size(180, 24);
-            acercaDeToolStripMenuItem1.Text = "Acerca de";
-            acercaDeToolStripMenuItem1.Click += acercaDeToolStripMenuItem1_Click;
             // 
             // MainDesktop
             // 
