@@ -108,7 +108,7 @@ namespace Checador_FXE.MdiForms
             }
 
             // Cargamos las configuraciones de horario que usaremos
-            loadTurnosBySettings(this.dgvTurnosHorarios);   // TODO: ESTO ENTRA EN CONFLICTO CON LA FUNCION DE ABRIR, ASI QUE HAY QUE REFORMULARLO
+            loadTurnosBySettings(this.dgvTurnosHorarios.Grid);   // TODO: ESTO ENTRA EN CONFLICTO CON LA FUNCION DE ABRIR, ASI QUE HAY QUE REFORMULARLO
             // Cargamos el tiempo maximo de retraso permitido
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
 
@@ -383,7 +383,7 @@ namespace Checador_FXE.MdiForms
                 case "btnEjecutar":
                     #region Ejecutamos el proceso de generacion de informe
                     // Primero debemos validar que la configuracion de turnos y horarios se encuentre vacia
-                    if (Utils.IsDgvEmpty(this.dgvTurnosHorarios))
+                    if (Utils.IsDgvEmpty(this.dgvTurnosHorarios.Grid))
                         break;
 
                     Program.WriteStatus(true, "Iniciando procesamiendo del casting...");
@@ -597,7 +597,7 @@ namespace Checador_FXE.MdiForms
                 return;
 
             // Cargamos las configuraciones de horario que usaremos
-            loadTurnosBySettings(this.dgvTurnosHorarios);
+            loadTurnosBySettings(this.dgvTurnosHorarios.Grid);
 
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
         }

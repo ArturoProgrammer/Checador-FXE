@@ -230,8 +230,8 @@
             dgvRelacionDeHorarios.Size = new Size(897, 362);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.CellEnter += dgvAjustesEmpleados_CellEnter;
-            dgvRelacionDeHorarios.CellValidating += dgvAjustesEmpleados_CellValidating;
-            dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
+            dgvRelacionDeHorarios.Grid.CellValidating += dgvAjustesEmpleados_CellValidating;
+            dgvRelacionDeHorarios.Grid.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             dgvRelacionDeHorarios.KeyDown += dgvRelacionDeHorarios_KeyDown;
             // 

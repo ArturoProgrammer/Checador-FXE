@@ -214,7 +214,6 @@
             dgvAjustesEmpleados.RowHeadersWidth = 45;
             dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
             dgvAjustesEmpleados.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            dgvAjustesEmpleados.ScrollBars = ScrollBars.Vertical;
             dgvAjustesEmpleados.SelectedCellColor = Color.Moccasin;
             dgvAjustesEmpleados.SelectedRowColor = Color.SteelBlue;
             dgvAjustesEmpleados.SelectionForeColor = Color.Black;
@@ -224,10 +223,10 @@
             dgvAjustesEmpleados.TabIndex = 4;
             dgvAjustesEmpleados.OnAddClick += dgvAjustesHorarios_OnAddClick;
             dgvAjustesEmpleados.OnRemoveClick += dgvAjustesEmpleados_OnRemoveClick;
-            dgvAjustesEmpleados.CellEndEdit += dgvAjustesEmpleados_CellEndEdit;
+            dgvAjustesEmpleados.Grid.CellEndEdit += dgvAjustesEmpleados_CellEndEdit;
             dgvAjustesEmpleados.CellEnter += dgvAjustesEmpleados_CellEnter;
-            dgvAjustesEmpleados.CellValidating += dgvAjustesEmpleados_CellValidating;
-            dgvAjustesEmpleados.RowValidating += dgvAjustesHorarios_RowValidating;
+            dgvAjustesEmpleados.Grid.CellValidating += dgvAjustesEmpleados_CellValidating;
+            dgvAjustesEmpleados.Grid.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvAjustesEmpleados.SelectionChanged += dgvAjustesHorarios_SelectionChanged;
             // 
             // colImageIcon

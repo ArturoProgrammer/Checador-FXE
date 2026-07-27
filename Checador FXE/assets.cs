@@ -268,7 +268,7 @@ namespace Checador_FXE
 
         internal static Turno[] ParseHorariosTurnosByDgv(flExtendedDataGridView dgv)
         {
-            if (IsDgvEmpty(dgv))
+            if (IsDgvEmpty(dgv.Grid))
                 throw new ArgumentException("No se puede cargar una tabla sin contenido para el parseo de datos.");
 
             List<Turno> _horariosTurnos = new List<Turno>();
