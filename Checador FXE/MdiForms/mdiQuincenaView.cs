@@ -138,6 +138,11 @@ namespace Checador_FXE.MdiForms
             this.splitContainer1.SplitterDistance = 400;
             this.splitResultadosCasting_Background.SplitterDistance = 275;
 
+            this.dgvRelacionDeHorarios.SetGridStyle(DataGridStylesGallery.BlueStyle);
+            this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
+            this.dgvTurnosHorarios.SetGridStyle(DataGridStylesGallery.BlueStyle);
+            this.dgvTurnosHorarios.MouseHoverEffectEnabled = false;
+
             // Cargamos las imagenes del imageList1
             this.imageList1.Images.Clear();
             this.imageList1.Images.AddRange(new Image[]
