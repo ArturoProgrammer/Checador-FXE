@@ -11,6 +11,7 @@ namespace Checador_FXE
         public frmCrudEmpleados()
         {
             InitializeComponent();
+            this.dgvAjustesEmpleados.SetGridStyle(DataGridStylesGallery.BlueStyle);
         }
 
         private void frmCrudEmpleados_Load(object sender, EventArgs e)

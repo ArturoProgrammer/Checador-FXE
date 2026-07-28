@@ -28,6 +28,7 @@ namespace Checador_FXE
                                                             .ToArray());
             this.cboxParametroLimitacion.SelectedIndex = 0;
             this.txtValorLimitacion.Text = "";
+            this.dgvRelacionDeHorarios.SetGridStyle(DataGridStylesGallery.BlueStyle);
         }
 
         void WriteStatus(bool status, string message)
@@ -151,7 +152,7 @@ namespace Checador_FXE
                 return;
             }
 
-            flExtendedDataGridView grid = (flExtendedDataGridView)sender;
+            DataGridView grid = (DataGridView)sender;
 
             string oldValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
             string newValue = e.FormattedValue!.ToString()!.Trim();
