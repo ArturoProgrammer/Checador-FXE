@@ -522,7 +522,7 @@ namespace Checador_FXE.Plantillas
                     _row.Cells.AddRange(
                         new DataGridViewImageCell()
                         {
-                            Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                            Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64),
                             ImageLayout = DataGridViewImageCellLayout.Zoom,
                         },
                         new DataGridViewTextBoxCell() { Value = j.NoEmp },

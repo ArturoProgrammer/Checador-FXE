@@ -46,6 +46,7 @@ namespace Checador_FXE
             this.txtYear.Text = DateTime.Now.Year.ToString();
 
             this.btnIrAMes.PerformClick();
+            this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = true;
         }
 
         void LoadLimitedView(LimitationParam param, string value)
@@ -134,14 +135,14 @@ namespace Checador_FXE
         {
             // Establecemos el icono de seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
         }
 
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
             // Establecemos el icono de no seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
         }
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)

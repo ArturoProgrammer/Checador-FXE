@@ -145,16 +145,17 @@ namespace Checador_FXE.MdiForms
 
             // Cargamos las imagenes del imageList1
             this.imageList1.Images.Clear();
+            IconSize imgLstSz = IconSize.S_32;
             this.imageList1.Images.AddRange(new Image[]
             {
-                IconGallery.Size32.NeutralObjectGreenUnselected,    // => 0
-                IconGallery.Size32.NeutralObjectGreenSelected,      // => 1
-                IconGallery.Size32.NeutralObjectYellowUnselected,   // => 2
-                IconGallery.Size32.NeutralObjectYellowSelected,     // => 3
-                IconGallery.Size32.NeutralObjectRedSelected,        // => 4
-                IconGallery.Size32.NeutralObjectRedUnselected,      // => 5
-                IconGallery.Size32.NeutralObjectOrangeSelected,     // => 6
-                IconGallery.Size32.NeutralObjectOrangeUnselected,   // => 7
+                IconGallery.NeutralObjectGreenUnselected.Render(imgLstSz),    // => 0
+                IconGallery.NeutralObjectGreenSelected.Render(imgLstSz),      // => 1
+                IconGallery.NeutralObjectYellowUnselected.Render(imgLstSz),   // => 2
+                IconGallery.NeutralObjectYellowSelected.Render(imgLstSz),     // => 3
+                IconGallery.NeutralObjectRedSelected.Render(imgLstSz),        // => 4
+                IconGallery.NeutralObjectRedUnselected.Render(imgLstSz),      // => 5
+                IconGallery.NeutralObjectOrangeSelected.Render(imgLstSz),     // => 6
+                IconGallery.NeutralObjectOrangeUnselected.Render(imgLstSz),   // => 7
             });
 
             #region Coloreamos los dias del reporte en ambos EventCalendar
@@ -742,14 +743,14 @@ namespace Checador_FXE.MdiForms
         {
             // Establecemos el icono de seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
         }
 
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
             // Establecemos el icono de no seleccionado
             if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
         }
 
         DataGridViewRow[] _CloneRows()

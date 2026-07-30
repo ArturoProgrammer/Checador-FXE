@@ -113,7 +113,7 @@ namespace Checador_FXE
             _row.Cells.AddRange(
                 new DataGridViewImageCell()
                 {
-                    Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                    Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64),
                     ImageLayout = DataGridViewImageCellLayout.Zoom
                 },
                 new DataGridViewTextBoxCell() { Value = resp.Response[0].Cells[0].Value },  // No. Emp.
@@ -152,7 +152,7 @@ namespace Checador_FXE
                 DataGridViewRow _row = new DataGridViewRow();
                 _row.Cells.Add(new DataGridViewImageCell()
                 {
-                    Value = IconGallery.Size64.NeutralObjectGreenUnselected,
+                    Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64),
                     ImageLayout = DataGridViewImageCellLayout.Zoom,
                 });
                 _row.Cells.Add(new DataGridViewTextBoxCell() { Value = i.NoEmp }); // No. Emp.
@@ -202,14 +202,14 @@ namespace Checador_FXE
         {
             // Establecemos el icono de seleccionado
             if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenSelected;
+                this.dgvAjustesEmpleados.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
         }
 
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
             // Establecemos el icono de no seleccionado
             if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.Size64.NeutralObjectGreenUnselected;
+                this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
         }
 
         private void exportarParaConfiguracionToolStripMenuItem_Click(object sender, EventArgs e)

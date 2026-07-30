@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using SpreadsheetLight;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Reflection;
 using System.Security.Principal;
 

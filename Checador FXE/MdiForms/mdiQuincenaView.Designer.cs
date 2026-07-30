@@ -611,6 +611,7 @@
             dgvTurnosHorarios.EnableHeadersVisualStyles = false;
             dgvTurnosHorarios.ExtraReservedBottomHeight = 0;
             dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
+            dgvTurnosHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvTurnosHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvTurnosHorarios.Location = new Point(0, 0);
             dgvTurnosHorarios.Margin = new Padding(0);
@@ -838,6 +839,7 @@
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
             dgvRelacionDeHorarios.ExtraReservedBottomHeight = 0;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
+            dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvRelacionDeHorarios.Location = new Point(0, 0);
             dgvRelacionDeHorarios.Margin = new Padding(0);
