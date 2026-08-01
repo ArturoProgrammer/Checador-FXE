@@ -1,9 +1,6 @@
-﻿using Checador_FXE.Plantillas;
-using FlowCommonWorkcore;
+﻿using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Utils;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace Checador_FXE
 {
