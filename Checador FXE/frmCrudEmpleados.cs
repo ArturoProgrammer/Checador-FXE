@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
+using DocumentFormat.OpenXml.Wordprocessing;
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Inputs;
@@ -11,7 +12,9 @@ namespace Checador_FXE
         public frmCrudEmpleados()
         {
             InitializeComponent();
-            this.dgvAjustesEmpleados.SetGridStyle(DataGridStylesGallery.BlueStyle);
+            this.dgvAjustesEmpleados.SetGridStyle(Program.StandardGridStyle);
+            this.dgvAjustesEmpleados.RowTemplate.Height = Program.DefaultRowHeight;
+            this.dgvAjustesEmpleados.AllowUserToResizeRows = false;
         }
 
         private void frmCrudEmpleados_Load(object sender, EventArgs e)
@@ -186,11 +189,18 @@ namespace Checador_FXE
                     TurnoDefault = int.TryParse(r.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value?.ToString(), out int turno) ? turno : 1
                 };
 
+                //MessageBox.Show($"objecto creado");
+
                 emp.Save(ShowObjectLog: false);
+                //MessageBox.Show($"objeto '{emp.NoEmp}' guardado");
             }
+
+            //MessageBox.Show("recargando vista");
 
             // Recargamos la vista para sincronizarla con los valores de la DB
             LoadView(this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!);
+
+            //MessageBox.Show("vista recargada");
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -198,19 +208,9 @@ namespace Checador_FXE
             throw new NotImplementedException();
         }
 
-        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
-        {
-            // Establecemos el icono de seleccionado
-            if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
-        }
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvAjustesEmpleados, e);
 
-        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            // Establecemos el icono de no seleccionado
-            if (this.dgvAjustesEmpleados.Rows.Count > 0)
-                this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
-        }
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvAjustesEmpleados, e);
 
         private void exportarParaConfiguracionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -229,37 +229,41 @@ namespace Checador_FXE
         {
             if (e.ColumnIndex == EmpleadosGridCells.LOCALIDAD.GetIndex())
             {
-                var grid = (flExtendedDataGridView)sender;
-
-                // Toma lo que el usuario está intentando dejar en la celda
-                string input = e.FormattedValue?.ToString() ?? string.Empty;
-
-                // Normaliza espacios
-                input = input.Trim();
-
-                // Valida contra la lista, ignorando mayúsculas/minúsculas
-                bool ok = Utils.GetLocalidadesDisponibles()
-                               .Contains(input, StringComparer.OrdinalIgnoreCase);
-                if (!ok)
+                try
                 {
-                    List<string> localidades = new List<string>();
-                    foreach (string i in Utils.GetLocalidadesDisponibles())
-                        localidades.Add($"* {i}");
+                    // Toma lo que el usuario está intentando dejar en la celda
+                    string input = e.FormattedValue?.ToString() ?? string.Empty;
 
-                    MessageBox.Show($"Localidad inválida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}");
-                    e.Cancel = true;   // No permite salir de la celda
-                    return;
+                    // Normaliza espacios
+                    input = input.Trim();
+
+                    // Valida contra la lista, ignorando mayúsculas/minúsculas
+                    bool ok = Utils.GetLocalidadesDisponibles()
+                                   .Contains(input, StringComparer.OrdinalIgnoreCase);
+                    if (!ok)
+                    {
+                        List<string> localidades = new List<string>();
+                        foreach (string i in Utils.GetLocalidadesDisponibles())
+                            localidades.Add($"* {i}");
+
+                        MessageBox.Show($"Localidad inválida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}");
+                        e.Cancel = true;   // No permite salir de la celda
+                        return;
+                    }
+
+                    // Limpia error si es válido
+                    this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
                 }
-
-                // Limpia error si es válido
-                grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
             }
         }
 
         // Limpia el texto de error al terminar la edición (visual)
         private void dgvAjustesEmpleados_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            var grid = (flExtendedDataGridView)sender;
+            var grid = this.dgvAjustesEmpleados;
             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
 
             string input = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;

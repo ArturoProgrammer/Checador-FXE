@@ -4,8 +4,6 @@ using FlowControls;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Runtime.CompilerServices;
 
 namespace Checador_FXE.MdiForms
 {
@@ -84,6 +82,14 @@ namespace Checador_FXE.MdiForms
 
         void LoadAllData()
         {
+            // Inicializamos los DGV con sus propiedades comunes
+            foreach (flExtendedDataGridView dgv in new[] { this.dgvRelacionDeHorarios, this.dgvTurnosHorarios })
+            {
+                dgv.SetGridStyle(Program.StandardGridStyle);
+                dgv.RowTemplate.Height = Program.DefaultRowHeight;
+                dgv.AllowUserToResizeRows = false;
+            }
+
             // Cargamos los valores en la visualizacion
             this.calendarAsistencias.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
             this.calendarEmpleadoCasteado.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
@@ -739,19 +745,10 @@ namespace Checador_FXE.MdiForms
             }
         }
 
-        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e)
-        {
-            // Establecemos el icono de seleccionado
-            if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
-        }
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
 
-        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            // Establecemos el icono de no seleccionado
-            if (this.dgvRelacionDeHorarios.Rows.Count > 0)
-                this.dgvRelacionDeHorarios.Rows[e.RowIndex].Cells[RelacionHorariosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
-        }
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
+
 
         DataGridViewRow[] _CloneRows()
         {
