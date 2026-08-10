@@ -47,6 +47,7 @@ namespace Checador_FXE
             //
             // AJUSTES DE HORARIO
             //
+            this.dgvAjustesHorarios.SetGridStyle(Program.StandardGridStyle);
             _LoadHorariosFromJson(Properties.Settings.Default.TURNOS_HORARIOS);
 
             //

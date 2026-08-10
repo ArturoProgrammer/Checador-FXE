@@ -58,51 +58,53 @@ namespace Checador_FXE
         {
             bool rowIsValid = false;
 
-            var input = new flDataGridInputBox().SetLimitRow(1)
-                                                .SetRowGridValidation((row) =>
-                                                {
-                                                    var _empleados = Empleado.GetAll(actualLocalidad);
-                                                    int _turnoDefIndex = EmpleadosGridCells.TURNO_DEFAULT.GetIndex() - 1;
-                                                    int _noEmpDefIndex = EmpleadosGridCells.NO_EMP.GetIndex() - 1;
-                                                    List<string> fails = new List<string>();
+            var input = new flDataGridInputBox()
+                .SetLimitRow(1)
+                .SetRowGridValidation((row) =>
+                {
+                    var _empleados = Empleado.GetAll(actualLocalidad);
+                    int _turnoDefIndex = EmpleadosGridCells.TURNO_DEFAULT.GetIndex() - 1;
+                    int _noEmpDefIndex = EmpleadosGridCells.NO_EMP.GetIndex() - 1;
+                    List<string> fails = new List<string>();
 
-                                                    // Validar campos no vacios
-                                                    int index = 1;
-                                                    foreach (DataGridViewCell c in row.Cells)
-                                                    {
-                                                        if (c.Value is null || String.IsNullOrEmpty(c.Value.ToString()!.Trim()))
-                                                            fails.Add($"* No se pueden dejar celdas con informacion vacia (Col.: {index})");
+                    // Validar campos no vacios
+                    int index = 1;
+                    foreach (DataGridViewCell c in row.Cells)
+                    {
+                        if (c.Value is null || String.IsNullOrEmpty(c.Value.ToString()!.Trim()))
+                            fails.Add($"* No se pueden dejar celdas con informacion vacia (Col.: {index})");
 
-                                                        index++;
-                                                    }
+                        index++;
+                    }
 
-                                                    // Validar no existencia de duplicados de numeros de empleados
-                                                    if (_empleados.Success)
-                                                        if (_empleados.Object!.Any(emp => emp.NoEmp == row.Cells[_noEmpDefIndex].Value?.ToString()))
-                                                            fails.Add($"* Numero de empleado duplicado ({_empleados.Object!.FirstOrDefault(e => e.NoEmp == row.Cells[_noEmpDefIndex].Value.ToString())})");
+                    // Validar no existencia de duplicados de numeros de empleados
+                    if (_empleados.Success)
+                        if (_empleados.Object!.Any(emp => emp.NoEmp == row.Cells[_noEmpDefIndex].Value?.ToString()))
+                            fails.Add($"* Numero de empleado duplicado ({_empleados.Object!.FirstOrDefault(e => e.NoEmp == row.Cells[_noEmpDefIndex].Value.ToString())})");
 
-                                                    // Validar el turno por defecto asignado a los empleados   
-                                                    if (row.Cells[_turnoDefIndex].Value == null ||
-                                                        String.IsNullOrWhiteSpace(row.Cells[_turnoDefIndex].Value.ToString().Trim()) ||
-                                                        !Utils.GetHorariosIDs().Contains(int.Parse(row.Cells[_turnoDefIndex].Value.ToString().Trim())))
-                                                        fails.Add("El turno por defecto asignado al empleado no es valido");
+                    // Validar el turno por defecto asignado a los empleados   
+                    if (row.Cells[_turnoDefIndex].Value == null ||
+                        String.IsNullOrWhiteSpace(row.Cells[_turnoDefIndex].Value.ToString().Trim()) ||
+                        !Utils.GetHorariosIDs().Contains(int.Parse(row.Cells[_turnoDefIndex].Value.ToString().Trim())))
+                        fails.Add("El turno por defecto asignado al empleado no es valido");
 
-                                                    rowIsValid = fails.Count == 0; // Asignamos una identificacion que indique que la fila es valida
+                    rowIsValid = fails.Count == 0; // Asignamos una identificacion que indique que la fila es valida
 
-                                                    if (!rowIsValid)
-                                                        MessageBox.Show($"La fila no es valida por los siguientes motivos:\n\n{String.Join('\n', fails)}", "Validacion de Fila Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!rowIsValid)
+                        MessageBox.Show($"La fila no es valida por los siguientes motivos:\n\n{String.Join('\n', fails)}", "Validacion de Fila Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                                                    return rowIsValid;
-                                                })
-                                                .SetDefaultValues(new flDefaultColumnValue[]
-                                                {
-                                                    new (4, "PACIFICO"),
-                                                    new (5, "HERMOSILLO"),
-                                                    new (6, actualLocalidad),
-                                                    new (7, Properties.Settings.Default.TURNO_DEFECTO)
-                                                })
-                                                .SetCloseEvenIfFails(true)
-                                                .SetGridStyle(DataGridStylesGallery.BlueStyle);
+                    return rowIsValid;
+                })
+                .SetDefaultValues(new flDefaultColumnValue[]
+                {
+                    new (4, "PACIFICO"),
+                    new (5, "HERMOSILLO"),
+                    new (6, actualLocalidad),
+                    new (7, Properties.Settings.Default.TURNO_DEFECTO)
+                })
+                .SetCloseEvenIfFails(true)
+                .SetGridStyle(Program.StandardGridStyle.SetAutoSizeColumnsMode(DataGridViewAutoSizeColumnsMode.AllCells));
+
             flDialogResult<DataGridViewRow[]> resp = input.Show(
                 "Nuevo empleado",
                 new[] { "No. Emp.", "Nombres", "Apellidos", "Puesto", "Region", "Division", "Localidad", "Turno Default" }
@@ -189,18 +191,11 @@ namespace Checador_FXE
                     TurnoDefault = int.TryParse(r.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value?.ToString(), out int turno) ? turno : 1
                 };
 
-                //MessageBox.Show($"objecto creado");
-
                 emp.Save(ShowObjectLog: false);
-                //MessageBox.Show($"objeto '{emp.NoEmp}' guardado");
             }
-
-            //MessageBox.Show("recargando vista");
 
             // Recargamos la vista para sincronizarla con los valores de la DB
             LoadView(this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!);
-
-            //MessageBox.Show("vista recargada");
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -284,9 +279,9 @@ namespace Checador_FXE
                                     MessageBoxButtons.YesNo, 
                                     MessageBoxIcon.Question, 
                                     FormStylesGallery.BlueStyle) is DialogResult.No)
-            {                
+            {
                 // Cancelamos la eliminacion de la fila
-
+                return;
             }
         }
     }

@@ -49,6 +49,8 @@
             lblStatus = new ToolStripStatusLabel();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblMessage = new ToolStripStatusLabel();
+            toolStripLabel2 = new ToolStripLabel();
+            lblLocalidadSeleccionada = new ToolStripLabel();
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
             statusStrip1.SuspendLayout();
@@ -59,10 +61,10 @@
             flCustomToolStrip1.BackColor = SystemColors.ActiveCaption;
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito, lblLocalidadSeleccionada, toolStripLabel2 });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(897, 25);
+            flCustomToolStrip1.Size = new Size(936, 25);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
@@ -227,11 +229,12 @@
             dgvRelacionDeHorarios.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvRelacionDeHorarios.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
+            dgvRelacionDeHorarios.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
             dgvRelacionDeHorarios.ExtraReservedBottomHeight = 1;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvRelacionDeHorarios.Location = new Point(0, 22);
+            dgvRelacionDeHorarios.Location = new Point(0, 25);
             dgvRelacionDeHorarios.Margin = new Padding(0);
             dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
             dgvRelacionDeHorarios.MultiSelect = false;
@@ -247,7 +250,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(897, 317);
+            dgvRelacionDeHorarios.Size = new Size(936, 432);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvRelacionDeHorarios.CellValidating += dgvAjustesEmpleados_CellValidating;
@@ -260,9 +263,9 @@
             statusStrip1.BackColor = SystemColors.ActiveCaption;
             statusStrip1.ImageScalingSize = new Size(18, 18);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblStatus, toolStripStatusLabel1, lblMessage });
-            statusStrip1.Location = new Point(0, 339);
+            statusStrip1.Location = new Point(0, 457);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(897, 22);
+            statusStrip1.Size = new Size(936, 22);
             statusStrip1.SizingGrip = false;
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
@@ -285,12 +288,32 @@
             lblMessage.Size = new Size(73, 17);
             lblMessage.Text = "%Message%";
             // 
+            // toolStripLabel2
+            // 
+            toolStripLabel2.Alignment = ToolStripItemAlignment.Right;
+            toolStripLabel2.Name = "toolStripLabel2";
+            toolStripLabel2.Size = new Size(61, 22);
+            toolStripLabel2.Text = "Localidad:";
+            // 
+            // lblLocalidadSeleccionada
+            // 
+            lblLocalidadSeleccionada.Alignment = ToolStripItemAlignment.Right;
+            lblLocalidadSeleccionada.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblLocalidadSeleccionada.ForeColor = SystemColors.HotTrack;
+            lblLocalidadSeleccionada.IsLink = true;
+            lblLocalidadSeleccionada.LinkColor = SystemColors.HotTrack;
+            lblLocalidadSeleccionada.Name = "lblLocalidadSeleccionada";
+            lblLocalidadSeleccionada.Size = new Size(93, 22);
+            lblLocalidadSeleccionada.Text = "%LOCALIDAD%";
+            lblLocalidadSeleccionada.VisitedLinkColor = SystemColors.HotTrack;
+            lblLocalidadSeleccionada.Click += lblLocalidadSeleccionada_Click;
+            // 
             // frmCrudRelacionHorarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
-            ClientSize = new Size(897, 361);
+            ClientSize = new Size(936, 479);
             Controls.Add(statusStrip1);
             Controls.Add(dgvRelacionDeHorarios);
             Controls.Add(flCustomToolStrip1);
@@ -328,5 +351,7 @@
         private ToolStripTextBox txtValorLimitacion;
         private ToolStripButton btnLimitarAmbito;
         private ToolStripButton toolStrpBtn_NuevoTurno;
+        private ToolStripLabel toolStripLabel2;
+        private ToolStripLabel lblLocalidadSeleccionada;
     }
 }

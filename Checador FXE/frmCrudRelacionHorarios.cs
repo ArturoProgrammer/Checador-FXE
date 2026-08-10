@@ -1,6 +1,7 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
 using FlowControls;
+using FlowControls.Inputs;
 using FlowControls.Utils;
 using System.Globalization;
 
@@ -49,6 +50,11 @@ namespace Checador_FXE
             this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = true;
         }
 
+        /// <summary>
+        /// Vista con objetos filtrados
+        /// </summary>
+        /// <param name="param"></param>
+        /// <param name="value"></param>
         void LoadLimitedView(LimitationParam param, string value)
         {
             try
@@ -121,7 +127,7 @@ namespace Checador_FXE
             Response _resp = actualSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().ToArray())
                                             .Save(ShowObjectLog: false);
             WriteStatus(_resp.Success, _resp.Message);
-            
+
             if (_resp.Success is false)
                 MessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -337,6 +343,27 @@ namespace Checador_FXE
                 throw new NotImplementedException();
                 #endregion
             }
+        }
+
+        private void lblLocalidadSeleccionada_Click(object sender, EventArgs e)
+        {
+            // Abrimos el selector de localidad para hacer el cambio
+            var dlgResp = flComboBoxInput.Show("Relacion de Horarios", "Localidad:", Utils.GetLocalidadesDisponibles(), Program.StandardFormStyle);
+            if (dlgResp.DialogResult != DialogResult.OK)
+                return;
+
+            // Mensaje opcional para guardar en caso de haberse realizado cambios
+
+            string localidadSeleccionada = dlgResp.Response;
+
+            if (!ValidateFields(Fields.Year))
+            {
+                WriteStatus(false, "Año invalido!");
+                return;
+            }
+
+            DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
+            LoadView(dt.Month, dt.Year, localidadSeleccionada);
         }
     }
 }

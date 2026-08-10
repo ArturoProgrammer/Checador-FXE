@@ -1,6 +1,8 @@
 ﻿using Checador_FXE.Plantillas; 
 using FlowCommonWorkcore;
 using FlowControls;
+using FlowControls.Inputs;
+using Org.BouncyCastle.Bcpg;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
@@ -683,9 +685,10 @@ namespace Checador_FXE.MdiForms
                 optionLists.Add(i.GetText());
             }
 
-            popUpComboBoxEntry frmPopUp = new popUpComboBoxEntry(e.Date, optionLists.ToArray(), e.Events.Cast<CalendarEvent>().FirstOrDefault().Texto);
+            var frmPopUp = flComboBoxInput.Show($"Propiedad del dia '{e.Date:dd/MM/yyyy}'", "Estatus:", optionLists.ToArray(), Program.StandardFormStyle);
+            //var frmPopUp = flListItemExplorerBox.Show("Propiedades", optionLists.ToArray(), Program.StandardFormStyle);
 
-            if (frmPopUp.ShowDialog() == DialogResult.Cancel)
+            if (frmPopUp.DialogResult == DialogResult.Cancel)
                 return;
 
             if (ACTUAL_EMPLEADO_SELECCIONADO == "-1")

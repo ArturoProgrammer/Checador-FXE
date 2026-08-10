@@ -1,11 +1,6 @@
 using Checador_FXE.Plantillas;
-using DocumentFormat.OpenXml.InkML;
-using FlowCommonWorkcore.HelperAssets;
 using FlowControls;
-using Org.BouncyCastle.Tls;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Web;
 
 namespace Checador_FXE
 {
@@ -18,6 +13,7 @@ namespace Checador_FXE
         internal static CultureInfo CurrentCultureInfo { get; }  = new CultureInfo("es-MX");
         internal static int DefaultRowHeight { get; } = 30;
         internal static DataGridStyle StandardGridStyle { get; } = DataGridStylesGallery.BlueStyle;
+        internal static FormStyle StandardFormStyle { get; } = FormStylesGallery.BlueStyle;
 
         /// <summary>
         /// Nombre del recurso del formato de asistencia de la primer quincena del mes
@@ -28,6 +24,9 @@ namespace Checador_FXE
         /// </summary>
         public static readonly (string Name, string Ext) FORMATO_ASIST_2_PROPS = ("FORMATO_ASISTENCIA_TAB_16_31_form", "pdf");
 
+        /// <summary>
+        /// Establece el icono de elemento seleccionado
+        /// </summary>
         internal static Action<flExtendedDataGridView, EventArgs> DefaultRowSelectionChanged = (sender, e) =>
         {
             // Establecemos el icono de seleccionado
@@ -36,6 +35,9 @@ namespace Checador_FXE
                     sender.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
         };
 
+        /// <summary>
+        /// Reestablece el icono de elemento no seleccionado
+        /// </summary>
         internal static Action<flExtendedDataGridView, DataGridViewCellCancelEventArgs> DefaultRowValidating = (sender, e) =>
         {
             // Establecemos el icono de no seleccionado
