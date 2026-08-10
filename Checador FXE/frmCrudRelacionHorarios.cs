@@ -132,7 +132,6 @@ namespace Checador_FXE
         }
 
         private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
-
         private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -143,7 +142,7 @@ namespace Checador_FXE
                 return;
             }
 
-            DataGridView grid = (DataGridView)sender;
+            var grid = this.dgvRelacionDeHorarios;
 
             string oldValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
             string newValue = e.FormattedValue!.ToString()!.Trim();
