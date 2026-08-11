@@ -155,7 +155,7 @@ namespace Checador_FXE.Plantillas
         private List<TurnoEmpleado> _items = new();
 
         // Propiedades
-        public int Count => _items.Count;
+        public int Length => _items.Count;
         public TurnoEmpleado[] Items => _items.ToArray();
         
         // Constructores
@@ -224,6 +224,9 @@ namespace Checador_FXE.Plantillas
         [ColumnSqlName("hash")]
         [ParamSqlKey("@hash")]
         public HexaHash HASH { get; set; } = new HexaHash();
+        [ColumnSqlName("localidad")]
+        [ParamSqlKey("@localidad")]
+        public string Localidad { get; set; } = "-1";   // localidad a la que corresponde
 
         public static void InitializeDb()
         {
@@ -239,7 +242,8 @@ namespace Checador_FXE.Plantillas
                     new ColumnTemplate("position", DataTypes.INTEGER, isPrimaryKey: true, isNotNull: true),
                     new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("ID"), DataTypes.TEXT, isNotNull: true),
                     new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("Relacion"), DataTypes.TEXT, isNotNull: true),
-                    new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("HASH"), DataTypes.TEXT, isNotNull: true));
+                    new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("HASH"), DataTypes.TEXT, isNotNull: true),
+                    new ColumnTemplate(ColumnSqlName.GetValue<RelacionHorarios>("Localidad"), DataTypes.TEXT, isNotNull: true));
 
                 if (!_tb_resp.Success)
                     throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");

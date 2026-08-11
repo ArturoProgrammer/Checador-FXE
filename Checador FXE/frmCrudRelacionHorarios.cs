@@ -29,7 +29,7 @@ namespace Checador_FXE
                                                             .ToArray());
             this.cboxParametroLimitacion.SelectedIndex = 0;
             this.txtValorLimitacion.Text = "";
-            this.dgvRelacionDeHorarios.SetGridStyle(DataGridStylesGallery.BlueStyle);
+            this.dgvRelacionDeHorarios.SetGridStyle(Program.StandardGridStyle);
         }
 
         void WriteStatus(bool status, string message)
@@ -48,6 +48,14 @@ namespace Checador_FXE
 
             this.btnIrAMes.PerformClick();
             this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = true;
+            this.dgvRelacionDeHorarios.SetLockedColumns(2);
+            this.dgvRelacionDeHorarios.AllowUserToResizeRows = false;
+        }
+
+        void SaveButtonCommonEnabled()
+        {
+            //this.toolStrpBtn_Guardar.Enabled = actualSelected.Relacion.Items.Count() > 0;
+            this.toolStrpBtn_Guardar.Enabled = this.dgvRelacionDeHorarios.RowCount > 0;
         }
 
         /// <summary>
@@ -81,6 +89,7 @@ namespace Checador_FXE
                     }
                 }
                 this.dgvRelacionDeHorarios.Invalidate();
+                SaveButtonCommonEnabled();
 
                 WriteStatus(true, $"Ambito limitado a '{param.GetText()}' : '{value}'");
             }
@@ -100,12 +109,17 @@ namespace Checador_FXE
                                                                         ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
                 Response loadViewProcess = actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad);
 
+                MessageBox.Show(actualSelected.);
+
                 if (!loadViewProcess.Success)
                     throw new Exception("No se cargo correctamente la vista de la grilla de datos");
 
                 actualView.Clear();
                 foreach (DataGridViewRow r in this.dgvRelacionDeHorarios.Rows)
                     actualView.Add(r);
+
+                this.lblLocalidadSeleccionada.Text = localidad;
+                SaveButtonCommonEnabled();
 
                 WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
             }
@@ -300,13 +314,20 @@ namespace Checador_FXE
             }
         }
 
-        private void btnIrAMes_Click(object sender, EventArgs e)
+        bool YearCommonValidation()
         {
             if (!ValidateFields(Fields.Year))
             {
                 WriteStatus(false, "Año invalido!");
-                return;
+                return false;
             }
+            return true;
+        }
+
+        private void btnIrAMes_Click(object sender, EventArgs e)
+        {
+            if (!YearCommonValidation())
+                return;
 
             DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
             LoadView(dt.Month, dt.Year);
@@ -320,7 +341,7 @@ namespace Checador_FXE
 
         private void cboxParametroLimitacion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.cboxParametroLimitacion.SelectedText == "Todo")
+            if (this.cboxParametroLimitacion.Text == "Todo")
             {
                 this.txtValorLimitacion.Enabled = false;
                 return;
@@ -356,11 +377,8 @@ namespace Checador_FXE
 
             string localidadSeleccionada = dlgResp.Response;
 
-            if (!ValidateFields(Fields.Year))
-            {
-                WriteStatus(false, "Año invalido!");
+            if (!YearCommonValidation())
                 return;
-            }
 
             DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
             LoadView(dt.Month, dt.Year, localidadSeleccionada);

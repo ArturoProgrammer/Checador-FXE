@@ -44,6 +44,8 @@ namespace Checador_FXE
 
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
+            this.dgvRelacionDeHorarios.SetLockedColumns(2);
+            this.dgvRelacionDeHorarios.AllowUserToResizeRows = false;
             LoadView();
         }
 

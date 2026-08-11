@@ -58,8 +58,6 @@ namespace Checador_FXE
         /// <summary>
         /// Envia un mensaje al servidor informando sobre una accion CRUD realizada.
         /// </summary>
-        /// <param name="title">Titulo del evento</param>
-        /// <param name="message">Mensaje del evento</param>
         /// <returns>Respuesta de la funcion.</returns>
         [Description("Envia un mensaje al servidor informando sobre una accion CRUD realizada.")]
         internal Response SendMessage()

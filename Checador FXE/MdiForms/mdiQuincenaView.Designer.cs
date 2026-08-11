@@ -873,9 +873,9 @@
             pageCastingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingResults.BorderStyle = BorderStyle.FixedSingle;
             pageCastingResults.Controls.Add(splitResultadosCasting_Background);
-            pageCastingResults.Location = new Point(4, 44);
+            pageCastingResults.Location = new Point(4, 29);
             pageCastingResults.Name = "pageCastingResults";
-            pageCastingResults.Size = new Size(822, 538);
+            pageCastingResults.Size = new Size(192, 67);
             pageCastingResults.TabIndex = 4;
             pageCastingResults.Text = "Resultados del Casting";
             // 
@@ -893,7 +893,7 @@
             // splitResultadosCasting_Background.Panel2
             // 
             splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
-            splitResultadosCasting_Background.Size = new Size(820, 536);
+            splitResultadosCasting_Background.Size = new Size(190, 65);
             splitResultadosCasting_Background.SplitterDistance = 161;
             splitResultadosCasting_Background.SplitterWidth = 6;
             splitResultadosCasting_Background.TabIndex = 0;
@@ -914,7 +914,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
-            tableLayoutPanel3.Size = new Size(161, 536);
+            tableLayoutPanel3.Size = new Size(161, 65);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // txtBusqueda
@@ -944,7 +944,7 @@
             lblTotalDeEmpleados.InfoLabelForeColor = SystemColors.MenuHighlight;
             lblTotalDeEmpleados.InfoLabelText = "0";
             lblTotalDeEmpleados.Label = "Total de empledos:";
-            lblTotalDeEmpleados.Location = new Point(4, 505);
+            lblTotalDeEmpleados.Location = new Point(4, 34);
             lblTotalDeEmpleados.MinimumSize = new Size(150, 30);
             lblTotalDeEmpleados.Name = "lblTotalDeEmpleados";
             lblTotalDeEmpleados.RootLineColor = Color.Gray;
@@ -968,7 +968,7 @@
             treePagingResultadosCasting.SelectedItem = null;
             treePagingResultadosCasting.SelectedNode = null;
             treePagingResultadosCasting.ShowLines = false;
-            treePagingResultadosCasting.Size = new Size(153, 460);
+            treePagingResultadosCasting.Size = new Size(153, 140);
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
@@ -981,7 +981,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(653, 536);
+            panel2.Size = new Size(25, 65);
             panel2.TabIndex = 0;
             // 
             // calendarEmpleadoCasteado
@@ -1002,7 +1002,7 @@
             calendarEmpleadoCasteado.Name = "calendarEmpleadoCasteado";
             calendarEmpleadoCasteado.ShowHolidays = true;
             calendarEmpleadoCasteado.ShowMonthHeader = true;
-            calendarEmpleadoCasteado.Size = new Size(651, 534);
+            calendarEmpleadoCasteado.Size = new Size(23, 63);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
             calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;

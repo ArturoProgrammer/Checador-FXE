@@ -12,7 +12,7 @@ namespace Checador_FXE
         internal static string DbPath = $@"{Application.StartupPath}\dbs";
         internal static CultureInfo CurrentCultureInfo { get; }  = new CultureInfo("es-MX");
         internal static int DefaultRowHeight { get; } = 30;
-        internal static DataGridStyle StandardGridStyle { get; } = DataGridStylesGallery.BlueStyle;
+        internal static DataGridStyle StandardGridStyle { get; } = DataGridStylesGallery.BlueStyle.SetAutoSizeColumnsMode(DataGridViewAutoSizeColumnsMode.AllCells);
         internal static FormStyle StandardFormStyle { get; } = FormStylesGallery.BlueStyle;
 
         /// <summary>
