@@ -109,7 +109,7 @@ namespace Checador_FXE
                                                                         ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
                 Response loadViewProcess = actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad);
 
-                MessageBox.Show(actualSelected.);
+                MessageBox.Show(actualSelected.Localidad);
 
                 if (!loadViewProcess.Success)
                     throw new Exception("No se cargo correctamente la vista de la grilla de datos");
