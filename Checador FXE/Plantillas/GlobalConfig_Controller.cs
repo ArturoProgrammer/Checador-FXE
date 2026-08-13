@@ -69,9 +69,9 @@ namespace Checador_FXE.Plantillas
                                                                                     Process = (object a) => String.Join(";", (a as string[])!)
                                                                                 });
             // Validamos que no tenga los valores correspondientes
-            Server.GeneralQuery query = new Server.GeneralQuery(new ConnectionsData(GlobalConfig.DB_PATH, GlobalConfig.TABLE_NAME));
-            var _resp = query.ExecuteNonQuery(
-                $@"
+            Server.GeneralQuery query = new Server.GeneralQuery(new ConnectionsData(GlobalConfig.DB_PATH, GlobalConfig.TABLE_NAME))
+                .SetParams(Common.BuildParamsArray<GlobalConfig>(conf, _scpConfig))
+                .SetQuery($@"
 UPDATE {GlobalConfig.TABLE_NAME}
 SET 
     {columnNames[0]} = CASE 
@@ -86,10 +86,8 @@ SET
                   WHEN {columnNames[2]} IS NULL OR {columnNames[2]} = '' THEN {columnValues[2]}
                   ELSE {columnNames[2]} 
                END
-",
-                ShowCommandPreview: false,
-                Common.BuildParamsArray<GlobalConfig>(conf, _scpConfig)
-            );
+");
+            var _resp = query.ExecuteNonQuery(ShowCommandPreview: false);
 
             conf.Save();
             #endregion

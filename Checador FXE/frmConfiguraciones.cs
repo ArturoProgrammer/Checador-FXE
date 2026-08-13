@@ -235,11 +235,16 @@ namespace Checador_FXE
                 int nuevoTurnoDefault = turnosNuevos[0];
 
                 // Analisis de turnos por defecto
-                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosTurnoDefecto = Empleado.GetAll(this.cboxLocalidadEstablecida.Value).Object!.Where(t => turnosEliminados.Contains(t.TurnoDefault))
-                                                                                                                                                    .Select(t => (t.Nombres, t.NoEmp, t.TurnoDefault))
-                                                                                                                                                    .ToArray();
+                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosTurnoDefecto = 
+                    Empleado.GetAll(this.cboxLocalidadEstablecida.Value).Object!
+                        .Where(t => turnosEliminados.Contains(t.TurnoDefault))
+                        .Select(t => (t.Nombres, t.NoEmp, t.TurnoDefault))
+                        .ToArray();
+
                 // Analisis de turnos de la relacion de turnos del mes actual
-                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosRelacionActual = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object!.Relacion.Items.Where(t => turnosEliminados.Contains(t.Turno))
+                (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosRelacionActual = 
+                    RelacionHorarios.Get(RelacionHorarioID.GetActualId(this.cboxLocalidadEstablecida.Value)).Object!.Relacion.Items
+                        .Where(t => turnosEliminados.Contains(t.Turno))
                                                                                                                                                             .Select(t => (t.Nombre, t.NoEmp.ToString(), t.Turno))
                                                                                                                                                             .ToArray();
                 // "Early Return" para efectos practicos
@@ -269,7 +274,7 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
                         }
 
                         if (EmpleadosAfectadosRelacionActual.Length > 0) {
-                            RelacionHorarios _relacion = RelacionHorarios.Get(RelacionHorarioID.GetActualId()).Object ?? throw new Exception("No se pudo cargar la relacion actual para su actualizacion");
+                            RelacionHorarios _relacion = RelacionHorarios.Get(RelacionHorarioID.GetActualId(this.cboxLocalidadEstablecida.Value)).Object ?? throw new Exception("No se pudo cargar la relacion actual para su actualizacion");
                             RelacionHorarios _BUFFER_RELACION = _relacion;
                             foreach (var i in _relacion.Relacion.Items)
                             {

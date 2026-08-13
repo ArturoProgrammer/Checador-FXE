@@ -113,23 +113,25 @@ namespace Checador_FXE.Plantillas
 
     public struct RelacionHorarioID
     {
+        public string Site { get; } // Nombre del sitio
         public string Month { get; } // Mes en formato de texto (Ej: Enero, Febrero, etc.)
         public int Year { get; } // Año en formato numérico (Ej: 2024)
 
-        public RelacionHorarioID(string month, int year)
+        public RelacionHorarioID(string site, string month, int year)
         {
+            this.Site = site;
             this.Month = month;
             this.Year = year;
         }
 
-        public override string ToString() => $"{Month}-{Year}";
-        public override bool Equals([NotNullWhen(true)] object? obj) => obj is RelacionHorarioID id && this.Month == id.Month && this.Year == id.Year;
-        public override int GetHashCode() => HashCode.Combine(Month, Year);
+        public override string ToString() => $"{Site}-{Month}-{Year}";
+        public override bool Equals([NotNullWhen(true)] object? obj) => obj is RelacionHorarioID id && this.Site == id.Site && this.Month == id.Month && this.Year == id.Year;
+        public override int GetHashCode() => HashCode.Combine(Site, Month, Year);
         /// <summary>
         /// Obtiene el ID de relacion de horarios correspondiente al mes y año actual
         /// </summary>
         /// <returns></returns>
-        public static RelacionHorarioID GetActualId() => new RelacionHorarioID(DateTime.Now.ToString("MMMM", Program.CurrentCultureInfo), DateTime.Now.Year);
+        public static RelacionHorarioID GetActualId(string site) => new RelacionHorarioID(site, DateTime.Now.ToString("MMMM", Program.CurrentCultureInfo), DateTime.Now.Year);
     }
 
     public class TurnoEmpleado
@@ -224,9 +226,6 @@ namespace Checador_FXE.Plantillas
         [ColumnSqlName("hash")]
         [ParamSqlKey("@hash")]
         public HexaHash HASH { get; set; } = new HexaHash();
-        [ColumnSqlName("localidad")]
-        [ParamSqlKey("@localidad")]
-        public string Localidad { get; set; } = "-1";   // localidad a la que corresponde
 
         public static void InitializeDb()
         {
@@ -272,7 +271,7 @@ namespace Checador_FXE.Plantillas
         /// <param name="SaveIfDefault">En caso de que no exista el periodo indicado, generara una relacion por defecto y la guardara en la base de datos</param>
         /// <param name="ShowObjectLog"></param>
         /// <returns></returns>
-        public static Response<RelacionHorarios> Get(RelacionHorarioID id, string localidad, bool SaveIfDefault = true, bool ShowObjectLog = false)
+        public static Response<RelacionHorarios> Get(RelacionHorarioID id, bool SaveIfDefault = true, bool ShowObjectLog = false)
         {
             #region
             Response<RelacionHorarios> _response = new Response<RelacionHorarios>(false, "Iniciando obtencion del objeto", null);
@@ -287,8 +286,9 @@ namespace Checador_FXE.Plantillas
             {
                 ConnectionsData _data = new ConnectionsData(DB_PATH, TABLE_NAME);
                 Server.SqlReadConnection _connection = new Server.SqlReadConnection(_data);
-                SqliteDataReader _reader = _connection.MakeQuery("*", "WHERE (ID=@ID AND localidad=@Localidad)", ("@ID", id.ToString()), ("@Localidad", localidad));
-
+                SqliteDataReader _reader = _connection.MakeQuery("*", 
+                                                                 "WHERE (ID=@ID)", 
+                                                                 ("@ID", id.ToString()));
                 RelacionHorarios _obj = new RelacionHorarios();
                 _obj.ID = id;
 
@@ -348,7 +348,6 @@ namespace Checador_FXE.Plantillas
             Response<RelacionHorarios[]> _resp = new Response<RelacionHorarios[]>(false, "Iniciando obtencion de relaciones de horarios existentes", null);
             List<RelacionHorarios> _list = new List<RelacionHorarios>();
             List<RelacionHorarioID> _IdsList = new List<RelacionHorarioID>();
-            List<string> _LocalidadesList = new List<string>();
 
             // Obtenemos todos los IDs
             ConnectionsData _data = new ConnectionsData($@"{Program.DbPath}\RelacionTurnos.db", TABLE_NAME);
@@ -358,25 +357,15 @@ namespace Checador_FXE.Plantillas
 
             while (_reader.Read())
             {
-                _IdsList.Add(new RelacionHorarioID(_reader.GetString(0).Split("-")[0], int.Parse(_reader.GetString(0).Split("-")[1])));
+                _IdsList.Add(new RelacionHorarioID( site: _reader.GetString(0).Split("-")[0],
+                                                    month: _reader.GetString(0).Split("-")[1],
+                                                    year: int.Parse(_reader.GetString(0).Split("-")[2])));
                 _resp.Log.Add($"ID '{_reader.GetString(0)}' obtenido correctamente");
             }
             _reader.Close();
-
-            // Obtenemos todas las localidades que esten guardadas en la base de datos
-            Server.GeneralQuery localidadesQuery = new Server.GeneralQuery(_data);
-            _reader = localidadesQuery.ExecuteQuery(
-                $@"SELECT DISTINCT localidad FROM {TABLE_NAME}", 
-                ShowCommandPreview: false);
-
-            while (_reader.Read())
-            {
-                _LocalidadesList.Add(_reader.GetString(0));
-            }
+            _connection.CloseConnection();
 
             int fails = 0;
-
-            // 
 
             // Consultamos todas las relaciones
             foreach (RelacionHorarioID i in _IdsList)
@@ -647,7 +636,9 @@ namespace Checador_FXE.Plantillas
             try 
             {
                 RelacionHorarios _obj = new RelacionHorarios();
-                _obj.ID = new RelacionHorarioID(relacionId.Split("-")[0], int.Parse(relacionId.Split("-")[1]));
+                _obj.ID = new RelacionHorarioID(site: relacionId.Split("-")[0], 
+                                                month: relacionId.Split("-")[1], 
+                                                year: int.Parse(relacionId.Split("-")[2]));
                 _resp.Log.Add("ID asignado...");
                 _obj.Relacion = TurnoEmpleadoCollection.ParseJson(relacionTurnosJson);
                 _resp.Log.Add("Relacion de Turnos asignada...");

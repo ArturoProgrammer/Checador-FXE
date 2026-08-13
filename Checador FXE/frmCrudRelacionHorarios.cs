@@ -1,6 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
-using FlowControls;
 using FlowControls.Inputs;
 using FlowControls.Utils;
 using System.Globalization;
@@ -30,6 +29,7 @@ namespace Checador_FXE
             this.cboxParametroLimitacion.SelectedIndex = 0;
             this.txtValorLimitacion.Text = "";
             this.dgvRelacionDeHorarios.SetGridStyle(Program.StandardGridStyle);
+            this.lblLocalidadSeleccionada.Text = Properties.Settings.Default.LOCALIDAD_DEFAULT;
         }
 
         void WriteStatus(bool status, string message)
@@ -100,16 +100,16 @@ namespace Checador_FXE
 
         }
 
-        void LoadView(int month, int year, string localidad = "Sufragio")
+        void LoadView(int month, int year, string localidad)
         {
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                actualSelected = RelacionHorarios.Get(new RelacionHorarioID(DateTimeFormatInfo.CurrentInfo.GetMonthName(month), year),
-                                                                        ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
+                actualSelected = RelacionHorarios.Get(new RelacionHorarioID(site: localidad,
+                                                                            month: DateTimeFormatInfo.CurrentInfo.GetMonthName(month), 
+                                                                            year: year),
+                                                                            ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
                 Response loadViewProcess = actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad);
-
-                MessageBox.Show(actualSelected.Localidad);
 
                 if (!loadViewProcess.Success)
                     throw new Exception("No se cargo correctamente la vista de la grilla de datos");
@@ -121,7 +121,7 @@ namespace Checador_FXE
                 this.lblLocalidadSeleccionada.Text = localidad;
                 SaveButtonCommonEnabled();
 
-                WriteStatus(true, $"Visualizacion de {cboxMonth.Text}-{txtYear.Text}!");
+                WriteStatus(true, $"Visualizacion de {actualSelected.ID}!");
             }
             catch (Exception ex)
             {
@@ -158,7 +158,7 @@ namespace Checador_FXE
         {
             if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
             {
-                WriteStatus(false, "No se puede editar esta celda!");
+                //WriteStatus(false, "No se puede editar esta celda!");
                 return;
             }
 
@@ -330,7 +330,7 @@ namespace Checador_FXE
                 return;
 
             DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
-            LoadView(dt.Month, dt.Year);
+            LoadView(dt.Month, dt.Year, this.lblLocalidadSeleccionada.Text!);
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)

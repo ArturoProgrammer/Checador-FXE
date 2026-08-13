@@ -34,7 +34,9 @@ namespace Checador_FXE
                 return;
             }
 
-            ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path, frm_n.Response.Device);
+            ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path, 
+                                                               frm_n.Response.Device, 
+                                                               frm_n.Response.LocalidadRemitente);
 
             // Early Return para validar que no este abierto actualmente
             string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
@@ -53,7 +55,7 @@ namespace Checador_FXE
             MDI_PANEL.Controls.Add(frm);
             frm.BringToFront();
             frm.Show();
-
+            
             // Agregamos el nodo correspondiente
             this.treeViewProyectosQuincenas.Nodes.Add(new TreeNode()
             {
