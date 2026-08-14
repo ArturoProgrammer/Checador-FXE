@@ -58,6 +58,7 @@
             imageList1 = new ImageList(components);
             MDI_PANEL = new Panel();
             lblBienvenido = new Label();
+            feriadosEInhabilesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             STATUS_BAR.SuspendLayout();
             flCustomToolStrip1.SuspendLayout();
@@ -147,10 +148,10 @@
             // 
             // editorDePersonalToolStripMenuItem
             // 
-            editorDePersonalToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { registroDePersonalToolStripMenuItem, relacionDeHorariosToolStripMenuItem });
+            editorDePersonalToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { registroDePersonalToolStripMenuItem, relacionDeHorariosToolStripMenuItem, feriadosEInhabilesToolStripMenuItem });
             editorDePersonalToolStripMenuItem.Name = "editorDePersonalToolStripMenuItem";
-            editorDePersonalToolStripMenuItem.Size = new Size(131, 23);
-            editorDePersonalToolStripMenuItem.Text = "Editor de Personal";
+            editorDePersonalToolStripMenuItem.Size = new Size(103, 23);
+            editorDePersonalToolStripMenuItem.Text = "Herramientas";
             // 
             // registroDePersonalToolStripMenuItem
             // 
@@ -176,7 +177,7 @@
             // acercaDeToolStripMenuItem1
             // 
             acercaDeToolStripMenuItem1.Name = "acercaDeToolStripMenuItem1";
-            acercaDeToolStripMenuItem1.Size = new Size(137, 24);
+            acercaDeToolStripMenuItem1.Size = new Size(180, 24);
             acercaDeToolStripMenuItem1.Text = "Acerca de";
             acercaDeToolStripMenuItem1.Click += acercaDeToolStripMenuItem1_Click;
             // 
@@ -317,6 +318,13 @@
             lblBienvenido.Text = "Bienvenido";
             lblBienvenido.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // feriadosEInhabilesToolStripMenuItem
+            // 
+            feriadosEInhabilesToolStripMenuItem.Name = "feriadosEInhabilesToolStripMenuItem";
+            feriadosEInhabilesToolStripMenuItem.Size = new Size(203, 24);
+            feriadosEInhabilesToolStripMenuItem.Text = "Feriados e Inhabiles";
+            feriadosEInhabilesToolStripMenuItem.Click += feriadosEInhabilesToolStripMenuItem_Click;
+            // 
             // MainDesktop
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -378,5 +386,6 @@
         private ToolStripMenuItem relacionDeHorariosToolStripMenuItem;
         private ToolStripMenuItem acercaDeToolStripMenuItem;
         private ToolStripMenuItem acercaDeToolStripMenuItem1;
+        private ToolStripMenuItem feriadosEInhabilesToolStripMenuItem;
     }
 }

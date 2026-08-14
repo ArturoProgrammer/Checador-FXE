@@ -34,8 +34,8 @@ namespace Checador_FXE
                 return;
             }
 
-            ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path, 
-                                                               frm_n.Response.Device, 
+            ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path,
+                                                               frm_n.Response.Device,
                                                                frm_n.Response.LocalidadRemitente);
 
             // Early Return para validar que no este abierto actualmente
@@ -55,7 +55,7 @@ namespace Checador_FXE
             MDI_PANEL.Controls.Add(frm);
             frm.BringToFront();
             frm.Show();
-            
+
             // Agregamos el nodo correspondiente
             this.treeViewProyectosQuincenas.Nodes.Add(new TreeNode()
             {
@@ -265,6 +265,11 @@ namespace Checador_FXE
         {
             // Abrimos el cuadro "Acerca de"
             new AboutBox1().ShowDialog();
+        }
+
+        private void feriadosEInhabilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException("Falta de implementar que el usuario pueda definir los dias festivos, tal ves sea una buena idea. Hay que pensarlo");
         }
     }
 }

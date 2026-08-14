@@ -44,14 +44,14 @@ namespace Checador_FXE
 
         private void btnEstablecerSeleccion_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Desea establecer la localidad seleccionada como la localidad por default?", "Confirmar selección", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (flMessageBox.Show("¿Desea establecer la localidad seleccionada como la localidad por default?", "Confirmar selección", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             Properties.Settings.Default.LOCALIDAD_DEFAULT = this.cboxLocalidadSeleccionada.SelectedItem!.ToString();
             Properties.Settings.Default.Save();
 
             this.lblLocalidadDefaultActualmente.Text = Properties.Settings.Default.LOCALIDAD_DEFAULT;
-            MessageBox.Show("Localidad por default actualizada correctamente.", "Operación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            flMessageBox.Show("Localidad por default actualizada correctamente.", "Operación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
@@ -91,7 +91,7 @@ namespace Checador_FXE
                     rowIsValid = fails.Count == 0; // Asignamos una identificacion que indique que la fila es valida
 
                     if (!rowIsValid)
-                        MessageBox.Show($"La fila no es valida por los siguientes motivos:\n\n{String.Join('\n', fails)}", "Validacion de Fila Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        flMessageBox.Show($"La fila no es valida por los siguientes motivos:\n\n{String.Join('\n', fails)}", "Validacion de Fila Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return rowIsValid;
                 })
@@ -148,7 +148,7 @@ namespace Checador_FXE
 
             if (!_SERV_RESP.Success)
             {
-                MessageBox.Show(_SERV_RESP.Message);
+                flMessageBox.Show(_SERV_RESP.Message);
                 return;
             }
 
@@ -241,7 +241,7 @@ namespace Checador_FXE
                         foreach (string i in Utils.GetLocalidadesDisponibles())
                             localidades.Add($"* {i}");
 
-                        MessageBox.Show($"Localidad inválida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}");
+                        flMessageBox.Show($"Localidad inválida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}");
                         e.Cancel = true;   // No permite salir de la celda
                         return;
                     }
@@ -250,7 +250,7 @@ namespace Checador_FXE
                     this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
                 } catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    flMessageBox.Show(ex.ToString());
                 }
             }
         }

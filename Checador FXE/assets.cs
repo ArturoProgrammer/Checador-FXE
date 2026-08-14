@@ -2,6 +2,7 @@
 using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils.MySQL;
 using FlowControls;
+using FlowControls.Inputs;
 using iTextSharp.text;
 using Newtonsoft.Json.Linq;
 using SpreadsheetLight;
@@ -34,95 +35,6 @@ namespace Checador_FXE
             "Nombre" => LimitationParam.NOMBRE,
             _ => throw new NotImplementedException(),
         };
-    }
-
-    internal class CrudEventLog
-    {
-        //
-        // TODO: Reportador de eventos sobre acciones CRUD a la BD; Ticket ##100188##
-        //
-        readonly string DataBaseName = "checador_fxe_db";
-        readonly string TableName = "events_log";
-
-        public string Title { get; } = "";
-        public string Description { get; } = "";
-        public int NoEmpleado { get; } = 0;
-
-        public CrudEventLog(int _noemp, string _title, string _description) 
-        { 
-            this.Title = _title;
-            this.Description = _description;
-            this.NoEmpleado = _noemp;
-        }
-
-        /// <summary>
-        /// Envia un mensaje al servidor informando sobre una accion CRUD realizada.
-        /// </summary>
-        /// <returns>Respuesta de la funcion.</returns>
-        [Description("Envia un mensaje al servidor informando sobre una accion CRUD realizada.")]
-        internal Response SendMessage()
-        {
-            #region CODIGO
-            Response _resp = new Response(false, "Iniciando consulta de Log de accion CRUD...");
-
-            string hostname = Environment.MachineName;
-            _resp.Log.Add($"Hostname del equipo obtenido...");
-            HexaHash hash = new HexaHash(12);
-            _resp.Log.Add("HASH para el evento generado...");
-
-            Response SERV_RESP = new Server.GeneralQuery(new ConnectionsData(
-                Properties.Settings.Default.SERVER_HOSTNAME,
-                Properties.Settings.Default.SERVER_USER,
-                Properties.Settings.Default.SERVER_PASS,
-                Int32.Parse(Properties.Settings.Default.SERVER_PORT),
-                TableName,
-                DataBaseName
-            )).ExecuteNonQuery(
-                $@"INSERT INTO {DataBaseName}.{TableName} (Titulo, Descripcion, Hostname, HASH, NoEmp) VALUES (@Titulo, @Descripcion, @Hostname, @HASH, @NoEmp)",
-                ShowCommandPreview: false,
-                ("@Titulo", this.Title.Trim()),
-                ("@Descripcion", this.Description.Trim()),
-                ("@Hostname", hostname),
-                ("@HASH", hash.ToString()),
-                ("@Fecha", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
-                ("@NoEmp", this.NoEmpleado)
-            );
-            _resp.Log.Add("Consulta NonQuery realiza...");
-            _resp.Success = SERV_RESP.Success;
-
-            if (!SERV_RESP.Success)
-            {
-                _resp.Log.Add(SERV_RESP.Message);
-                _resp.Message = "No se pudo realizar la consulta!";
-                MessageBox.Show($"Ha ocurrido un error inesperado en la comunicacion con el servidor! {SERV_RESP.Message}", "Excepcion inesperada", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return _resp;
-            }
-
-            _resp.Message = "Consulta al servidor realizada con exito!";
-
-            return _resp;
-            #endregion
-        }
-
-        #region PLANTILLAS
-        /// <summary>
-        /// Plantillas del objeto
-        /// </summary>
-        public static class Templates
-        {
-            public static CrudEventLog CreateNewEmployee(string nombre, int no_emp) =>
-                new CrudEventLog(no_emp, $"Adicion de empleado", $"Se añadio un nuevo registro de empleado; '{no_emp}' - '{nombre}' agregado con exito!");
-
-            public static CrudEventLog UpdateEmployee(int no_emp, string param_name) =>
-                new CrudEventLog(no_emp, $"Modificacion de empleado", $"Se modifico el parametro '{param_name}'");
-
-            public static CrudEventLog DeleteEmployee(string nombre, int no_emp) =>
-                new CrudEventLog(no_emp, $"Eliminacion de empleado", $"Se ha eliminado al empleado '{no_emp}' - '{nombre}' de la base de datos!!") ;
-
-            public static CrudEventLog ChangeEmployeeLocalidad(string nombre, int no_emp, string localidad) =>
-                new CrudEventLog(no_emp, $"Cambio de localidad", $"Se cambio la localidad del empleado a '{localidad}'");
-        }
-        #endregion
     }
 
     /// <summary>
@@ -560,7 +472,7 @@ namespace Checador_FXE
                          * ES DECIR, DE QUE COLUMNA A QUE COLUMNA REPRESENTA UN MES
                          * */
                         string NXT_DAY = sl.GetCellValueAsString(periodDaysRow, i + 1).Trim();
-                        //MessageBox.Show($"Analizando Col: {i}->{NXT_DAY} (Limite: {TRGT_LIMIT}) X: {X_MONTH_COORD}");
+                        //flMessageBox.Show($"Analizando Col: {i}->{NXT_DAY} (Limite: {TRGT_LIMIT}) X: {X_MONTH_COORD}");
 
                         if (String.IsNullOrEmpty(NXT_DAY))
                         {
@@ -843,7 +755,7 @@ namespace Checador_FXE
                         // Analizamos las columnas de cada registro
                         for (int i = 1; i <= TRGT_LIMIT; i++)
                         {
-                            //MessageBox.Show($"Columna actual: {i} (Limite: {TRGT_LIMIT})");
+                            //flMessageBox.Show($"Columna actual: {i} (Limite: {TRGT_LIMIT})");
                             actualCol = i;
                             if (String.IsNullOrEmpty(sl.GetCellValueAsString(actualRow, actualCol).Trim()))
                                 continue;
@@ -910,7 +822,7 @@ namespace Checador_FXE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}\n{ex}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show($"{ex.Message}\n{ex}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return (false, new TurnoEmpleadoCollection(), new Dictionary<string, Checada[]>(), period);
             }
         }

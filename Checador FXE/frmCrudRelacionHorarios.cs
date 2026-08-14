@@ -18,9 +18,6 @@ namespace Checador_FXE
         {
             InitializeComponent();
 
-            //Properties.Settings.Default.TURNOS_HORARIOS = @"{""1"":{""titulo"":""Turno corrido"",""primer_horario"":{""entrada"":800,""salida"":1500},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}},""2"":{""titulo"":""Turno completo con comida"",""primer_horario"":{""entrada"":800,""salida"":1300},""segundo_horario"":{""entrada"":1500,""salida"":1700},""tiempo_extra"":{""entrada"":0,""salida"":0}},""3"":{""titulo"":""Media tarde"",""primer_horario"":{""entrada"":1500,""salida"":1700},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}}}";
-            //Properties.Settings.Default.Save();
-
             // Cargamos los elementos
             this.cboxParametroLimitacion.Items.AddRange(Enum.GetValues<LimitationParam>()
                                                             .Cast<LimitationParam>()
@@ -41,7 +38,6 @@ namespace Checador_FXE
 
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
-            WriteStatus(true, "Inicializacion exitosa");
 
             this.cboxMonth.SelectedIndex = DateTime.Now.Month - 1;
             this.txtYear.Text = DateTime.Now.Year.ToString();
@@ -50,6 +46,8 @@ namespace Checador_FXE
             this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = true;
             this.dgvRelacionDeHorarios.SetLockedColumns(2);
             this.dgvRelacionDeHorarios.AllowUserToResizeRows = false;
+
+            WriteStatus(true, "Inicializacion exitosa");
         }
 
         void SaveButtonCommonEnabled()
@@ -106,7 +104,7 @@ namespace Checador_FXE
             {
                 this.Cursor = Cursors.WaitCursor;
                 actualSelected = RelacionHorarios.Get(new RelacionHorarioID(site: localidad,
-                                                                            month: DateTimeFormatInfo.CurrentInfo.GetMonthName(month), 
+                                                                            month: DateTimeFormatInfo.CurrentInfo.GetMonthName(month),
                                                                             year: year),
                                                                             ShowObjectLog: false).Object ?? throw new NullReferenceException("Ocurrio un error en el proceso de obtencion de la relacion de horarios!");
                 Response loadViewProcess = actualSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, month, year, localidad);
@@ -121,6 +119,7 @@ namespace Checador_FXE
                 this.lblLocalidadSeleccionada.Text = localidad;
                 SaveButtonCommonEnabled();
 
+                this.dgvRelacionDeHorarios.Focus();
                 WriteStatus(true, $"Visualizacion de {actualSelected.ID}!");
             }
             catch (Exception ex)
@@ -143,7 +142,7 @@ namespace Checador_FXE
             WriteStatus(_resp.Success, _resp.Message);
 
             if (_resp.Success is false)
-                MessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show(_resp.GetBuildedLog(), "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -151,60 +150,14 @@ namespace Checador_FXE
             throw new NotImplementedException("Funcion proxima a implementar!");
         }
 
-        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
-        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) =>
+            Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
 
-        private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            if (e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
-            {
-                //WriteStatus(false, "No se puede editar esta celda!");
-                return;
-            }
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) =>
+            Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
 
-            var grid = this.dgvRelacionDeHorarios;
-
-            string oldValue = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
-            string newValue = e.FormattedValue!.ToString()!.Trim();
-
-            // Limpiar antes de validar
-            var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            cell.ErrorText = string.Empty;
-
-            // Toma lo que el usuario está intentando dejar en la celda
-            int input = -1;
-
-            if (String.IsNullOrEmpty(newValue))
-                return;
-
-            if (!int.TryParse(newValue, out input))
-            {
-                e.Cancel = true;
-                grid.Rows[e.RowIndex]
-                    .Cells[e.ColumnIndex].ErrorText = "Debe ingresar un número entero válido.";
-                return;
-            }
-
-            // Valida que el ID exista en la lista de horarios
-            if (!Utils.GetHorariosIDs().Contains(input))
-            {
-                List<string> turns = new List<string>();
-                foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
-                    turns.Add($"* {i.ID} ({i.Nombre})");
-
-                MessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;   // No permite salir de la celda
-                return;
-            }
-
-            // Limpia error si es valido
-            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
-
-            // Guardamos la nueva informacion
-            actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
-
-            WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
-        }
+        private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) =>
+            Program.DefaultCellValidating(this.dgvRelacionDeHorarios, actualView, e);
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -382,6 +335,62 @@ namespace Checador_FXE
 
             DateTime dt = DateTime.Parse($"01-{this.cboxMonth.Text.Trim()}-{this.txtYear.Text.Trim()}");
             LoadView(dt.Month, dt.Year, localidadSeleccionada);
+        }
+
+        private void cboxMonth_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                // Lanzamos el evento de ir a la relacion indicada
+                this.btnIrAMes.PerformClick();
+                e.Handled = true;
+            }
+        }
+
+        private void txtYear_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                // Lanzamos el evento de ir a la relacion indicada
+                this.btnIrAMes.PerformClick();
+                e.Handled = true;
+            }
+        }
+
+        private void dgvRelacionDeHorarios_OnAddClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStrpBtn_EstablecerTurnosDefectoAEmpleado_Click(object sender, EventArgs e)
+        {
+            //
+            // Establecemos los turnos por defecto al empleado seleccionado en toda la relacion de horario actual
+            //
+            if (this.dgvRelacionDeHorarios.SelectedRows.Count == 0)
+            {
+                WriteStatus(false, "No hay empleado seleccionado!");
+                return;
+            }
+
+            if (flMessageBox.Show($"¿Desea establecer los turnos por defecto al empleado '{this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.NOMBRE_COMP.GetIndex()].Value}' en toda la relacion de horarios actual?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            /* 
+             * Recorremos todas las celdas de la fila seleccionada escribiendo el turno por defecto en cada una de ellas, 
+             * exceptuando los dias domingos y feriados establecidos
+             * */
+
+            int _noEmpleado = int.Parse(this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
+            Empleado empleadoSelected = Empleado.Get(_noEmpleado.ToString()).Object;
+            int turnoDefectoEmpleado = empleadoSelected.TurnoDefault;
+
+            var arr = this.dgvRelacionDeHorarios.SelectedRows[0].Cells.Cast<DataGridViewCell>().ToArray();
+
+            foreach (DataGridViewCell c in arr[3..])
+            {
+
+            }
         }
     }
 }

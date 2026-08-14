@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
+using FlowControls.Inputs;
 
 namespace Checador_FXE
 {
@@ -39,7 +40,7 @@ namespace Checador_FXE
                     FileInfo fi = new FileInfo(ofd.FileName);
                     if (fi.Extension == ".xls")
                     {
-                        MessageBox.Show("El archivo proporcionado es formato '*.xls' por lo que se debe convertir a '*.xlsx'. Abre el archivo .xls en Excel y guardalo en formato .xlsx para posteriormente abrirlo en este programa.", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        flMessageBox.Show("El archivo proporcionado es formato '*.xls' por lo que se debe convertir a '*.xlsx'. Abre el archivo .xls en Excel y guardalo en formato .xlsx para posteriormente abrirlo en este programa.", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 

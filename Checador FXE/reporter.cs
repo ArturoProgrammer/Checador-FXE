@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office2010.Word;
 using DocumentFormat.OpenXml.Office2016.Excel;
+using FlowControls.Inputs;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.ComponentModel.Design;
@@ -64,7 +65,7 @@ namespace Checador_FXE
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{ex.Message}\n{ex}");
+                    flMessageBox.Show($"{ex.Message}\n{ex}");
                 }
                 return a;
             };

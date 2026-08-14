@@ -17,9 +17,6 @@ namespace Checador_FXE
         {
             InitializeComponent();
 
-            //Properties.Settings.Default.TURNOS_HORARIOS = @"{""1"":{""titulo"":""Turno corrido"",""primer_horario"":{""entrada"":800,""salida"":1500},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}},""2"":{""titulo"":""Turno completo con comida"",""primer_horario"":{""entrada"":800,""salida"":1300},""segundo_horario"":{""entrada"":1500,""salida"":1700},""tiempo_extra"":{""entrada"":0,""salida"":0}},""3"":{""titulo"":""Media tarde"",""primer_horario"":{""entrada"":1500,""salida"":1700},""segundo_horario"":{""entrada"":0,""salida"":0},""tiempo_extra"":{""entrada"":0,""salida"":0}}}";
-            //Properties.Settings.Default.Save();
-
             // Cargamos los elementos
             this.cboxParametroLimitacion.Items.AddRange(Enum.GetValues<LimitationParam>()
                                                             .Cast<LimitationParam>()
@@ -32,6 +29,7 @@ namespace Checador_FXE
             foreach (DataGridViewColumn col in cols)
                 this.dgvRelacionDeHorarios.Columns.Add(col);
 
+            this.dgvRelacionDeHorarios.SetGridStyle(Program.StandardGridStyle);
             actualView = rows.ToList();
         }
 
@@ -44,9 +42,12 @@ namespace Checador_FXE
 
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
+            this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = true;
             this.dgvRelacionDeHorarios.SetLockedColumns(2);
             this.dgvRelacionDeHorarios.AllowUserToResizeRows = false;
             LoadView();
+
+            WriteStatus(true, "Inicializacion exitosa");
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
@@ -160,75 +161,14 @@ namespace Checador_FXE
             this.Close();
         }
 
-        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => 
+            Program.DefaultRowSelectionChanged(this.dgvRelacionDeHorarios, e);
 
-        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => 
+            Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
 
-        private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            var grid = (flExtendedDataGridView)sender;
-
-            // Validar índices
-            if (e.RowIndex < 0 || e.RowIndex >= grid.Rows.Count)
-                return;
-
-            var row = grid.Rows[e.RowIndex];
-
-            // Ignorar fila nueva o columnas no editables
-            if (row.IsNewRow || e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
-            {
-                WriteStatus(false, "No se puede editar esta celda!");
-                return;
-            }
-
-            var cell = row.Cells[e.ColumnIndex];
-
-            // Obtener valores sin llamar ToString() sobre null
-            string oldValue = Convert.ToString(cell?.Value) ?? string.Empty;
-            string newValue = e.FormattedValue?.ToString()?.Trim() ?? string.Empty;
-
-            // Limpiar antes de validar
-            if (cell != null)
-                cell.ErrorText = string.Empty;
-
-            // Toma lo que el usuario está intentando dejar en la celda
-            int input = -1;
-
-            if (String.IsNullOrEmpty(newValue))
-                return;
-
-            if (!int.TryParse(newValue, out input))
-            {
-                e.Cancel = true;
-                if (cell != null)
-                    cell.ErrorText = "Debe ingresar un número entero válido.";
-                return;
-            }
-
-            // Valida que el ID exista en la lista de horarios
-            if (!Utils.GetHorariosIDs().Contains(input))
-            {
-                List<string> turns = new List<string>();
-                foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
-                    turns.Add($"* {i.ID} ({i.Nombre})");
-
-                MessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;   // No permite salir de la celda
-                return;
-            }
-
-            // Limpia error si es valido
-            if (cell != null)
-                cell.ErrorText = string.Empty;
-
-            // Guardamos la nueva informacion
-            if (actualView != null && e.RowIndex >= 0 && e.RowIndex < actualView.Count)
-            {
-                actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
-            }
-
-            WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
-        }
+        private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) =>
+            Program.DefaultCellValidating(this.dgvRelacionDeHorarios, actualView, e);
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
         {

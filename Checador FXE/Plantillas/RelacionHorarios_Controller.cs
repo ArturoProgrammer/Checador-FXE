@@ -2,9 +2,9 @@
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
 using FlowControls;
+using FlowControls.Inputs;
 using Microsoft.Data.Sqlite;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using static Checador_FXE.Plantillas.RelacionHorarios;
 
 namespace Checador_FXE.Plantillas
@@ -74,7 +74,7 @@ namespace Checador_FXE.Plantillas
                     _employeeSections.Add($"\"{n_E}\":[{string.Join(",\n", _turnosParts)}]");
                 }
 
-                //MessageBox.Show("{" + string.Join(",\n", _employeeSections) + "}");
+                //flMessageBox.Show("{" + string.Join(",\n", _employeeSections) + "}");
 
                 return "{" + string.Join(",\n", _employeeSections) + "}";
             }
@@ -119,7 +119,7 @@ namespace Checador_FXE.Plantillas
 
         public RelacionHorarioID(string site, string month, int year)
         {
-            this.Site = site;
+            this.Site = site.ToLower();
             this.Month = month;
             this.Year = year;
         }
@@ -131,7 +131,7 @@ namespace Checador_FXE.Plantillas
         /// Obtiene el ID de relacion de horarios correspondiente al mes y año actual
         /// </summary>
         /// <returns></returns>
-        public static RelacionHorarioID GetActualId(string site) => new RelacionHorarioID(site, DateTime.Now.ToString("MMMM", Program.CurrentCultureInfo), DateTime.Now.Year);
+        public static RelacionHorarioID GetActualId(string site) => new RelacionHorarioID(site.ToLower(), DateTime.Now.ToString("MMMM", Program.CurrentCultureInfo), DateTime.Now.Year);
     }
 
     public class TurnoEmpleado
@@ -331,7 +331,7 @@ namespace Checador_FXE.Plantillas
             }
 
             if (ShowObjectLog)
-                MessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
 
             return _response;
             #endregion
@@ -388,7 +388,7 @@ namespace Checador_FXE.Plantillas
             _resp.Message = $"Proceso de obtencion de ID finalizado {fails} errores!";
 
             if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion
@@ -539,7 +539,13 @@ namespace Checador_FXE.Plantillas
 
                     // Agregamos las celdas de los dias
                     for (int i = 1; i <= DateTime.DaysInMonth(year, month); i++)
-                        _row.Cells.Add(new DataGridViewTextBoxCell());
+                    {
+                        var _cell = new DataGridViewTextBoxCell()
+                        {
+                            Tag = new DateOnly(year, month, i)
+                        };
+                        _row.Cells.Add(_cell);
+                    }
 
                     // Pintamos los dias domingos
                     foreach (int i in _sundays)
@@ -563,7 +569,7 @@ namespace Checador_FXE.Plantillas
                 #endregion
 
                 _resp.Success = true;
-                _resp.Message = $"Base de la visualizacion cargada correctamente para '{month:00}/{year}'!";
+                _resp.Message = $"Base de la visualizacion cargada correctamente para '{localidad}/{month:00}/{year}'!";
             }
             catch (Exception ex)
             {
@@ -621,7 +627,7 @@ namespace Checador_FXE.Plantillas
             _resp.Message = _resp.Success ? $"Relacion de horario para '{ID}' guardado correctamente!" : $"Ocurrio un error al intentar guardar la relacion de horario '{ID}'!";
 
             if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion
@@ -631,7 +637,7 @@ namespace Checador_FXE.Plantillas
         {
             Response<RelacionHorarios> _resp = new Response<RelacionHorarios>(false, "Iniciando operacion de parsing", null);
 
-            MessageBox.Show(relacionTurnosJson, "JSON a parsear");
+            flMessageBox.Show(relacionTurnosJson, "JSON a parsear");
 
             try 
             {
@@ -659,7 +665,7 @@ namespace Checador_FXE.Plantillas
 
 
             if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
         }

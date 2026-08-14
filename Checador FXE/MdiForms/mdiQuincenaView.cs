@@ -130,11 +130,12 @@ namespace Checador_FXE.MdiForms
             */
 
             // Carga de la relacion mensual correspondiente al proyecto
+            string _site = RelacionHorarioSelected.ID.Site;
             int _year = RelacionHorarioSelected.ID.Year;
             int _month = DateTime.Parse($"01-{RelacionHorarioSelected.ID.Month}-0001").Month;
             Response loadProccess = RelacionHorarioSelected.LoadCrudBaseView(this.dgvRelacionDeHorarios, _month, _year, LugarRemitente);
 
-            this.flLabelHeader2.HeaderText += $" ({RelacionHorarioSelected.ID.Month}/{_year})";
+            this.flLabelHeader2.HeaderText += $" ({_site}/{RelacionHorarioSelected.ID.Month}/{_year})";
 
             if (!loadProccess.Success)
                 Program.WriteStatus(false, $"Error inesperado. {loadProccess.Message}!");
@@ -301,7 +302,7 @@ namespace Checador_FXE.MdiForms
                     break;
                 case "btnCerrar":
                     #region CODIGO
-                    DialogResult d_r = MessageBox.Show("¿Deseas salir sin guardar los cambios realizados?", "Confirmacion", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    DialogResult d_r = flMessageBox.Show("¿Deseas salir sin guardar los cambios realizados?", "Confirmacion", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                     if (d_r == DialogResult.No)
                     {
                         SavedFlag = false;
@@ -329,7 +330,7 @@ namespace Checador_FXE.MdiForms
                         {
                             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                             {
-                                MessageBox.Show("No hay archivo disponible para imprimir.", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                flMessageBox.Show("No hay archivo disponible para imprimir.", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 break;
                             }
 
@@ -359,7 +360,7 @@ namespace Checador_FXE.MdiForms
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show($"Error al imprimir: {ex.Message}", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    flMessageBox.Show($"Error al imprimir: {ex.Message}", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }
                             }
                         }
@@ -518,7 +519,7 @@ namespace Checador_FXE.MdiForms
                                 if (turnOfToday == -1)
                                 {
                                     //throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
-                                    //MessageBox.Show($"No se ha encontrado el turno correspondiente al día indicado para '{empleado}' (No. Emp.: {noEmp})");
+                                    //flMessageBox.Show($"No se ha encontrado el turno correspondiente al día indicado para '{empleado}' (No. Emp.: {noEmp})");
                                     _PeriodoCasteado[empleado][today] = TipoAsistencia.NINGUNO;
                                     continue;
                                 }
@@ -607,7 +608,7 @@ namespace Checador_FXE.MdiForms
 
         private void btnSincronizarAjustes_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Seguro que deseas sincronizar los horarios? Perderas las modificaciones locales que haz hecho", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (flMessageBox.Show("¿Seguro que deseas sincronizar los horarios? Perderas las modificaciones locales que haz hecho", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
 
             // Cargamos las configuraciones de horario que usaremos

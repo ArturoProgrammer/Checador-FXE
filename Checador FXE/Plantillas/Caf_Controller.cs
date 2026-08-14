@@ -1,6 +1,7 @@
 ﻿using Checador_FXE.MdiForms;
 using FlowCommonWorkcore;
 using FlowControls;
+using FlowControls.Inputs;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text.Json;
@@ -379,7 +380,7 @@ namespace Checador_FXE.Plantillas
                 _resp.Success = false;
                 _resp.Message = $"Ocurrio un error inesperado a la hora de construir el archivo de proyecto! {ex.Message}";
                 _resp.Log.Add($"{ex}");
-                MessageBox.Show($"Ocurrio un error inesperado construyendo el proyecto!", "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show($"Ocurrio un error inesperado construyendo el proyecto!", "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -391,7 +392,7 @@ namespace Checador_FXE.Plantillas
                 */
             }
 
-            if (ShowObjectLog) MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+            if (ShowObjectLog) flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion

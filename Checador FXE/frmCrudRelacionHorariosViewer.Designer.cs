@@ -56,7 +56,7 @@
             flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, flCustomToolStripSeparator1, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(897, 25);
+            flCustomToolStrip1.Size = new Size(823, 25);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
@@ -164,6 +164,7 @@
             dgvRelacionDeHorarios.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvRelacionDeHorarios.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
+            dgvRelacionDeHorarios.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
             dgvRelacionDeHorarios.ExtraReservedBottomHeight = 0;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
@@ -184,7 +185,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(897, 317);
+            dgvRelacionDeHorarios.Size = new Size(823, 380);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
@@ -198,9 +199,9 @@
             statusStrip1.BackColor = SystemColors.ActiveCaption;
             statusStrip1.ImageScalingSize = new Size(18, 18);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblStatus, toolStripStatusLabel1, lblMessage });
-            statusStrip1.Location = new Point(0, 339);
+            statusStrip1.Location = new Point(0, 402);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(897, 22);
+            statusStrip1.Size = new Size(823, 22);
             statusStrip1.SizingGrip = false;
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
@@ -228,7 +229,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
-            ClientSize = new Size(897, 361);
+            ClientSize = new Size(823, 424);
             Controls.Add(statusStrip1);
             Controls.Add(dgvRelacionDeHorarios);
             Controls.Add(flCustomToolStrip1);

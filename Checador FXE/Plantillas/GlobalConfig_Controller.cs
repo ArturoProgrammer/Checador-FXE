@@ -1,6 +1,7 @@
 ﻿using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils;
 using FlowCommonWorkcore.SqlUtils.SQLite;
+using FlowControls.Inputs;
 using Microsoft.Data.Sqlite;
 
 namespace Checador_FXE.Plantillas
@@ -135,7 +136,7 @@ SET
             _resp.Message = $"Proceso de obtencion de Configuraicon finalizado {fails} errores!";
 
             if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion
@@ -174,7 +175,7 @@ SET
             }
 
             if (ShowObjectLog)
-                MessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
 
             return _response;
             #endregion
@@ -224,7 +225,7 @@ SET
 
 
             if (ShowObjectLog)
-                MessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
+                flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");
 
             return _resp;
             #endregion

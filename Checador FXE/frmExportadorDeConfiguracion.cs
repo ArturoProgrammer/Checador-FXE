@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
+using FlowControls.Inputs;
 using FlowControls.Utils;
 using SpreadsheetLight;
 
@@ -32,7 +33,7 @@ namespace Checador_FXE
                     FileInfo fi = new FileInfo(ofd.FileName);
                     if (fi.Extension == ".xls")
                     {
-                        MessageBox.Show("El archivo proporcionado es formato '*.xls' por lo que se debe convertir a '*.xlsx'. Abre el archivo .xls en Excel y guardalo en formato .xlsx para posteriormente abrirlo en este programa.", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        flMessageBox.Show("El archivo proporcionado es formato '*.xls' por lo que se debe convertir a '*.xlsx'. Abre el archivo .xls en Excel y guardalo en formato .xlsx para posteriormente abrirlo en este programa.", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -117,9 +118,9 @@ namespace Checador_FXE
                 
                 using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value, sheet))
                 {
-                    MessageBox.Show("aqui 1");
-                    MessageBox.Show(sl.GetCellValueAsString(6,2));
-                    MessageBox.Show("aqui 2");
+                    flMessageBox.Show("aqui 1");
+                    flMessageBox.Show(sl.GetCellValueAsString(6,2));
+                    flMessageBox.Show("aqui 2");
                 }
 
                 using (SLDocument sl = new SLDocument(this.txtRutaIngreso.Value, sheet))
@@ -139,7 +140,7 @@ namespace Checador_FXE
                     {
                         case WriteMode.OVERWRITE_ALL:
                             #region
-                            if (MessageBox.Show("Este modo ELIMINARA TODOS los usuarios para escribir los nuevos. ¿Estas seguro que deseas continuar?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                            if (flMessageBox.Show("Este modo ELIMINARA TODOS los usuarios para escribir los nuevos. ¿Estas seguro que deseas continuar?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                                 break;
 
                             // Eliminamos todas las filas con informacion
@@ -266,13 +267,13 @@ namespace Checador_FXE
                         sl.SaveAs(this.txtRutaDestino.Value);  // Guardamos el documento editado una vez finalizado el proceso
                 }
 
-                MessageBox.Show(OPERATION_FLAG ? "Operacion finalizada con exito!" : "Operacion finalizada");
+                flMessageBox.Show(OPERATION_FLAG ? "Operacion finalizada con exito!" : "Operacion finalizada");
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrio un error al procesar el archivo de plantilla. {ex.Message}\n\nAsegurate de que el archivo no se encuentre abierto por otro programa!\n\n\n{ex}",
+                flMessageBox.Show($"Ocurrio un error al procesar el archivo de plantilla. {ex.Message}\n\nAsegurate de que el archivo no se encuentre abierto por otro programa!\n\n\n{ex}",
                                 "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -285,7 +286,7 @@ namespace Checador_FXE
         {
             this.rtxtExplicacionDelModo.Text = getWriteModeDescription(getWriteMode());
 
-            MessageBox.Show("Funcion inhabiltada temporalmente por bugs en funcionalidad", "Funcion Inhabilitada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            flMessageBox.Show("Funcion inhabiltada temporalmente por bugs en funcionalidad", "Funcion Inhabilitada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             this.Close();
         }
 

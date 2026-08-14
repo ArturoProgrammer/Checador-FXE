@@ -1,5 +1,6 @@
 using Checador_FXE.Plantillas;
 using FlowControls;
+using FlowControls.Inputs;
 using System.Globalization;
 
 namespace Checador_FXE
@@ -46,6 +47,70 @@ namespace Checador_FXE
                     sender.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
         };
 
+        internal static Action<flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (sender, actualView, e) =>
+        {
+            // Validar índices
+            if (e.RowIndex < 0 || e.RowIndex >= sender.Rows.Count)
+                return;
+
+            var row = sender.Rows[e.RowIndex];
+
+            // Ignorar fila nueva o columnas no editables
+            if (row.IsNewRow || e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
+            {
+                WriteStatus(false, "No se puede editar esta celda!");
+                return;
+            }
+
+            var cell = row.Cells[e.ColumnIndex];
+
+            // Obtener valores sin llamar ToString() sobre null
+            string oldValue = Convert.ToString(cell?.Value) ?? string.Empty;
+            string newValue = e.FormattedValue?.ToString()?.Trim() ?? string.Empty;
+
+            // Limpiar antes de validar
+            if (cell != null)
+                cell.ErrorText = string.Empty;
+
+            // Toma lo que el usuario está intentando dejar en la celda
+            int input = -1;
+
+            if (String.IsNullOrEmpty(newValue))
+                return;
+
+            if (!int.TryParse(newValue, out input))
+            {
+                e.Cancel = true;
+                if (cell != null)
+                    cell.ErrorText = "Debe ingresar un número entero válido.";
+                return;
+            }
+
+            // Valida que el ID exista en la lista de horarios
+            if (!Utils.GetHorariosIDs().Contains(input))
+            {
+                List<string> turns = new List<string>();
+                foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
+                    turns.Add($"* {i.ID} ({i.Nombre})");
+
+                flMessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;   // No permite salir de la celda
+                return;
+            }
+
+            // Limpia error si es valido
+            if (cell != null)
+                cell.ErrorText = string.Empty;
+
+            // Guardamos la nueva informacion
+            if (actualView != null && e.RowIndex >= 0 && e.RowIndex < actualView.Count)
+            {
+                actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
+            }
+
+            WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
+        };
+
         static Action<bool, string> _writeStatusCommon = (s, t) =>
         {
             lblStatus.ForeColor = s ? Color.FromKnownColor(KnownColor.Green) : Color.FromKnownColor(KnownColor.IndianRed);
@@ -89,7 +154,7 @@ namespace Checador_FXE
 
 ");
 
-            MessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            flMessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -121,7 +186,7 @@ namespace Checador_FXE
             }
             catch (Exception ex) 
             {
-                MessageBox.Show($"Ocurrio un error al descargar el recurso '{resourceName.name}' en: '{resourcePath}'. {ex.Message}\n{ex}");
+                flMessageBox.Show($"Ocurrio un error al descargar el recurso '{resourceName.name}' en: '{resourcePath}'. {ex.Message}\n{ex}");
             }
         }
 
@@ -170,7 +235,7 @@ namespace Checador_FXE
                 SingleInstance.Release(_mutex); // Liberamos el Mutex
             } else
             {
-                MessageBox.Show("Ya existe una instancia de la aplicacion abierta actualmente!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show("Ya existe una instancia de la aplicacion abierta actualmente!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

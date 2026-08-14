@@ -4,6 +4,7 @@ using System.ComponentModel;
 using FlowControls.Utils;
 using FlowControls.Security;
 using Checador_FXE.Plantillas;
+using FlowControls.Inputs;
 
 namespace Checador_FXE
 {
@@ -201,7 +202,7 @@ namespace Checador_FXE
             // Ejecutamos los multivalidadores
             if (!PassAllValidations())
             {
-                MessageBox.Show("No se pudieron validar todos los controles!");
+                flMessageBox.Show("No se pudieron validar todos los controles!");
                 return;
             }
 
@@ -253,7 +254,7 @@ namespace Checador_FXE
 
                 if (!SaveFlag_NuevosTurnos)
                 {
-                    if (MessageBox.Show($@"Afectaciones encontradas.
+                    if (flMessageBox.Show($@"Afectaciones encontradas.
 {(EmpleadosAfectadosTurnoDefecto.Length > 0 ? 
 $@"Los siguientes empleados tienen asignado como turno por defecto uno de los turnos a eliminar:
 {String.Join("\n", EmpleadosAfectadosTurnoDefecto.Select(s => $"* {s.Nombres} - {s.NoEmp}: {s.Turno}").ToArray())}" : "")}
@@ -298,7 +299,7 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
             //
             if (_ServerPropsHasChanged())
             {
-                DialogResult dr = MessageBox.Show("Ha realizado cambios en la configuración del servidor.\n¿Desea aplicar los cambios y reiniciar la aplicación para que surtan efecto?", "Cambios en configuración del servidor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult dr = flMessageBox.Show("Ha realizado cambios en la configuración del servidor.\n¿Desea aplicar los cambios y reiniciar la aplicación para que surtan efecto?", "Cambios en configuración del servidor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dr == DialogResult.Yes)
                 {
                     Properties.Settings.Default.SERVER_HOSTNAME = this.txtHostnameTcpIp.Value;
@@ -366,7 +367,7 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Se ha producido una excepcion inesperada al establecer la conexion! {ex.Message}", "Excepcion inesperada");
+                flMessageBox.Show($"Se ha producido una excepcion inesperada al establecer la conexion! {ex.Message}", "Excepcion inesperada");
             }
             finally
             {
@@ -383,11 +384,11 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
             this.Cursor = Cursors.WaitCursor;
             if (TestConexion(this.txtHostnameTcpIp.Value, this.txtUsuarioServidor.Value, this.txtPassServidor.Value, Int32.Parse(this.txtPuerto.Value)).Result)
             {
-                MessageBox.Show("Conexión exitosa al servidor MySQL.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                flMessageBox.Show("Conexión exitosa al servidor MySQL.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("No se pudo conectar al servidor MySQL. Verifique la configuración e intente nuevamente.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show("No se pudo conectar al servidor MySQL. Verifique la configuración e intente nuevamente.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             this.Cursor = Cursors.Default;
         }
@@ -395,25 +396,25 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
         private void txtHostnameTcpIp_OnTextChanged(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(this.txtHostnameTcpIp.Value.Trim()))
-                MessageBox.Show("No puedes dejar este campo vacio!");
+                flMessageBox.Show("No puedes dejar este campo vacio!");
         }
 
         private void txtUsuarioServidor_OnTextChanged(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(this.txtUsuarioServidor.Value.Trim()))
-                MessageBox.Show("No puedes dejar este campo vacio!");
+                flMessageBox.Show("No puedes dejar este campo vacio!");
         }
 
         private void txtPassServidor_OnTextChanged(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(this.txtPassServidor.Value.Trim()))
-                MessageBox.Show("No puedes dejar este campo vacio!");
+                flMessageBox.Show("No puedes dejar este campo vacio!");
         }
 
         private void txtPuerto_OnTextChanged(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(this.txtPuerto.Value.Trim()))
-                MessageBox.Show("No puedes dejar este campo vacio!");
+                flMessageBox.Show("No puedes dejar este campo vacio!");
         }
 
         private void txtMaximoRetrasoMinutosPermitidos_Validating(object sender, CancelEventArgs e)
@@ -425,19 +426,19 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
         private void cboxDispositivoDefault_Validating(object sender, CancelEventArgs e)
         {
             if (this.cboxDispositivoDefault.IsNonSelectedTextSelected)
-                MessageBox.Show("Debes de seleccionar un elemento!");
+                flMessageBox.Show("Debes de seleccionar un elemento!");
         }
 
         private void cboxColorPincel_Validating(object sender, CancelEventArgs e)
         {
             if (this.cboxColorPincel.IsNonSelectedTextSelected)
-                MessageBox.Show("Debes de seleccionar un elemento!");
+                flMessageBox.Show("Debes de seleccionar un elemento!");
         }
 
         private void cboxLocalidadEstablecida_Validating(object sender, CancelEventArgs e)
         {
             if (this.cboxLocalidadEstablecida.IsNonSelectedTextSelected)
-                MessageBox.Show("Debes de seleccionar un elemento!");
+                flMessageBox.Show("Debes de seleccionar un elemento!");
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
