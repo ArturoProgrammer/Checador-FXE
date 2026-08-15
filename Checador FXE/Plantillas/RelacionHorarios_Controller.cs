@@ -454,6 +454,8 @@ namespace Checador_FXE.Plantillas
 
             try
             {
+                List<int> _toRemarkRows = new List<int>();
+
                 #region CARGA DE LA UI
                 DataGridViewColumn[] colBaseTemplate = {
                     new DataGridViewImageColumn() {
@@ -565,7 +567,17 @@ namespace Checador_FXE.Plantillas
                         int turno = targetTurno?.Turno ?? 0;
                         r.Cells[d_i].Value = turno == 0 ? "" : turno;   // Escribimos el turno asignado
                     }
+
+                    bool isRowFullEmpty = r.Cells.Cast<DataGridViewCell>()
+                                                 .Skip(3)
+                                                 .All(t => t.Value is null || string.IsNullOrWhiteSpace(t.Value.ToString()));
+                    if (isRowFullEmpty)
+                        _toRemarkRows.Add(r.Index);
                 }
+                #endregion
+                #region REMARCAMOS LAS FILAS VACIAS
+                foreach (int i in _toRemarkRows)
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.RosyBrown;
                 #endregion
 
                 _resp.Success = true;

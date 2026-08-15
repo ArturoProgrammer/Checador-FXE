@@ -144,13 +144,13 @@ namespace Checador_FXE
             _writeStatusCommon(Status, Text);
             System.Diagnostics.Debug.WriteLine($@"
 
-*** ============ [ERROR INESPERADO] ============ ***
+*** ======================== [ERROR INESPERADO] ======================== ***
     {Text}
 
     ERROR MESSAGE: {ErrorMessage}
 
     ERROR STACK: {ErrorStack}
-====================================================
+============================================================================
 
 ");
 

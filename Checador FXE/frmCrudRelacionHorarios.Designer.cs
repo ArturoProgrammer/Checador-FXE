@@ -37,6 +37,7 @@ namespace Checador_FXE
             toolStrpBtn_RevertirCambios = new ToolStripButton();
             toolStrpBtn_NuevoTurno = new ToolStripButton();
             toolStrpBtn_EliminarRelacionHorario = new ToolStripButton();
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado = new ToolStripButton();
             flCustomToolStripSeparator1 = new flCustomToolStripSeparator();
             cboxMonth = new ToolStripComboBox();
             txtYear = new ToolStripTextBox();
@@ -54,7 +55,6 @@ namespace Checador_FXE
             lblStatus = new ToolStripStatusLabel();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblMessage = new ToolStripStatusLabel();
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado = new ToolStripButton();
             flCustomToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRelacionDeHorarios).BeginInit();
             statusStrip1.SuspendLayout();
@@ -97,6 +97,8 @@ namespace Checador_FXE
             // toolStrpBtn_NuevoTurno
             // 
             toolStrpBtn_NuevoTurno.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStrpBtn_NuevoTurno.Enabled = false;
+            toolStrpBtn_NuevoTurno.Image = Properties.Resources.add_16;
             toolStrpBtn_NuevoTurno.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_NuevoTurno.Name = "toolStrpBtn_NuevoTurno";
             toolStrpBtn_NuevoTurno.Size = new Size(23, 24);
@@ -106,11 +108,23 @@ namespace Checador_FXE
             // toolStrpBtn_EliminarRelacionHorario
             // 
             toolStrpBtn_EliminarRelacionHorario.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStrpBtn_EliminarRelacionHorario.Image = (Image)resources.GetObject("toolStrpBtn_EliminarRelacionHorario.Image");
+            toolStrpBtn_EliminarRelacionHorario.Enabled = false;
+            toolStrpBtn_EliminarRelacionHorario.Image = Properties.Resources.delete_16;
             toolStrpBtn_EliminarRelacionHorario.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_EliminarRelacionHorario.Name = "toolStrpBtn_EliminarRelacionHorario";
             toolStrpBtn_EliminarRelacionHorario.Size = new Size(23, 24);
             toolStrpBtn_EliminarRelacionHorario.Text = "Eliminar la relacion de horario";
+            toolStrpBtn_EliminarRelacionHorario.Click += toolStrpBtn_EliminarRelacionHorario_Click;
+            // 
+            // toolStrpBtn_EstablecerTurnosDefectoAEmpleado
+            // 
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Image = Properties.Resources.sync2_16;
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.ImageTransparentColor = Color.Magenta;
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Name = "toolStrpBtn_EstablecerTurnosDefectoAEmpleado";
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Size = new Size(23, 24);
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Text = "Establecer turnos por defecto";
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Click += toolStrpBtn_EstablecerTurnosDefectoAEmpleado_Click;
             // 
             // flCustomToolStripSeparator1
             // 
@@ -328,16 +342,6 @@ namespace Checador_FXE
             lblMessage.Name = "lblMessage";
             lblMessage.Size = new Size(73, 17);
             lblMessage.Text = "%Message%";
-            // 
-            // toolStrpBtn_EstablecerTurnosDefectoAEmpleado
-            // 
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Image = (Image)resources.GetObject("toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Image");
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.ImageTransparentColor = Color.Magenta;
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Name = "toolStrpBtn_EstablecerTurnosDefectoAEmpleado";
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Size = new Size(23, 24);
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Text = "Establecer turnos por defecto";
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Click += toolStrpBtn_EstablecerTurnosDefectoAEmpleado_Click;
             // 
             // frmCrudRelacionHorarios
             // 

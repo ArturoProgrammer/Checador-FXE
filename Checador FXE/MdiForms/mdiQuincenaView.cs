@@ -186,6 +186,9 @@ namespace Checador_FXE.MdiForms
             // Ejecuciones requeridas
             this.flExtendedTabControl1.SelectedTab = this.pageParsingResults;
             this.flQuickAccessPanel1.PerformButtonClick(4);     // EJECUTAMOS AUTOMATICAMENTE EL CASTING
+
+            // Establecemos las filas innaccesibles
+            this.dgvRelacionDeHorarios.SetLockedColumns(2);
         }
 
         ListViewItem actualSelectedEmpleado = null;

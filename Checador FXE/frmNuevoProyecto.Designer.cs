@@ -32,22 +32,22 @@
             cboxModeloDispositivo = new FlowControls.flComboBoxLabelJoint();
             btnAceptar = new FlowControls.flCustomButton();
             btnCerrar = new FlowControls.flCustomButton();
-            groupBox1 = new GroupBox();
             btnExaminar = new FlowControls.flCustomButton();
             cboxLocalidadRemitente = new FlowControls.flComboBoxLabelJoint();
             txtTitulo = new FlowControls.flTextBoxLabelJoint();
             label1 = new Label();
-            groupBox1.SuspendLayout();
+            flGroupBox1 = new FlowControls.flGroupBox();
+            flGroupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // txtRutaArchivo
             // 
             txtRutaArchivo.Enabled = false;
-            txtRutaArchivo.EntryFont = new Font("Consolas", 9F);
+            txtRutaArchivo.EntryFont = new Font("Consolas", 10F);
             txtRutaArchivo.InputContentType = FlowControls.InputMode.GENERAL;
             txtRutaArchivo.InputStyle = FlowControls.TextStyle.Normal;
             txtRutaArchivo.Label = "Archivo:";
-            txtRutaArchivo.Location = new Point(5, 66);
+            txtRutaArchivo.Location = new Point(3, 68);
             txtRutaArchivo.MinimumSize = new Size(79, 28);
             txtRutaArchivo.Name = "txtRutaArchivo";
             txtRutaArchivo.Placeholder = "";
@@ -68,7 +68,7 @@
             cboxModeloDispositivo.EntryFont = new Font("Consolas", 10F);
             cboxModeloDispositivo.Items.Add("(Seleccione un elemento...)");
             cboxModeloDispositivo.Label = "Dispositivo:";
-            cboxModeloDispositivo.Location = new Point(5, 103);
+            cboxModeloDispositivo.Location = new Point(3, 105);
             cboxModeloDispositivo.MinimumSize = new Size(118, 28);
             cboxModeloDispositivo.Name = "cboxModeloDispositivo";
             cboxModeloDispositivo.RootLineColor = Color.Gray;
@@ -112,21 +112,6 @@
             btnCerrar.UseVisualStyleBackColor = false;
             btnCerrar.Click += btnCerrar_Click;
             // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(btnExaminar);
-            groupBox1.Controls.Add(cboxLocalidadRemitente);
-            groupBox1.Controls.Add(txtTitulo);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(txtRutaArchivo);
-            groupBox1.Controls.Add(cboxModeloDispositivo);
-            groupBox1.Location = new Point(12, 12);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(528, 237);
-            groupBox1.TabIndex = 1;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Propiedades";
-            // 
             // btnExaminar
             // 
             btnExaminar.BackColor = SystemColors.ActiveCaption;
@@ -134,7 +119,7 @@
             btnExaminar.FlatStyle = FlatStyle.Flat;
             btnExaminar.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminar.Image = Properties.Resources.buscar_16;
-            btnExaminar.Location = new Point(446, 69);
+            btnExaminar.Location = new Point(444, 71);
             btnExaminar.Name = "btnExaminar";
             btnExaminar.Size = new Size(52, 25);
             btnExaminar.TabIndex = 3;
@@ -151,7 +136,7 @@
             cboxLocalidadRemitente.EntryFont = new Font("Consolas", 10F);
             cboxLocalidadRemitente.Items.Add("(Seleccione un elemento...)");
             cboxLocalidadRemitente.Label = "Localidad:";
-            cboxLocalidadRemitente.Location = new Point(6, 140);
+            cboxLocalidadRemitente.Location = new Point(4, 142);
             cboxLocalidadRemitente.MinimumSize = new Size(118, 28);
             cboxLocalidadRemitente.Name = "cboxLocalidadRemitente";
             cboxLocalidadRemitente.RootLineColor = Color.Gray;
@@ -161,11 +146,11 @@
             // 
             // txtTitulo
             // 
-            txtTitulo.EntryFont = new Font("Consolas", 9F);
+            txtTitulo.EntryFont = new Font("Consolas", 10F);
             txtTitulo.InputContentType = FlowControls.InputMode.GENERAL;
             txtTitulo.InputStyle = FlowControls.TextStyle.Normal;
             txtTitulo.Label = "Titulo:";
-            txtTitulo.Location = new Point(6, 30);
+            txtTitulo.Location = new Point(4, 32);
             txtTitulo.MinimumSize = new Size(79, 28);
             txtTitulo.Name = "txtTitulo";
             txtTitulo.Placeholder = "";
@@ -178,13 +163,35 @@
             // 
             // label1
             // 
-            label1.Font = new Font("Segoe UI", 8F, FontStyle.Italic | FontStyle.Underline);
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Italic | FontStyle.Underline);
             label1.ForeColor = Color.IndianRed;
-            label1.Location = new Point(6, 188);
+            label1.Location = new Point(4, 190);
             label1.Name = "label1";
             label1.Size = new Size(516, 49);
             label1.TabIndex = 7;
             label1.Text = "** ADVERTENCIA: Selecciona el modelo de dispositivo correcto con el que se genero el reporte de chequeos para procesar el documento correctamente con el algoritmo correspondiente.";
+            // 
+            // flGroupBox1
+            // 
+            flGroupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            flGroupBox1.BackColor = SystemColors.GradientInactiveCaption;
+            flGroupBox1.BorderColor = SystemColors.ActiveCaption;
+            flGroupBox1.Controls.Add(txtTitulo);
+            flGroupBox1.Controls.Add(btnExaminar);
+            flGroupBox1.Controls.Add(cboxModeloDispositivo);
+            flGroupBox1.Controls.Add(cboxLocalidadRemitente);
+            flGroupBox1.Controls.Add(txtRutaArchivo);
+            flGroupBox1.Controls.Add(label1);
+            flGroupBox1.HeaderColor = SystemColors.ActiveCaption;
+            flGroupBox1.HeaderStyle = FlowControls.HeaderStyle.Folder;
+            flGroupBox1.Location = new Point(12, 12);
+            flGroupBox1.Name = "flGroupBox1";
+            flGroupBox1.Padding = new Padding(1, 29, 1, 1);
+            flGroupBox1.Size = new Size(528, 248);
+            flGroupBox1.TabIndex = 8;
+            flGroupBox1.TitleFont = new Font("Segoe UI", 10F);
+            flGroupBox1.TitleForeColor = Color.White;
+            flGroupBox1.TitleText = "Propiedades";
             // 
             // frmNuevoProyecto
             // 
@@ -193,7 +200,7 @@
             BackColor = SystemColors.GradientInactiveCaption;
             CancelButton = btnCerrar;
             ClientSize = new Size(552, 312);
-            Controls.Add(groupBox1);
+            Controls.Add(flGroupBox1);
             Controls.Add(btnAceptar);
             Controls.Add(btnCerrar);
             Font = new Font("Segoe UI", 10F);
@@ -206,7 +213,7 @@
             Text = "Nuevo Proyecto";
             FormClosing += frmNuevoProyecto_FormClosing;
             Load += frmNuevoProyecto_Load;
-            groupBox1.ResumeLayout(false);
+            flGroupBox1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -216,10 +223,10 @@
         private FlowControls.flComboBoxLabelJoint cboxModeloDispositivo;
         private FlowControls.flCustomButton btnAceptar;
         private FlowControls.flCustomButton btnCerrar;
-        private GroupBox groupBox1;
         private FlowControls.flCustomButton btnExaminar;
         private Label label1;
         private FlowControls.flTextBoxLabelJoint txtTitulo;
         private FlowControls.flComboBoxLabelJoint cboxLocalidadRemitente;
+        private FlowControls.flGroupBox flGroupBox1;
     }
 }

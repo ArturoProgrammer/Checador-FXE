@@ -38,7 +38,6 @@ namespace Checador_FXE
 
         private void frmCrudRelacionHorarios_Load(object sender, EventArgs e)
         {
-
             this.cboxMonth.SelectedIndex = DateTime.Now.Month - 1;
             this.txtYear.Text = DateTime.Now.Year.ToString();
 
@@ -236,7 +235,6 @@ namespace Checador_FXE
             return flag;
         }
 
-
         private void txtYear_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -314,7 +312,7 @@ namespace Checador_FXE
             {
                 // En caso de que se haya eliminado un turno, eliminamos las referencias de ese turno
                 #region
-                throw new NotImplementedException();
+
                 #endregion
             }
         }
@@ -376,21 +374,45 @@ namespace Checador_FXE
             if (flMessageBox.Show($"¿Desea establecer los turnos por defecto al empleado '{this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.NOMBRE_COMP.GetIndex()].Value}' en toda la relacion de horarios actual?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
-            /* 
-             * Recorremos todas las celdas de la fila seleccionada escribiendo el turno por defecto en cada una de ellas, 
-             * exceptuando los dias domingos y feriados establecidos
-             * */
-
-            int _noEmpleado = int.Parse(this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
-            Empleado empleadoSelected = Empleado.Get(_noEmpleado.ToString()).Object;
-            int turnoDefectoEmpleado = empleadoSelected.TurnoDefault;
-
-            var arr = this.dgvRelacionDeHorarios.SelectedRows[0].Cells.Cast<DataGridViewCell>().ToArray();
-
-            foreach (DataGridViewCell c in arr[3..])
+            try
             {
+                /* 
+                 * Recorremos todas las celdas de la fila seleccionada escribiendo el turno por defecto en cada una de ellas, 
+                 * exceptuando los dias domingos y feriados establecidos
+                 * */
+                int _noEmpleado = int.Parse(this.dgvRelacionDeHorarios.SelectedRows[0].Cells[RelacionHorariosGridCells.NO_EMP.GetIndex()].Value.ToString()!);
+                Empleado empleadoSelected = Empleado.Get(_noEmpleado.ToString()).Object;
+                int turnoDefectoEmpleado = empleadoSelected.TurnoDefault;
 
+                var arr = this.dgvRelacionDeHorarios.SelectedRows[0].Cells.Cast<DataGridViewCell>().ToArray();
+
+                foreach (DataGridViewCell c in arr[3..])
+                {
+                    if (((DateOnly)c.Tag).DayOfWeek != DayOfWeek.Sunday)
+                        c.Value = turnoDefectoEmpleado;
+                }
+
+                WriteStatus(true, $"Turnos por defecto establecidos correctamente para '{empleadoSelected.Nombres}'.");
             }
+            catch (Exception ex)
+            {
+                WriteStatus(false, $"Ocurrio un error inesperado: {ex.Message}");
+            }
+        }
+
+        private void toolStrpBtn_EliminarRelacionHorario_Click(object sender, EventArgs e)
+        {
+            //
+            // Confirmamos la eliminacion de la relacion de horarario actual
+            //
+            if (flMessageBox.Show($"¿Desea eliminar la relacion de horarios '{actualSelected.ID}'?", "Confirmacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            // Eliminamos de la base de datos
+
+
+            // Reiniciamos la ventana
+            
         }
     }
 }
