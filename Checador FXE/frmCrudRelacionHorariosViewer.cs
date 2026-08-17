@@ -168,7 +168,7 @@ namespace Checador_FXE
             Program.DefaultRowValidating(this.dgvRelacionDeHorarios, e);
 
         private void dgvAjustesEmpleados_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) =>
-            Program.DefaultCellValidating(this.dgvRelacionDeHorarios, actualView, e);
+            Program.DefaultCellValidating(WriteStatus, this.dgvRelacionDeHorarios, actualView, e);
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
         {

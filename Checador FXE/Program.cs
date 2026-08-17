@@ -35,7 +35,6 @@ namespace Checador_FXE
                 if (sender.SelectedRows[0].Cells.Count > 0)
                     sender.SelectedRows[0].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenSelected.Render(IconSize.S_64);
         };
-
         /// <summary>
         /// Reestablece el icono de elemento no seleccionado
         /// </summary>
@@ -46,8 +45,10 @@ namespace Checador_FXE
                 if (sender.SelectedRows[0].Cells.Count > 0)
                     sender.Rows[e.RowIndex].Cells[EmpleadosGridCells.ICON.GetIndex()].Value = IconGallery.NeutralObjectGreenUnselected.Render(IconSize.S_64);
         };
-
-        internal static Action<flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (sender, actualView, e) =>
+        /// <summary>
+        /// Valida el valor de turno ingresado en la celda
+        /// </summary>
+        internal static Action<Action<bool, string>, flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (_WriteStatus, sender, actualView, e) =>
         {
             // Validar índices
             if (e.RowIndex < 0 || e.RowIndex >= sender.Rows.Count)
@@ -58,7 +59,7 @@ namespace Checador_FXE
             // Ignorar fila nueva o columnas no editables
             if (row.IsNewRow || e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
             {
-                WriteStatus(false, "No se puede editar esta celda!");
+                _WriteStatus(false, "No se puede editar esta celda!");
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace Checador_FXE
                 actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
             }
 
-            WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
+            _WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
         };
 
         static Action<bool, string> _writeStatusCommon = (s, t) =>
@@ -203,6 +204,7 @@ namespace Checador_FXE
                 // To customize application configuration such as set high DPI settings or default font,
                 // see https://aka.ms/applicationconfiguration.
                 ApplicationConfiguration.Initialize();
+                Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 
                 //
                 // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GRÁFICA

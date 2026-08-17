@@ -208,13 +208,14 @@
             dgvAjustesEmpleados.Dock = DockStyle.Fill;
             dgvAjustesEmpleados.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvAjustesEmpleados.EnableHeadersVisualStyles = false;
+            dgvAjustesEmpleados.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
             dgvAjustesEmpleados.ExtraReservedBottomHeight = 0;
             dgvAjustesEmpleados.GridColor = Color.FromArgb(210, 210, 210);
             dgvAjustesEmpleados.HoverRowBackColor = Color.AntiqueWhite;
             dgvAjustesEmpleados.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvAjustesEmpleados.Location = new Point(0, 30);
             dgvAjustesEmpleados.Margin = new Padding(0);
-            dgvAjustesEmpleados.MouseHoverEffectEnabled = false;
+            dgvAjustesEmpleados.MouseHoverEffectEnabled = true;
             dgvAjustesEmpleados.MultiSelect = false;
             dgvAjustesEmpleados.Name = "dgvAjustesEmpleados";
             dgvAjustesEmpleados.ReadOnly = false;

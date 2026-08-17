@@ -1,8 +1,8 @@
 ﻿using Checador_FXE.Plantillas;
-using DocumentFormat.OpenXml.Wordprocessing;
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Inputs;
+using System.ComponentModel;
 using System.Data;
 
 namespace Checador_FXE
@@ -248,7 +248,8 @@ namespace Checador_FXE
 
                     // Limpia error si es válido
                     this.dgvAjustesEmpleados.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     flMessageBox.Show(ex.ToString());
                 }
@@ -272,16 +273,15 @@ namespace Checador_FXE
             //grid.Rows[e.RowIndex].Cells[e.ColumnIndex].;
         }
 
-        private void dgvAjustesEmpleados_OnRemoveClick(object sender, EventArgs e)
+        private void dgvAjustesEmpleados_OnRemoveClick(object sender, CancelEventArgs e)
         {
-            if (flMessageBox.Show("¿estas seguro que deseas eliminar el elemento seleccionado?", 
-                                    "Confirmacion", 
-                                    MessageBoxButtons.YesNo, 
-                                    MessageBoxIcon.Question, 
-                                    FormStylesGallery.BlueStyle) is DialogResult.No)
+            if (flMessageBox.Show("¿estas seguro que deseas eliminar el elemento seleccionado?",
+                                    "Confirmacion",
+                                    MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question) is DialogResult.No)
             {
                 // Cancelamos la eliminacion de la fila
-                return;
+                e.Cancel = true;
             }
         }
     }
