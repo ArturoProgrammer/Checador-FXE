@@ -44,14 +44,20 @@ namespace Checador_FXE
 
         private void btnEstablecerSeleccion_Click(object sender, EventArgs e)
         {
-            if (flMessageBox.Show("¿Desea establecer la localidad seleccionada como la localidad por default?", "Confirmar selección", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (flMessageBox.Show("¿Desea establecer la localidad seleccionada como la localidad por default?", 
+                                  "Confirmar selección", 
+                                  MessageBoxButtons.YesNo, 
+                                  MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             Properties.Settings.Default.LOCALIDAD_DEFAULT = this.cboxLocalidadSeleccionada.SelectedItem!.ToString();
             Properties.Settings.Default.Save();
 
             this.lblLocalidadDefaultActualmente.Text = Properties.Settings.Default.LOCALIDAD_DEFAULT;
-            flMessageBox.Show("Localidad por default actualizada correctamente.", "Operación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            flMessageBox.Show("Localidad por default actualizada correctamente.", 
+                              "Operación exitosa", 
+                              MessageBoxButtons.OK, 
+                              MessageBoxIcon.Information);
         }
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
@@ -137,6 +143,9 @@ namespace Checador_FXE
             this.dgvAjustesEmpleados.CurrentCell = this.dgvAjustesEmpleados.Rows[this.dgvAjustesEmpleados.Rows.Count - 1].Cells[1];
         }
 
+        /// <summary>
+        /// Localidad actualmente seleccionada. Si no se encuentra ninguna localidad seleccionada, el valor es igual al por defecto (-1)
+        /// </summary>
         private string actualLocalidad = "-1";
 
         void LoadView(string localidad)
@@ -176,27 +185,47 @@ namespace Checador_FXE
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow r in this.dgvAjustesEmpleados.Rows)
+            try
             {
-                Empleado emp = new Empleado()
+                this.Cursor = Cursors.WaitCursor;
+
+                foreach (DataGridViewRow r in this.dgvAjustesEmpleados.Rows)
                 {
-                    NoEmp = r.Cells[EmpleadosGridCells.NO_EMP.GetIndex()].Value?.ToString() ?? "",
-                    Nombres = r.Cells[EmpleadosGridCells.NOMBRE.GetIndex()].Value?.ToString() ?? "",
-                    Apellidos = r.Cells[EmpleadosGridCells.APELLIDOS.GetIndex()].Value?.ToString() ?? "",
-                    Puesto = r.Cells[EmpleadosGridCells.PUESTO.GetIndex()].Value?.ToString() ?? "",
-                    Region = r.Cells[EmpleadosGridCells.REGION.GetIndex()].Value?.ToString() ?? "",
-                    Division = r.Cells[EmpleadosGridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
-                    Localidad = r.Cells[EmpleadosGridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
-                    Area = "UdA",
-                    TurnoDefault = int.TryParse(r.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value?.ToString(), out int turno) ? turno : 1
-                };
+                    Empleado emp = new Empleado()
+                    {
+                        NoEmp = r.Cells[EmpleadosGridCells.NO_EMP.GetIndex()].Value?.ToString() ?? "",
+                        Nombres = r.Cells[EmpleadosGridCells.NOMBRE.GetIndex()].Value?.ToString() ?? "",
+                        Apellidos = r.Cells[EmpleadosGridCells.APELLIDOS.GetIndex()].Value?.ToString() ?? "",
+                        Puesto = r.Cells[EmpleadosGridCells.PUESTO.GetIndex()].Value?.ToString() ?? "",
+                        Region = r.Cells[EmpleadosGridCells.REGION.GetIndex()].Value?.ToString() ?? "",
+                        Division = r.Cells[EmpleadosGridCells.DIVISION.GetIndex()].Value?.ToString() ?? "",
+                        Localidad = r.Cells[EmpleadosGridCells.LOCALIDAD.GetIndex()].Value?.ToString() ?? "",
+                        Area = "UdA",
+                        TurnoDefault = int.TryParse(r.Cells[EmpleadosGridCells.TURNO_DEFAULT.GetIndex()].Value?.ToString(), out int turno) ? turno : 1
+                    };
 
-                emp.Save(ShowObjectLog: false);
+                    emp.Save(ShowObjectLog: false);
+                }
+
+                // Recargamos la vista para sincronizarla con los valores de la DB
+                LoadView(this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!);
             }
-
-            // Recargamos la vista para sincronizarla con los valores de la DB
-            LoadView(this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!);
+            catch (Exception ex)
+            {
+                _commonFailMessage(ex.Message);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
+
+        void _commonFailMessage(string ex) => 
+            flMessageBox.Show($"Ocurrio un error inesperado. {ex}",
+                "Excepcion inesperada",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error,
+                Program.StandardFormStyle);
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
@@ -241,7 +270,11 @@ namespace Checador_FXE
                         foreach (string i in Utils.GetLocalidadesDisponibles())
                             localidades.Add($"* {i}");
 
-                        flMessageBox.Show($"Localidad inválida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}");
+                        flMessageBox.Show($"Localidad invalida. Escribe una de la lista disponible.\n\n{String.Join("\n", localidades)}",
+                                          "Localidad Invalida",
+                                          MessageBoxButtons.OK,
+                                          MessageBoxIcon.Warning,
+                                          Program.StandardFormStyle);
                         e.Cancel = true;   // No permite salir de la celda
                         return;
                     }
@@ -251,7 +284,7 @@ namespace Checador_FXE
                 }
                 catch (Exception ex)
                 {
-                    flMessageBox.Show(ex.ToString());
+                    _commonFailMessage(ex.Message);
                 }
             }
         }
@@ -259,12 +292,32 @@ namespace Checador_FXE
         // Limpia el texto de error al terminar la edición (visual)
         private void dgvAjustesEmpleados_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            var grid = this.dgvAjustesEmpleados;
-            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+            try
+            {
+                var grid = this.dgvAjustesEmpleados;
 
-            string input = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
-            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Utils.GetLocalidadesDisponibles().Cast<string>()
-                                                                                                .FirstOrDefault(t => t.Equals(input, StringComparison.OrdinalIgnoreCase));
+                if (e.ColumnIndex == EmpleadosGridCells.LOCALIDAD.GetIndex())
+                {
+
+                    grid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = string.Empty;
+
+                    string input = grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()!;
+                    grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Utils.GetLocalidadesDisponibles()
+                                                                            .Cast<string>()
+                                                                            .FirstOrDefault(t => t.Equals(input, StringComparison.OrdinalIgnoreCase));
+                    return;
+                }
+
+                if (e.ColumnIndex == EmpleadosGridCells.TURNO_DEFAULT.GetIndex())
+                {
+                    // Validacion del turno ingresado
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                _commonFailMessage(ex.Message);
+            }
         }
 
         private void dgvAjustesEmpleados_CellEnter(object sender, DataGridViewCellEventArgs e)
