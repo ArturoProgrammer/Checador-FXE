@@ -30,10 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConfiguraciones));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             flTabMenuControl1 = new FlowControls.flTabMenuControl();
             tabGeneral = new TabPage();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -272,50 +268,65 @@
             // dgvAjustesHorarios
             // 
             dgvAjustesHorarios.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle1.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ActiveCaptionText;
-            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvAjustesHorarios.AllowUserToDeleteRows = true;
+            dgvAjustesHorarios.AllowUserToOrderColumns = false;
+            dgvAjustesHorarios.AllowUserToResizeColumns = true;
+            dgvAjustesHorarios.AllowUserToResizeRows = true;
+            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle.BackColor = SystemColors.GradientInactiveCaption;
+            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
+            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.SteelBlue;
+            dgvAjustesHorarios.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvAjustesHorarios.AutoGenerateColumns = true;
             dgvAjustesHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvAjustesHorarios.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
             dgvAjustesHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
-            dgvAjustesHorarios.BorderStyle = BorderStyle.None;
             dgvAjustesHorarios.ButtonAddEnabled = true;
             dgvAjustesHorarios.ButtonEditEnabled = false;
             dgvAjustesHorarios.ButtonRemoveEnabled = false;
             dgvAjustesHorarios.ButtonViewEnabled = false;
+            dgvAjustesHorarios.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dgvAjustesHorarios.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithAutoHeaderText;
             dgvAjustesHorarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.SteelBlue;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ButtonFace;
-            dataGridViewCellStyle2.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.ForeColor = SystemColors.ButtonFace;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvAjustesHorarios.ColumnHeadersHeight = 23;
             dgvAjustesHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAjustesHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(64, 64, 64);
-            dataGridViewCellStyle3.Padding = new Padding(3, 0, 3, 0);
-            dataGridViewCellStyle3.SelectionBackColor = Color.Orange;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvAjustesHorarios.DefaultCellStyle = dataGridViewCellStyle3;
+            dgvAjustesHorarios.CurrentCell = null;
+            dgvAjustesHorarios.DataMember = "";
+            dgvAjustesHorarios.DataSource = null;
+            dgvAjustesHorarios.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvAjustesHorarios.DefaultCellStyle.BackColor = Color.White;
+            dgvAjustesHorarios.DefaultCellStyle.Font = new Font("Segoe UI", 9F);
+            dgvAjustesHorarios.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
+            dgvAjustesHorarios.DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
+            dgvAjustesHorarios.DefaultCellStyle.SelectionBackColor = Color.Orange;
+            dgvAjustesHorarios.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvAjustesHorarios.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
             dgvAjustesHorarios.Dock = DockStyle.Fill;
+            dgvAjustesHorarios.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvAjustesHorarios.EnableHeadersVisualStyles = false;
+            dgvAjustesHorarios.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
+            dgvAjustesHorarios.ExtraReservedBottomHeight = 0;
             dgvAjustesHorarios.GridColor = Color.FromArgb(210, 210, 210);
+            dgvAjustesHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvAjustesHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
             dgvAjustesHorarios.Location = new Point(0, 0);
             dgvAjustesHorarios.Margin = new Padding(0);
+            dgvAjustesHorarios.MouseHoverEffectEnabled = true;
             dgvAjustesHorarios.MultiSelect = false;
             dgvAjustesHorarios.Name = "dgvAjustesHorarios";
+            dgvAjustesHorarios.ReadOnly = false;
             dgvAjustesHorarios.RowHeadersVisible = false;
             dgvAjustesHorarios.RowHeadersWidth = 45;
-            dataGridViewCellStyle4.SelectionBackColor = Color.Orange;
-            dgvAjustesHorarios.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvAjustesHorarios.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.EnableResizing;
+            dgvAjustesHorarios.RowsDefaultCellStyle.SelectionBackColor = Color.SteelBlue;
+            dgvAjustesHorarios.RowsDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvAjustesHorarios.SelectedCellColor = Color.Moccasin;
             dgvAjustesHorarios.SelectedRowColor = Color.SteelBlue;
             dgvAjustesHorarios.SelectionForeColor = Color.Black;
@@ -331,7 +342,7 @@
             colTurnoNom.HeaderText = "No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 64;
+            colTurnoNom.Width = 60;
             // 
             // colNombre
             // 
@@ -339,7 +350,7 @@
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 96;
+            colNombre.Width = 89;
             // 
             // colHorarioUno_Entrada
             // 
@@ -347,7 +358,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 122;
+            colHorarioUno_Entrada.Width = 116;
             // 
             // colHorarioUno_Salida
             // 
@@ -355,7 +366,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 121;
+            colHorarioUno_Salida.Width = 113;
             // 
             // colHorarioDos_Entrada
             // 
@@ -363,7 +374,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 127;
+            colHorarioDos_Entrada.Width = 120;
             // 
             // colHorarioDos_Salida
             // 
@@ -371,7 +382,7 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 126;
+            colHorarioDos_Salida.Width = 117;
             // 
             // tabServidor
             // 
@@ -525,6 +536,7 @@
             // btnTestConnection
             // 
             btnTestConnection.BackColor = SystemColors.ActiveCaption;
+            btnTestConnection.BorderRadius = 0;
             btnTestConnection.FlatStyle = FlatStyle.Flat;
             btnTestConnection.Font = new Font("Segoe UI", 10F);
             btnTestConnection.Image = (Image)resources.GetObject("btnTestConnection.Image");
@@ -548,7 +560,9 @@
             // 
             // btnCerrar
             // 
+            btnCerrar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCerrar.BackColor = SystemColors.ActiveCaption;
+            btnCerrar.BorderRadius = 0;
             btnCerrar.FlatStyle = FlatStyle.Flat;
             btnCerrar.Font = new Font("Segoe UI", 10F);
             btnCerrar.Image = Properties.Resources.cancel_16;
@@ -563,7 +577,9 @@
             // 
             // btnAceptar
             // 
+            btnAceptar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnAceptar.BackColor = SystemColors.ActiveCaption;
+            btnAceptar.BorderRadius = 0;
             btnAceptar.FlatStyle = FlatStyle.Flat;
             btnAceptar.Font = new Font("Segoe UI", 10F);
             btnAceptar.Image = Properties.Resources.check;
@@ -578,7 +594,7 @@
             // 
             // frmConfiguraciones
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
             CancelButton = btnCerrar;
@@ -587,7 +603,6 @@
             Controls.Add(btnCerrar);
             Controls.Add(flTabMenuControl1);
             Font = new Font("Segoe UI", 10F);
-            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "frmConfiguraciones";
             Text = "Configuraciones";
             Load += frmConfiguraciones_Load;

@@ -79,16 +79,15 @@ namespace Checador_FXE
             if (String.IsNullOrEmpty(newValue))
                 return;
 
+            bool isNotNumber = !int.TryParse(newValue, out input);
+            
+            /*
             if (!int.TryParse(newValue, out input))
-            {
-                e.Cancel = true;
-                if (cell != null)
-                    cell.ErrorText = "Debe ingresar un número entero válido.";
-                return;
-            }
+                isNotNumber = true;
+            */
 
             // Valida que el ID exista en la lista de horarios
-            if (!Utils.GetHorariosIDs().Contains(input))
+            if (!Utils.GetHorariosIDs().Contains(input) || isNotNumber)
             {
                 List<string> turns = new List<string>();
                 foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
@@ -105,9 +104,7 @@ namespace Checador_FXE
 
             // Guardamos la nueva informacion
             if (actualView != null && e.RowIndex >= 0 && e.RowIndex < actualView.Count)
-            {
                 actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
-            }
 
             _WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
         };

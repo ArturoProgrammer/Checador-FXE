@@ -286,6 +286,13 @@ namespace Checador_FXE
                 {
                     _commonFailMessage(ex.Message);
                 }
+                return;
+            }
+
+            if (e.ColumnIndex == EmpleadosGridCells.TURNO_DEFAULT.GetIndex())
+            {
+                Program.DefaultCellValidating(Program.WriteStatus, this.dgvAjustesEmpleados, null!, e);
+                return;
             }
         }
 

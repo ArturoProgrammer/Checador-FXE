@@ -148,11 +148,12 @@ namespace Checador_FXE
                         foreach (DataGridViewRow row in this.dgvAjustesHorarios.Rows)
                         {
                             // Validamos primer condicion
-                            if (row.Cells[TurnosGridCells.NUMBER.GetIndex()].Value == null || string.IsNullOrWhiteSpace(row.Cells[TurnosGridCells.NUMBER.GetIndex()].Value.ToString()?.Trim()))
+                            if (!TurnosGridCells.ID_NO.Validate(row.Cells[TurnosGridCells.ID_NO.GetIndex()].Value))
                                 fails.Add(false);
+
                             // Validamos segunda condicion
-                            if (row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value == null || string.IsNullOrWhiteSpace(row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value.ToString()?.Trim()))
-                                    fails.Add(false);
+                            if (!TurnosGridCells.NOMBRE.Validate(row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value))
+                                fails.Add(false);
                             
                             // Validamos tercer condicion, minimo, debe estar establecido el primer horario
                             if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value.ToString()?.Trim()) || 

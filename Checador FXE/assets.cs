@@ -5,11 +5,13 @@ using FlowControls;
 using FlowControls.Inputs;
 using iTextSharp.text;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto.Operators;
 using SpreadsheetLight;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security.Principal;
+using ZstdSharp.Unsafe;
 
 namespace Checador_FXE
 {
@@ -417,18 +419,18 @@ namespace Checador_FXE
 
             // VALORES DE HOJA DE ASISTENCIAS
             const string SHEET_ASISTENCIAS_NAME = "Reporte de Asistencia";
-            const string SHEET_TURNOS_NAME = "Reporte de Turnos";
-            const char NO_EMP_COLUMN = 'C';
-            const char NOM_EMP_COLUMN = 'K';
-            const int FIRST_ROW = 6;                // Primer fila con registro de asistencia
-            const int PERIOD_DAYS_ROW = 4;          // Fila que indica los dias que abarca el reporte
-            const char PERIOD_REPORT_COLUMN = 'C';  // Columna donde establece la fecha inicial y final a la que pertenece el reporte
+            const string SHEET_TURNOS_NAME      = "Reporte de Turnos";
+            const char   NO_EMP_COLUMN          = 'C';
+            const char   NOM_EMP_COLUMN         = 'K';
+            const int    FIRST_ROW              = 6;    // Primer fila con registro de asistencia
+            const int    PERIOD_DAYS_ROW        = 4;    // Fila que indica los dias que abarca el reporte
+            const char   PERIOD_REPORT_COLUMN   = 'C';  // Columna donde establece la fecha inicial y final a la que pertenece el reporte
 
             // VALORES DE HOJA DE TURNOS
-            const char NOM_EMP_TURNSHEET_COLUMN = 'B';  // Columna en la que se encuentran los nombres
-            const int FIRST_NOM_EMP_TURNSHEET_ROW = 5;  // Primer fila donde estan los nombres
-            const char START_TURNOS_COL = 'D';          // Columna en la que inician los dias del reporte que analizaremos
-            const int PERIOD_DAYS_TURNSHEET_ROW = 3;    // Fila en la que se escribe el numero del dia
+            const char   NOM_EMP_TURNSHEET_COLUMN       = 'B';  // Columna en la que se encuentran los nombres
+            const int    FIRST_NOM_EMP_TURNSHEET_ROW    = 5;    // Primer fila donde estan los nombres
+            const char   START_TURNOS_COL               = 'D';  // Columna en la que inician los dias del reporte que analizaremos
+            const int    PERIOD_DAYS_TURNSHEET_ROW      = 3;    // Fila en la que se escribe el numero del dia
 
 
             // DICCIONARIO DE RESULTADOS PREVIOS
@@ -1059,12 +1061,12 @@ public static class RelacionHorariosGridCellsExtension
 
 public enum TurnosGridCells
 {
-    NUMBER,
-    NOMBRE,
-    FIRST_IN,
-    FIRST_OUT,
-    SECOND_IN,
-    SECOND_OUT,
+    ID_NO,      // Numero ID del turno
+    NOMBRE,     // Nombre de titulo del turno
+    FIRST_IN,   // Entrada
+    FIRST_OUT,  // Salida o salida a comer
+    SECOND_IN,  // Entrada de regreso a comer
+    SECOND_OUT, // Salida definitiva del turno
 }
 
 public static class TurnosGridCellsExtension
@@ -1072,7 +1074,7 @@ public static class TurnosGridCellsExtension
 
     public static int GetIndex(this TurnosGridCells gc) => gc switch
     {
-        TurnosGridCells.NUMBER => 0,
+        TurnosGridCells.ID_NO => 0,
         TurnosGridCells.NOMBRE => 1,
         TurnosGridCells.FIRST_IN => 2,
         TurnosGridCells.FIRST_OUT => 3,
@@ -1080,6 +1082,31 @@ public static class TurnosGridCellsExtension
         TurnosGridCells.SECOND_OUT => 5,
         _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
     };
+
+    public static bool Validate(this TurnosGridCells gc, object? value)
+    {
+        switch (gc)
+        {
+            case TurnosGridCells.ID_NO:
+                return value == null || string.IsNullOrWhiteSpace(value.ToString()?.Trim());
+                break;
+            case TurnosGridCells.NOMBRE:
+                return value == null || string.IsNullOrWhiteSpace(value.ToString()?.Trim());
+                break;
+            case TurnosGridCells.FIRST_IN:
+                
+                break;
+            case TurnosGridCells.FIRST_OUT:
+
+                break;
+            case TurnosGridCells.SECOND_IN:
+
+                break;
+            case TurnosGridCells.SECOND_OUT:
+
+                break;
+        }
+    }
 }
 
 
@@ -1113,6 +1140,7 @@ public static class EmpleadosGridCellsExtension
         _ => throw new ArgumentOutOfRangeException(nameof(gc), gc, null)
     };
 }
+
 
 public static class SingleInstance
 {
