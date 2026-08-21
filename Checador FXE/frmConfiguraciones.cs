@@ -1,10 +1,11 @@
-﻿using FlowCommonWorkcore.SqlUtils.MySQL;
+﻿using Checador_FXE.Plantillas;
+using FlowCommonWorkcore.SqlUtils.MySQL;
+using FlowControls.Inputs;
+using FlowControls.Security;
+using FlowControls.Utils;
 using MySql.Data.MySqlClient;
 using System.ComponentModel;
-using FlowControls.Utils;
-using FlowControls.Security;
-using Checador_FXE.Plantillas;
-using FlowControls.Inputs;
+using System.Globalization;
 
 namespace Checador_FXE
 {
@@ -143,6 +144,38 @@ namespace Checador_FXE
                         if (this.dgvAjustesHorarios.Rows.Count == 0)
                             return false;
 
+                        Func<string, string, bool> InOutTimesIntegrityCheck = (_in, _out) =>
+                        {
+                            bool _inV = DateTime.TryParseExact(
+                                _in,
+                                "HH:mm",
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None,
+                                out _
+                            );
+
+                            bool _outV = DateTime.TryParseExact(
+                                _out,
+                                "HH:mm",
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None,
+                                out _
+                            );
+
+                            return _inV && _outV;
+                        };
+
+                        Func<object?, bool> NullsEmptysCheck = (v) =>
+                        {
+                            if (v is null)
+                                return false;
+
+                            if (String.IsNullOrEmpty(v.ToString()!.Trim()))
+                                return false;
+
+                            return true;
+                        };
+
                         // Las condiciones son: ID, titulo y que al menos haya un horario establecido
                         List<bool> fails = new List<bool>();
                         foreach (DataGridViewRow row in this.dgvAjustesHorarios.Rows)
@@ -154,18 +187,25 @@ namespace Checador_FXE
                             // Validamos segunda condicion
                             if (!TurnosGridCells.NOMBRE.Validate(row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value))
                                 fails.Add(false);
-                            
+
+                            object? _First_In = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
+                            object? _First_Out = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
+                            object? _Secon_In = row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value;
+                            object? _Secon_Out = row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value;
+
                             // Validamos tercer condicion, minimo, debe estar establecido el primer horario
-                            if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value.ToString()?.Trim()) || 
-                                String.IsNullOrEmpty(row.Cells[TurnosGridCells.FIRST_OUT.GetIndex()].Value.ToString()?.Trim()))
+                            if (!NullsEmptysCheck(_First_In.ToString()?.Trim()) || 
+                                !NullsEmptysCheck(_First_Out.ToString()?.Trim()))
+                                fails.Add(false);
+
+                            if (!InOutTimesIntegrityCheck(_First_In.ToString()!.Trim(), _First_Out.ToString()!.Trim()))
                                 fails.Add(false);
                             
                             // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
-                            if (!String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value.ToString()?.Trim()) || 
-                                !String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value.ToString()?.Trim()))
+                            if (NullsEmptysCheck(_Secon_In.ToString()?.Trim()) && 
+                                NullsEmptysCheck(_Secon_Out.ToString()?.Trim()))
                             {
-                                if (String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value.ToString()?.Trim()) || 
-                                    String.IsNullOrEmpty(row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value.ToString()?.Trim()))
+                                if (!InOutTimesIntegrityCheck(_Secon_In.ToString()!.Trim(), _Secon_Out.ToString()!.Trim()))
                                     fails.Add(false);
                             }
                         }

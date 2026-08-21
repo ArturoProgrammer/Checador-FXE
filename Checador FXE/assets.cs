@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using FlowCommonWorkcore;
 using FlowCommonWorkcore.SqlUtils.MySQL;
 using FlowControls;
@@ -1093,17 +1094,8 @@ public static class TurnosGridCellsExtension
             case TurnosGridCells.NOMBRE:
                 return value == null || string.IsNullOrWhiteSpace(value.ToString()?.Trim());
                 break;
-            case TurnosGridCells.FIRST_IN:
-                
-                break;
-            case TurnosGridCells.FIRST_OUT:
-
-                break;
-            case TurnosGridCells.SECOND_IN:
-
-                break;
-            case TurnosGridCells.SECOND_OUT:
-
+            default:
+                return false;
                 break;
         }
     }
