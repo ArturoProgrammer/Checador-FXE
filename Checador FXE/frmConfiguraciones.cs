@@ -1,5 +1,6 @@
 ﻿using Checador_FXE.Plantillas;
 using FlowCommonWorkcore.SqlUtils.MySQL;
+using FlowControls;
 using FlowControls.Inputs;
 using FlowControls.Security;
 using FlowControls.Utils;
@@ -125,6 +126,9 @@ namespace Checador_FXE
             #endregion
         }
 
+
+        List<(bool, string)> fails = new List<(bool, string)>();
+
         bool MultiValidator(Fields f)
         {
             #region
@@ -139,15 +143,20 @@ namespace Checador_FXE
             switch (f)
             {
                 case Fields.AJUSTES_HORARIO:
+                    fails.Clear();
                     flag = mv.Validate<Fields>(f, invalidValues: null, () => {
                         // Realizamos la validacion del DGV de los turnos existentes
                         if (this.dgvAjustesHorarios.Rows.Count == 0)
                             return false;
 
-                        Func<string, string, bool> InOutTimesIntegrityCheck = (_in, _out) =>
+                        // Verifica que los tiempos ingresados cumplan con el formato de 24 HRS 00:00
+                        Func<object, object, bool> InOutTimesIntegrityCheck = (_in, _out) =>
                         {
+                            if (_in is null || _out is null)
+                                return false;
+
                             bool _inV = DateTime.TryParseExact(
-                                _in,
+                                _in.ToString()!.Trim(),
                                 "HH:mm",
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None,
@@ -155,7 +164,7 @@ namespace Checador_FXE
                             );
 
                             bool _outV = DateTime.TryParseExact(
-                                _out,
+                                _out.ToString()!.Trim(),
                                 "HH:mm",
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None,
@@ -164,7 +173,7 @@ namespace Checador_FXE
 
                             return _inV && _outV;
                         };
-
+                        // Verifica que las cadenas ingresadas no sean valores nulos o vacios por completo
                         Func<object?, bool> NullsEmptysCheck = (v) =>
                         {
                             if (v is null)
@@ -177,40 +186,49 @@ namespace Checador_FXE
                         };
 
                         // Las condiciones son: ID, titulo y que al menos haya un horario establecido
-                        List<bool> fails = new List<bool>();
                         foreach (DataGridViewRow row in this.dgvAjustesHorarios.Rows)
                         {
-                            // Validamos primer condicion
-                            if (!TurnosGridCells.ID_NO.Validate(row.Cells[TurnosGridCells.ID_NO.GetIndex()].Value))
-                                fails.Add(false);
-
-                            // Validamos segunda condicion
-                            if (!TurnosGridCells.NOMBRE.Validate(row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value))
-                                fails.Add(false);
-
+                            object? _ID = row.Cells[TurnosGridCells.ID_NO.GetIndex()].Value;
+                            object? _Nombre = row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value;
                             object? _First_In = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
                             object? _First_Out = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
                             object? _Secon_In = row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value;
                             object? _Secon_Out = row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value;
 
-                            // Validamos tercer condicion, minimo, debe estar establecido el primer horario
-                            if (!NullsEmptysCheck(_First_In.ToString()?.Trim()) || 
-                                !NullsEmptysCheck(_First_Out.ToString()?.Trim()))
-                                fails.Add(false);
+                            // Validamos primer condicion
+                            if (!TurnosGridCells.ID_NO.Validate(_ID))
+                                fails.Add((false, $"Numero de ID no valido"));
 
-                            if (!InOutTimesIntegrityCheck(_First_In.ToString()!.Trim(), _First_Out.ToString()!.Trim()))
-                                fails.Add(false);
+                            // Validamos que no se trate de un ID duplicado
+                            bool uniqueId = this.dgvAjustesHorarios.Rows
+                                .Cast<DataGridViewRow>()
+                                .Where(r => !r.IsNewRow)
+                                .Select(r => int.Parse($"{r.Cells[0].Value}"))
+                                .Count(i => i == int.Parse($"{_ID}")) == 1;
+
+                            if (!uniqueId)
+                                fails.Add((false, $"El ID '{_ID}' (en fila {row.Index + 1}) se encuentra duplicado!"));
+
+                            // Validamos segunda condicion
+                            if (!TurnosGridCells.NOMBRE.Validate(_Nombre))
+                                fails.Add((false, $"Nombre no valido"));
+
+                            // Validamos tercer condicion, minimo, debe estar establecido el primer horario
+                            if (!NullsEmptysCheck(_First_In) || !NullsEmptysCheck(_First_Out))
+                                fails.Add((false, $"No se ha establecido correctamente el primer horario del turno '{_ID} - {_Nombre}'"));
+
+                            if (!InOutTimesIntegrityCheck(_First_In, _First_Out))
+                                fails.Add((false, $"Los tiempos indicados para el turno '{_ID} - {_Nombre}' no son validos"));
                             
                             // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
-                            if (NullsEmptysCheck(_Secon_In.ToString()?.Trim()) && 
-                                NullsEmptysCheck(_Secon_Out.ToString()?.Trim()))
+                            if (NullsEmptysCheck(_Secon_In) && NullsEmptysCheck(_Secon_Out))
                             {
-                                if (!InOutTimesIntegrityCheck(_Secon_In.ToString()!.Trim(), _Secon_Out.ToString()!.Trim()))
-                                    fails.Add(false);
+                                if (!InOutTimesIntegrityCheck(_Secon_In, _Secon_Out))
+                                    fails.Add((false, $"Los tiempos indicados para el turno '{_ID} - {_Nombre}' no son validos"));
                             }
                         }
 
-                        return fails.Count == 0;
+                        return !fails.Select(t => t.Item1).Any(t => t is false);
                     }, ValidationParams.CUSTOM_ACTION, ValidationParams.NOT_EMPTY_ENTRY).Success;
                     break;
                 case Fields.RUTA_DB_LOCAL:
@@ -243,7 +261,14 @@ namespace Checador_FXE
             // Ejecutamos los multivalidadores
             if (!PassAllValidations())
             {
-                flMessageBox.Show("No se pudieron validar todos los controles!");
+                flMessageBox.Show($@"
+No se pudieron validar todos los controles. Corrige los siguientes errores a intenta de nuevo:
+
+{String.Join("\n", fails.Select(s => $"* {s.Item2}").ToArray())}", 
+                                  "Configuracion", 
+                                  MessageBoxButtons.OK, 
+                                  MessageBoxIcon.Warning, 
+                                  FormStylesGallery.BlueStyle);
                 return;
             }
 
@@ -334,6 +359,28 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
             }
             
             Properties.Settings.Default.TURNOS_HORARIOS = SaveFlag_NuevosTurnos ? Utils.ParseJsonHorariosByDgv(this.dgvAjustesHorarios) : Properties.Settings.Default.TURNOS_HORARIOS;
+
+            // Si se aplicaron nuevos turnos, asegurar que el turno por defecto sea válido y persistir la configuración
+            if (SaveFlag_NuevosTurnos)
+            {
+                try
+                {
+                    int[] nuevosIds = Utils.ParseHorariosTurnosByDgv(this.dgvAjustesHorarios).Select(t => t.ID).ToArray();
+                    if (nuevosIds.Length > 0)
+                    {
+                        // Si el TURNO_DEFECTO actual no existe en la nueva lista, actualizamos al primer turno disponible
+                        if (!nuevosIds.Contains(int.Parse(Properties.Settings.Default.TURNO_DEFECTO)))
+                            Properties.Settings.Default.TURNO_DEFECTO = nuevosIds[0].ToString();
+                    }
+                }
+                catch
+                {
+                    // En caso de error no rompiemos el guardado de las demás propiedades
+                }
+            }
+
+            // Persistir todas las propiedades de usuario modificadas
+            Properties.Settings.Default.Save();
 
             //
             // SERVIDOR

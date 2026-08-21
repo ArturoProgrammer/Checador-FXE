@@ -189,6 +189,9 @@ namespace Checador_FXE
             {
                 Func<object, TimeSpan> _TryParseTime = delegate (object cellValue)
                 {
+                    if (cellValue is null)
+                        return TimeSpan.Zero;
+
                     string tVal = (string)cellValue;
                     if (String.IsNullOrEmpty(tVal.Trim()))
                         return TimeSpan.Zero;
@@ -1089,10 +1092,10 @@ public static class TurnosGridCellsExtension
         switch (gc)
         {
             case TurnosGridCells.ID_NO:
-                return value == null || string.IsNullOrWhiteSpace(value.ToString()?.Trim());
+                return value is not null && !string.IsNullOrWhiteSpace(value.ToString()?.Trim());
                 break;
             case TurnosGridCells.NOMBRE:
-                return value == null || string.IsNullOrWhiteSpace(value.ToString()?.Trim());
+                return value is not null && !string.IsNullOrWhiteSpace(value.ToString()?.Trim());
                 break;
             default:
                 return false;
