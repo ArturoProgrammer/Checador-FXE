@@ -51,6 +51,7 @@ namespace Checador_FXE
             // AJUSTES DE HORARIO
             //
             this.dgvAjustesHorarios.SetGridStyle(Program.StandardGridStyle);
+            this.dgvAjustesHorarios.AllowUserToResizeRows = false;
             _LoadHorariosFromJson(Properties.Settings.Default.TURNOS_HORARIOS);
 
             //
@@ -531,12 +532,12 @@ $@"Los siguientes empleados tienen asignado al menos un horario con uno de los t
 
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
         {
-            this.dgvAjustesHorarios.Rows.Add(1);    // Se agrega una linea por defecto
+            int ROW_I = this.dgvAjustesHorarios.Rows.Add(1);    // Se agrega una linea por defecto
 
             // Establecemos el ID del turno segun el turno anterior
-            this.dgvAjustesHorarios.Rows[this.dgvAjustesHorarios.Rows.Count - 1].Cells[0].Value =
+            this.dgvAjustesHorarios.Rows[ROW_I].Cells[0].Value =
                 this.dgvAjustesHorarios.Rows.Count > 1
-                ? (int.Parse(this.dgvAjustesHorarios.Rows[this.dgvAjustesHorarios.Rows.Count - 2].Cells[0].Value.ToString()) + 1).ToString()
+                ? (int.Parse(this.dgvAjustesHorarios.Rows[ROW_I - 1].Cells[0].Value.ToString()) + 1).ToString()
                 : "1";
         }
     }

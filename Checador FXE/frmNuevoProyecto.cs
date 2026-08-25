@@ -38,7 +38,7 @@ namespace Checador_FXE
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     FileInfo fi = new FileInfo(ofd.FileName);
-                    if (fi.Extension == ".xls")
+                    if (fi.Extension.ToLower() == ".xls")
                     {
                         flMessageBox.Show("El archivo proporcionado es formato '*.xls' por lo que se debe convertir a '*.xlsx'. Abre el archivo .xls en Excel y guardalo en formato .xlsx para posteriormente abrirlo en este programa.", "Confirmacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;

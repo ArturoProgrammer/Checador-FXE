@@ -93,7 +93,7 @@ namespace Checador_FXE
                 foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
                     turns.Add($"* {i.ID} ({i.Nombre})");
 
-                flMessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flMessageBox.Show($"Turno invalido. Escribe una de la lista disponible.\n\n{String.Join("\n", turns)}\n\nSi deseas agregar un turno nuevo, debes agregarlo desde Propiedades > Ajustes de Horario.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;   // No permite salir de la celda
                 return;
             }
@@ -181,7 +181,7 @@ namespace Checador_FXE
                     byte[] resourceBytes = (byte[])Properties.Resources.ResourceManager.GetObject(resourceName.name)!;
                     fs.Write(resourceBytes, 0, resourceBytes.Length);
                 }
-            }
+            }   
             catch (Exception ex) 
             {
                 flMessageBox.Show($"Ocurrio un error al descargar el recurso '{resourceName.name}' en: '{resourcePath}'. {ex.Message}\n{ex}");

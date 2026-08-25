@@ -135,7 +135,7 @@
             dgvRelacionDeHorarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRelacionDeHorarios.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
             dgvRelacionDeHorarios.BackgroundColor = SystemColors.GradientActiveCaption;
-            dgvRelacionDeHorarios.ButtonAddEnabled = true;
+            dgvRelacionDeHorarios.ButtonAddEnabled = false;
             dgvRelacionDeHorarios.ButtonEditEnabled = false;
             dgvRelacionDeHorarios.ButtonRemoveEnabled = false;
             dgvRelacionDeHorarios.ButtonViewEnabled = false;
@@ -169,7 +169,7 @@
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvRelacionDeHorarios.Location = new Point(0, 22);
+            dgvRelacionDeHorarios.Location = new Point(0, 25);
             dgvRelacionDeHorarios.Margin = new Padding(0);
             dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
             dgvRelacionDeHorarios.MultiSelect = false;
@@ -185,7 +185,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(823, 380);
+            dgvRelacionDeHorarios.Size = new Size(823, 377);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;

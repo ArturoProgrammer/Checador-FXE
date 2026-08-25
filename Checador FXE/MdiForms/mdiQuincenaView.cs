@@ -551,10 +551,10 @@ namespace Checador_FXE.MdiForms
                     ObservableCollection<InteropGenericObject> _list = new ObservableCollection<InteropGenericObject>();
 
                     foreach (string empleado in _PeriodoCasteado.Keys)
-                        _list.Add(InteropGenericObject.Compatibilize(empleado, 
-                                                                    "", 
-                                                                    _PeriodoCasteado[empleado], 
-                                                                    new HexaHash().Hash, 
+                        _list.Add(InteropGenericObject.Compatibilize(empleado,
+                                                                    "",
+                                                                    _PeriodoCasteado[empleado],
+                                                                    new HexaHash().Hash,
                                                                     0, 1));
 
                     PairEmpleado_FechaAsistencia = _PeriodoCasteado;
@@ -843,6 +843,17 @@ namespace Checador_FXE.MdiForms
         private void calendarAsistencias_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dgvTurnosHorarios_OnAddClick(object sender, EventArgs e)
+        {
+            int ROW_I = this.dgvTurnosHorarios.Rows.Add(1);    // Se agrega una linea por defecto
+
+            // Establecemos el ID del turno segun el turno anterior
+            this.dgvTurnosHorarios.Rows[ROW_I].Cells[0].Value =
+                this.dgvTurnosHorarios.Rows.Count > 1
+                ? (int.Parse(this.dgvTurnosHorarios.Rows[ROW_I - 1].Cells[0].Value.ToString()) + 1).ToString()
+                : "1";
         }
     }
 }
