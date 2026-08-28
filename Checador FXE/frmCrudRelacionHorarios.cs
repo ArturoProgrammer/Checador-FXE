@@ -29,6 +29,16 @@ namespace Checador_FXE
             this.lblLocalidadSeleccionada.Text = Properties.Settings.Default.LOCALIDAD_DEFAULT;
         }
 
+        void WriteStatus(bool status, string message, Exception? ex)
+        {
+            this.lblStatus.Text = status ? "Listo" : "Error";
+            this.lblStatus.ForeColor = status ? Color.DarkGreen : Color.IndianRed;
+            this.lblMessage.Text = message;
+
+            if (status == false && ex is not null)
+                Program.ReportFailureExposed(message, ex.Message, ex.ToString());
+        }
+
         void WriteStatus(bool status, string message)
         {
             this.lblStatus.Text = status ? "Listo" : "Error";
@@ -92,7 +102,7 @@ namespace Checador_FXE
             }
             catch (Exception ex)
             {
-                WriteStatus(false, $"Ocurio un error inesperado. {ex.Message}");
+                WriteStatus(false, $"Ocurio un error inesperado. {ex.Message}", ex);
             }
 
         }
@@ -123,7 +133,7 @@ namespace Checador_FXE
             }
             catch (Exception ex)
             {
-                WriteStatus(false, $"Error al cargar la vista: {ex.Message}");
+                WriteStatus(false, $"Error al cargar la vista: {ex.Message}", ex);
             }
             finally
             {
@@ -396,7 +406,7 @@ namespace Checador_FXE
             }
             catch (Exception ex)
             {
-                WriteStatus(false, $"Ocurrio un error inesperado: {ex.Message}");
+                WriteStatus(false, $"Ocurrio un error inesperado: {ex.Message}", ex);
             }
         }
 

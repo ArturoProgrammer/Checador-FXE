@@ -484,10 +484,10 @@
             pageCastingSetting.BackColor = SystemColors.GradientInactiveCaption;
             pageCastingSetting.BorderStyle = BorderStyle.FixedSingle;
             pageCastingSetting.Controls.Add(tableLayoutPanel5);
-            pageCastingSetting.Location = new Point(4, 44);
+            pageCastingSetting.Location = new Point(4, 29);
             pageCastingSetting.Name = "pageCastingSetting";
             pageCastingSetting.Padding = new Padding(3);
-            pageCastingSetting.Size = new Size(822, 538);
+            pageCastingSetting.Size = new Size(192, 67);
             pageCastingSetting.TabIndex = 3;
             pageCastingSetting.Text = "Configuracion del Casting";
             // 
@@ -504,7 +504,7 @@
             tableLayoutPanel5.RowCount = 2;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 409F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 448F));
-            tableLayoutPanel5.Size = new Size(814, 530);
+            tableLayoutPanel5.Size = new Size(184, 59);
             tableLayoutPanel5.TabIndex = 9;
             // 
             // panel5
@@ -517,7 +517,7 @@
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(3, 3);
             panel5.Name = "panel5";
-            panel5.Size = new Size(808, 403);
+            panel5.Size = new Size(178, 403);
             panel5.TabIndex = 0;
             // 
             // flLabelHeader1
@@ -536,7 +536,7 @@
             flLabelHeader1.MinimumSize = new Size(0, 45);
             flLabelHeader1.Name = "flLabelHeader1";
             flLabelHeader1.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader1.Size = new Size(808, 45);
+            flLabelHeader1.Size = new Size(178, 45);
             flLabelHeader1.TabIndex = 2;
             // 
             // btnSincronizarAjustes
@@ -720,7 +720,7 @@
             panel6.Dock = DockStyle.Fill;
             panel6.Location = new Point(3, 412);
             panel6.Name = "panel6";
-            panel6.Size = new Size(808, 442);
+            panel6.Size = new Size(178, 442);
             panel6.TabIndex = 1;
             // 
             // btnDefinirRelacionMensual
@@ -785,7 +785,7 @@
             flLabelHeader2.MinimumSize = new Size(0, 45);
             flLabelHeader2.Name = "flLabelHeader2";
             flLabelHeader2.Padding = new Padding(20, 3, 20, 5);
-            flLabelHeader2.Size = new Size(808, 45);
+            flLabelHeader2.Size = new Size(178, 45);
             flLabelHeader2.TabIndex = 3;
             // 
             // panel4
@@ -795,7 +795,7 @@
             panel4.Controls.Add(dgvRelacionDeHorarios);
             panel4.Location = new Point(7, 48);
             panel4.Name = "panel4";
-            panel4.Size = new Size(798, 321);
+            panel4.Size = new Size(168, 321);
             panel4.TabIndex = 7;
             // 
             // dgvRelacionDeHorarios
@@ -864,7 +864,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(796, 319);
+            dgvRelacionDeHorarios.Size = new Size(166, 319);
             dgvRelacionDeHorarios.TabIndex = 5;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
             dgvRelacionDeHorarios.SelectionChanged += dgvAjustesHorarios_SelectionChanged;

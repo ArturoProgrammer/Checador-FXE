@@ -1,4 +1,5 @@
 ﻿using Checador_FXE.Plantillas;
+using FlowControls;
 using FlowControls.Inputs;
 
 namespace Checador_FXE
@@ -74,6 +75,24 @@ namespace Checador_FXE
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
+            // Validamos que exista personal y relacion de horarios asignados para esta localidad
+            string site = this.cboxLocalidadRemitente.Value.Trim();
+            int? personalCount = Empleado.GetAll(site).Object?.Length;
+            bool havePersonal = personalCount != null && personalCount > 0;
+
+            //int? horariosCount = RelacionHorarios.Get(RelacionHorarioID.GetActualId(site)).Object?;
+            //bool haveHorarios = horariosCount != null && personalCount > 0;
+
+            if (!havePersonal)
+            {
+                flMessageBox.Show("No se puede crear el objeto debido a que no existen datos de referencia para la localidad seleccionada.\n\nAsegura la existencia de personal registrado en esa localidad y su relacion de horario correspondiente.",
+                                  "Nuevo proyecto",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Warning,
+                                  FormStylesGallery.BlueStyle);
+                return;
+            }
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

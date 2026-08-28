@@ -49,7 +49,7 @@ namespace Checador_FXE
 
             WriteStatus(true, "Inicializacion exitosa");
         }
-
+        
         private void dgvAjustesHorarios_OnAddClick(object sender, EventArgs e)
         {
             throw new NotImplementedException();

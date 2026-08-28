@@ -232,9 +232,11 @@ namespace Checador_FXE
             throw new NotImplementedException();
         }
 
-        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => Program.DefaultRowSelectionChanged(this.dgvAjustesEmpleados, e);
+        private void dgvAjustesHorarios_SelectionChanged(object sender, EventArgs e) => 
+            Program.DefaultRowSelectionChanged(this.dgvAjustesEmpleados, e);
 
-        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => Program.DefaultRowValidating(this.dgvAjustesEmpleados, e);
+        private void dgvAjustesHorarios_RowValidating(object sender, DataGridViewCellCancelEventArgs e) => 
+            Program.DefaultRowValidating(this.dgvAjustesEmpleados, e);
 
         private void exportarParaConfiguracionToolStripMenuItem_Click(object sender, EventArgs e)
         {

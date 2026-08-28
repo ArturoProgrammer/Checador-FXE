@@ -1,6 +1,7 @@
-using Checador_FXE.Plantillas;
+Ôªøusing Checador_FXE.Plantillas;
 using FlowControls;
 using FlowControls.Inputs;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Checador_FXE
@@ -50,7 +51,7 @@ namespace Checador_FXE
         /// </summary>
         internal static Action<Action<bool, string>, flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (_WriteStatus, sender, actualView, e) =>
         {
-            // Validar Ìndices
+            // Validar √≠ndices
             if (e.RowIndex < 0 || e.RowIndex >= sender.Rows.Count)
                 return;
 
@@ -73,7 +74,7 @@ namespace Checador_FXE
             if (cell != null)
                 cell.ErrorText = string.Empty;
 
-            // Toma lo que el usuario est· intentando dejar en la celda
+            // Toma lo que el usuario est√° intentando dejar en la celda
             int input = -1;
 
             if (String.IsNullOrEmpty(newValue))
@@ -140,19 +141,25 @@ namespace Checador_FXE
                 return;
 
             _writeStatusCommon(Status, Text);
-            System.Diagnostics.Debug.WriteLine($@"
+            ReportFailureExposed(Text, ErrorMessage, ErrorStack);
 
-*** ======================== [ERROR INESPERADO] ======================== ***
-    {Text}
+            flMessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
-    ERROR MESSAGE: {ErrorMessage}
+        internal static void ReportFailureExposed(string txt, string msg, string ers)
+        {
+            //System.Diagnostics.Debug.WriteLine($@"
+            Trace.WriteLine($@"
 
-    ERROR STACK: {ErrorStack}
+*** ======================== [ ‚ùå ERROR INESPERADO] ======================== ***
+    {txt}
+
+    ERROR MESSAGE: {msg}
+
+    ERROR STACK: {ers}
 ============================================================================
 
 ");
-
-            flMessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -204,18 +211,18 @@ namespace Checador_FXE
                 Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 
                 //
-                // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GR¡FICA
+                // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GR√ÅFICA
                 //
                 AppDomain.CurrentDomain.UnhandledException += (object s, UnhandledExceptionEventArgs e) => {
-                    WriteStatus(false, "OcurriÛ un error inesperado. Por favor, contacte al soporte tÈcnico.", ((Exception)e.ExceptionObject).Message, ((Exception)e.ExceptionObject).ToString());
+                    WriteStatus(false, "Ocurri√≥ un error inesperado. Por favor, contacte al soporte t√©cnico.", ((Exception)e.ExceptionObject).Message, ((Exception)e.ExceptionObject).ToString());
                 };
 
                 //
-                // EXCEPCIONES PRODUCIDAS EN HILLOS DE INTERFAZ GR¡FICA
+                // EXCEPCIONES PRODUCIDAS EN HILLOS DE INTERFAZ GR√ÅFICA
                 //
                 Application.ThreadException += (object s, ThreadExceptionEventArgs e) =>
                 {
-                    WriteStatus(false, "OcurriÛ un error inesperado. Por favor, contacte al soporte tÈcnico.", e.Exception.Message, e.Exception.ToString());
+                    WriteStatus(false, "Ocurri√≥ un error inesperado. Por favor, contacte al soporte t√©cnico.", e.Exception.Message, e.Exception.ToString());
                 };
 
                 //
