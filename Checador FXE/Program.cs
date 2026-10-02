@@ -1,8 +1,10 @@
 ﻿using Checador_FXE.Plantillas;
+using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Inputs;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 
 namespace Checador_FXE
 {
@@ -16,6 +18,35 @@ namespace Checador_FXE
         internal static int DefaultRowHeight { get; } = 30;
         internal static DataGridStyle StandardGridStyle { get; } = DataGridStylesGallery.BlueStyle.SetAutoSizeColumnsMode(DataGridViewAutoSizeColumnsMode.AllCells);
         internal static FormStyle StandardFormStyle { get; } = FormStylesGallery.BlueStyle;
+
+        static string logsDir = Path.Combine(Application.StartupPath, "logs");
+        static string logFilePath = $@"{logsDir}\execution_log_{DateTime.Now.ToString("ddMMyy-HHmm")}.txt";
+
+        internal static SystemLog Log = new SystemLog(
+            logFilePath,
+            true,
+            /*
+            new SoftwareProperties()
+            {
+                AssemblyVersion = ProjectMetadataReader.GetAttributeValue("AssemblyVersion").Split(".").Select(t => int.Parse(t)).ToArray(),
+                Author = ProjectMetadataReader.GetAttributeValue("Copyright"),
+                Company = ProjectMetadataReader.GetAttributeValue("Company"),
+                Compilation = "-1",
+                Description = ProjectMetadataReader.GetAttributeValue("Description"),
+                ID = "-1",
+                Name = ProjectMetadataReader.GetAttributeValue("AssemblyTitle"),
+            },*/
+            new SoftwareProperties()
+            {
+                AssemblyVersion = new[] { 1, 0, 0, 0 } ,
+                Author = "IDC Arturo Venegas",
+                Company = "Grupo Mexico Transportes",
+                Compilation = "-1",
+                Description = "",
+                ID = "-1",
+                Name = "Checador FXE",
+            },
+            OnLiveSave: true);
 
         /// <summary>
         /// Nombre del recurso del formato de asistencia de la primer quincena del mes
@@ -160,39 +191,6 @@ namespace Checador_FXE
 ============================================================================
 
 ");
-        }
-
-        /// <summary>
-        /// Descargamos el recurso si no existe en el directorio de la aplicacion
-        /// </summary>
-        /// <param name="resourceName"></param>
-        static void _DownloadResource((string name, string ext) resourceName)
-        {
-            string completeName = $"{resourceName.name}.{resourceName.ext}";
-            string resourcePath = Path.Combine(Application.StartupPath, completeName);
-
-            try
-            {
-                // Validamos la existencia del nombre del recurso en el gestor del recursos
-                var rm = Properties.Resources.ResourceManager;
-                string[] resNames = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true)
-                                    .OfType<System.Collections.DictionaryEntry>()
-                                    .Select(de => de.Key.ToString())
-                                    .ToArray();
-
-                if (resNames == null || !resNames.Contains(resourceName.name))
-                    return;
-
-                using (FileStream fs = new FileStream(resourcePath, FileMode.Create, FileAccess.Write))
-                {
-                    byte[] resourceBytes = (byte[])Properties.Resources.ResourceManager.GetObject(resourceName.name)!;
-                    fs.Write(resourceBytes, 0, resourceBytes.Length);
-                }
-            }   
-            catch (Exception ex) 
-            {
-                flMessageBox.Show($"Ocurrio un error al descargar el recurso '{resourceName.name}' en: '{resourcePath}'. {ex.Message}\n{ex}");
-            }
         }
 
         /// <summary>

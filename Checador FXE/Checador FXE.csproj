@@ -13,6 +13,7 @@
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <Platforms>AnyCPU;x64</Platforms>
+	<GenerateAssemblyInfo>True</GenerateAssemblyInfo>
 
 	<ManualVersion>1.0.1</ManualVersion>  
 	<VersionSuffix>beta-dev</VersionSuffix>
@@ -21,16 +22,18 @@
 	  <Description>Generador y gestor de asistencias de personal sindicalizado FXE con hardware ZKTeco.</Description>
 	  
 	<Copyright>Arturo Venegas IDC</Copyright>
+	<Company>Grupo Mexico Transportes</Company>
 
 	<NeutralLanguage>es-MX</NeutralLanguage>
 	<RepositoryType>git</RepositoryType>
 	<RepositoryUrl>https://github.com/ArturoProgrammer/Checador-FXE</RepositoryUrl>
+	<Configurations>Debug;Release;Dev R1</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
-    <PackageReference Include="FlowCommonWorkcore" Version="1.0.17" />
-    <PackageReference Include="FlowControls" Version="1.0.15.40" />
+    <PackageReference Include="FlowCommonWorkcore" Version="1.0.20" />
+    <PackageReference Include="FlowControls" Version="1.0.15.42" />
     <PackageReference Include="iTextSharp" Version="5.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SpreadsheetLight.Fork" Version="3.5.0" />

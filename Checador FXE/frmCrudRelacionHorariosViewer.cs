@@ -89,7 +89,6 @@ namespace Checador_FXE
             {
                 WriteStatus(false, $"Ocurio un error inesperado. {ex.Message}");
             }
-
         }
 
         void LoadView()

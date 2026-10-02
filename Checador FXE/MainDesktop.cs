@@ -249,27 +249,16 @@ namespace Checador_FXE
             actualView.SavedFlag = _CommonSaveMethod(targetPath);
         }
 
-        private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Abrimos el editor de personal
-            new frmCrudEmpleados().ShowDialog();
-        }
+        private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e) 
+            => new frmCrudEmpleados().ShowDialog();
 
         private void relacionDeHorariosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Abrimos el editor de horarios
-            new frmCrudRelacionHorarios().ShowDialog();
-        }
+            => new frmCrudRelacionHorarios().ShowDialog();
 
         private void acercaDeToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            // Abrimos el cuadro "Acerca de"
-            new AboutBox1().ShowDialog();
-        }
+            => new AboutBox1().ShowDialog();
 
         private void feriadosEInhabilesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException("Falta de implementar que el usuario pueda definir los dias festivos, tal ves sea una buena idea. Hay que pensarlo");
-        }
+            => throw new NotImplementedException("Falta de implementar que el usuario pueda definir los dias festivos, tal ves sea una buena idea. Hay que pensarlo");
     }
 }
