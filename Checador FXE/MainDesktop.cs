@@ -69,6 +69,7 @@ namespace Checador_FXE
         private void MainDesktop_Load(object sender, EventArgs e)
         {
             Program.WriteStatus(true, "Inizializacion de programa exitosa!");
+            Program.Log.Add($"Inicializacion del programa exitosa");
         }
 
         private void MDI_PANEL_ControlAdded(object sender, ControlEventArgs e)
@@ -92,10 +93,7 @@ namespace Checador_FXE
         }
 
         private void propiedadesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmConfiguraciones frm = new frmConfiguraciones();
-            frm.ShowDialog();
-        }
+            => new frmConfiguraciones().ShowDialog();
 
         private void treeViewProyectosQuincenas_DoubleClick(object sender, EventArgs e)
         {
@@ -115,20 +113,10 @@ namespace Checador_FXE
         }
 
         private void toolStrpBtnNuevo_Click(object sender, EventArgs e)
-        {
-            nuevoToolStripMenuItem.PerformClick();
-        }
+            => nuevoToolStripMenuItem.PerformClick();
 
         private void toolStrpBtnAbrir_Click(object sender, EventArgs e)
-        {
-            abrirToolStripMenuItem.PerformClick();
-        }
-
-        private void editorDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
+            => abrirToolStripMenuItem.PerformClick();
 
         /// <summary>
         /// Metodo que lanza el dialogo de guardado del sistema y retorna la ruta seleccionada

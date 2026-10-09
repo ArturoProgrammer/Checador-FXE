@@ -64,6 +64,8 @@ namespace Checador_FXE.Plantillas
 
                 if (!_tb_resp.Success)
                     throw new NullReferenceException($"Ocurrio un error al crear la tabla '{TABLE_NAME}'! {_tb_resp.Message}");
+
+                Program.Log.Add($"Base de datos '{DB_PATH}' y tabla '{TABLE_NAME}' creadas correctamente!");
             }
         }
         

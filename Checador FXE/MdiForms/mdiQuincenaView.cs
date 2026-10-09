@@ -65,11 +65,11 @@ namespace Checador_FXE.MdiForms
             LoadAllData();
         }
 
-        Action<DataGridView> loadTurnosBySettings = (dgv) =>
+        Action<DataGridView, string> loadTurnos = (dgv, turnosJson) =>
         {
             dgv.Rows.Clear();
 
-            foreach (Turno i in Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS))
+            foreach (Turno i in Turno.GetAll(turnosJson))
             {
                 dgv.Rows.Add(new[]
                 {
@@ -115,7 +115,10 @@ namespace Checador_FXE.MdiForms
             }
 
             // Cargamos las configuraciones de horario que usaremos
-            loadTurnosBySettings(this.dgvTurnosHorarios.Grid);   // TODO: ESTO ENTRA EN CONFLICTO CON LA FUNCION DE ABRIR, ASI QUE HAY QUE REFORMULARLO
+            // Un proyecto CAF debe conservar los horarios con que se generó, incluso si la
+            // configuración global cambió después. Esto también conserva correctamente los turnos nocturnos.
+            loadTurnos(this.dgvTurnosHorarios.Grid,
+                projByCafOpened ? ActualCafProject.ConfiguracionCasting.HorariosTurnosCrudJson : Properties.Settings.Default.TURNOS_HORARIOS);
             // Cargamos el tiempo maximo de retraso permitido
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
 
@@ -409,9 +412,6 @@ namespace Checador_FXE.MdiForms
                     #region HELPERS DE CODIGO
                     RelacionHorarios _relac = this.RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Select(r => r).ToArray());
 
-                    // Obtiene el tiempo de entrada maximo permitido para la asistencia
-                    Func<TimeSpan, TimeSpan> _GetMaximumTime = (TimeSpan entradaNormal) => entradaNormal.Add(new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0));
-
                     // Obtiene el turno correspondiente del dia y el usuario indicado
                     /* 
                      * VERSION NUEVA DE LA FUNCION EN LA CUAL YA SE IMPLEMENTA LA CLASE DE TURNOS, 
@@ -420,15 +420,6 @@ namespace Checador_FXE.MdiForms
                     Func<TurnoEmpleadoCollection, DateOnly, string, int> _GetTurn = delegate (TurnoEmpleadoCollection c, DateOnly fecha, string empNombre)
                     {
                         return c[c.Items.Cast<TurnoEmpleado>().FirstOrDefault(e => e.Nombre == empNombre).NoEmp, fecha.Day].Turno;
-                    };
-
-                    // Evalua si llego a tiempo o presento un retardo. True en caso de ser un retardo y false en caso contrario
-                    Func<TimeSpan, TimeSpan, bool> _IsARetardEntry = delegate (TimeSpan entReal, TimeSpan entIdeal)
-                    {
-                        int real = int.Parse($"{entReal.Hours}{entReal.Minutes}");
-                        int ideal = int.Parse($"{entIdeal.Hours}{entIdeal.Minutes}");
-
-                        return (real > ideal);
                     };
 
                     // Determina si el empleado debe trabajar ese día.
@@ -509,31 +500,44 @@ namespace Checador_FXE.MdiForms
                         {
                             string empleado = i.Key;
 
-                            foreach (Checada j in i.Value)
+                            foreach (Checada j in i.Value.Where(c => c.Tipo == TipoChecada.ENTRADA))
                             {
-                                /*
-                                 * Hay que encontrar la manera de hacerlo funcional y encontrar el numero de empleado correspondiente
-                                 * */
-                                DateOnly today = DateOnly.Parse(j.Fecha.ToString("d"));
                                 int noEmp = j.NumEmpleado;
-                                int turnOfToday = this.RelacionHorarioSelected.Relacion[noEmp, today.Day]?.Turno ?? -1;
+                                DateOnly fechaCalendario = DateOnly.FromDateTime(j.Fecha);
+                                int turnoActual = this.RelacionHorarioSelected.Relacion[noEmp, fechaCalendario.Day]?.Turno ?? -1;
+                                Turno? configuracionActual = _turnos.Where(t => t.ID == turnoActual).Select(t => (Turno?)t).FirstOrDefault();
 
-                                if (turnOfToday == -1)
+                                // Una entrada ocurrida después de medianoche puede pertenecer al turno
+                                // nocturno asignado al día anterior. La asistencia siempre se registra en
+                                // la fecha de inicio del turno, nunca en la fecha de salida.
+                                DateOnly fechaLaboral = fechaCalendario;
+                                int turnoLaboral = turnoActual;
+                                Turno? configuracionLaboral = configuracionActual;
+                                if (fechaCalendario.Day > 1)
                                 {
-                                    //throw new IndexOutOfRangeException("No se ha encontrado el turno correspondiente al dia indicado");
-                                    //flMessageBox.Show($"No se ha encontrado el turno correspondiente al día indicado para '{empleado}' (No. Emp.: {noEmp})");
-                                    _PeriodoCasteado[empleado][today] = TipoAsistencia.NINGUNO;
+                                    int turnoAnterior = this.RelacionHorarioSelected.Relacion[noEmp, fechaCalendario.Day - 1]?.Turno ?? -1;
+                                    Turno? configuracionAnterior = _turnos.Where(t => t.ID == turnoAnterior).Select(t => (Turno?)t).FirstOrDefault();
+                                    if (configuracionAnterior.HasValue && CalendarioTurnos.CruzaMedianoche(CalendarioTurnos.ObtenerHorarioLaboral(configuracionAnterior.Value)) &&
+                                        CalendarioTurnos.FechaLaboralDeChecada(j.Fecha, configuracionAnterior.Value) == fechaCalendario.AddDays(-1))
+                                    {
+                                        fechaLaboral = fechaCalendario.AddDays(-1);
+                                        turnoLaboral = turnoAnterior;
+                                        configuracionLaboral = configuracionAnterior;
+                                    }
+                                }
+
+                                if (turnoLaboral <= 0 || !configuracionLaboral.HasValue)
+                                {
                                     continue;
                                 }
 
-                                TimeSpan limiteEntrada = _GetMaximumTime(_turnos.Cast<Turno>()
-                                                                                .Where(h => h.ID == turnOfToday)
-                                                                                .Select(t => t.PrimerHorario.Entrada)
-                                                                                .FirstOrDefault());
-                                //
-                                // CON ESTA LINEA NOSOTROS LO QUE HACEMOS ES SABER SI TUVO UN RETARDO O UNA ASISTENCIA
-                                //
-                                _PeriodoCasteado[empleado][today] = _IsARetardEntry(TimeSpan.Parse($"{j.Fecha.Hour:00}:{j.Fecha.Minute:00}"), limiteEntrada) ? TipoAsistencia.RETARDO : TipoAsistencia.FALTA;
+                                _PeriodoCasteado[empleado][fechaLaboral] = CalendarioTurnos.EsRetardo(
+                                    j.Fecha,
+                                    fechaLaboral,
+                                    configuracionLaboral.Value,
+                                    new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0))
+                                    ? TipoAsistencia.RETARDO
+                                    : TipoAsistencia.ASISTENCIA;
                             }
                         }
                         #endregion
@@ -614,7 +618,7 @@ namespace Checador_FXE.MdiForms
                 return;
 
             // Cargamos las configuraciones de horario que usaremos
-            loadTurnosBySettings(this.dgvTurnosHorarios.Grid);
+            loadTurnos(this.dgvTurnosHorarios.Grid, Properties.Settings.Default.TURNOS_HORARIOS);
 
             this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
         }

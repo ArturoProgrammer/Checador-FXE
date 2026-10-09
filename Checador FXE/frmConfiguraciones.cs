@@ -192,7 +192,7 @@ namespace Checador_FXE
                             object? _ID = row.Cells[TurnosGridCells.ID_NO.GetIndex()].Value;
                             object? _Nombre = row.Cells[TurnosGridCells.NOMBRE.GetIndex()].Value;
                             object? _First_In = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
-                            object? _First_Out = row.Cells[TurnosGridCells.FIRST_IN.GetIndex()].Value;
+                            object? _First_Out = row.Cells[TurnosGridCells.FIRST_OUT.GetIndex()].Value;
                             object? _Secon_In = row.Cells[TurnosGridCells.SECOND_IN.GetIndex()].Value;
                             object? _Secon_Out = row.Cells[TurnosGridCells.SECOND_OUT.GetIndex()].Value;
 

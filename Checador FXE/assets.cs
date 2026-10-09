@@ -1,18 +1,14 @@
 ﻿using Checador_FXE.Plantillas;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
-using FlowCommonWorkcore;
-using FlowCommonWorkcore.SqlUtils.MySQL;
 using FlowControls;
 using FlowControls.Inputs;
 using iTextSharp.text;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Crypto.Operators;
 using SpreadsheetLight;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security.Principal;
-using ZstdSharp.Unsafe;
 
 namespace Checador_FXE
 {
@@ -624,7 +620,7 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[1])),
                                         Tipo = TipoChecada.SALIDA
                                     }
                                 });
@@ -652,7 +648,7 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[1])),
                                         Tipo = TipoChecada.IDA_COMIDA
                                     },
                                     new Checada()
@@ -663,7 +659,7 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[2])),
                                         Tipo = TipoChecada.SALIDA
                                     }
                                 });
@@ -691,7 +687,7 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[1])),
                                         Tipo = TipoChecada.IDA_COMIDA
                                     },
                                     new Checada()
@@ -702,7 +698,7 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[2])),
                                         Tipo = TipoChecada.REGRESO_COMIDA
                                     },
                                     new Checada()
@@ -713,12 +709,21 @@ namespace Checador_FXE
                                             fechaAsistencia.Day,
                                             fechaAsistencia.ToString("MMMM", new System.Globalization.CultureInfo("es-ES")),
                                             fechaAsistencia.Year
-                                        ).Add(TimeSpan.Parse(inOutTimes[0])),
+                                        ).Add(TimeSpan.Parse(inOutTimes[3])),
                                         Tipo = TipoChecada.SALIDA
                                     }
                                 });
                                 #endregion
                                 break;
+                        }
+
+                        // El reporte agrupa las horas por la fecha de inicio de la jornada. Si una
+                        // hora posterior es menor que la anterior, corresponde al día siguiente
+                        // (por ejemplo, 22:00 / 06:00). Conservamos la fecha real de cada checada.
+                        for (int index = 1; index < _results.Count; index++)
+                        {
+                            if (_results[index].Fecha.TimeOfDay < _results[index - 1].Fecha.TimeOfDay)
+                                _results[index].Fecha = _results[index].Fecha.AddDays(1);
                         }
 
                         return _results.ToArray();
@@ -857,6 +862,46 @@ namespace Checador_FXE
         }
     }
 
+    /// <summary>
+    /// Operaciones de calendario para turnos. Un horario cuya salida es menor o
+    /// igual a su entrada termina el día siguiente.
+    /// </summary>
+    internal static class CalendarioTurnos
+    {
+        internal static bool CruzaMedianoche(Horario horario) =>
+            horario.Entrada != TimeSpan.Zero && horario.Salida != TimeSpan.Zero && horario.Salida <= horario.Entrada;
+
+        internal static Horario ObtenerHorarioLaboral(Turno turno) =>
+            turno.SegundoHorario.Entrada != TimeSpan.Zero || turno.SegundoHorario.Salida != TimeSpan.Zero
+                ? new Horario(turno.PrimerHorario.Entrada, turno.SegundoHorario.Salida)
+                : turno.PrimerHorario;
+
+        internal static DateTime Inicio(DateOnly fechaLaboral, Turno turno) =>
+            fechaLaboral.ToDateTime(TimeOnly.MinValue).Add(ObtenerHorarioLaboral(turno).Entrada);
+
+        internal static DateTime Fin(DateOnly fechaLaboral, Turno turno)
+        {
+            Horario horario = ObtenerHorarioLaboral(turno);
+            DateTime inicio = fechaLaboral.ToDateTime(TimeOnly.MinValue).Add(horario.Entrada);
+            DateTime fin = fechaLaboral.ToDateTime(TimeOnly.MinValue).Add(horario.Salida);
+            return fin <= inicio ? fin.AddDays(1) : fin;
+        }
+
+        internal static DateOnly FechaLaboralDeChecada(DateTime fechaChecada, Turno turno)
+        {
+            DateOnly fecha = DateOnly.FromDateTime(fechaChecada);
+            Horario horario = ObtenerHorarioLaboral(turno);
+
+            // Las checadas posteriores a medianoche pertenecen al turno iniciado ayer.
+            return CruzaMedianoche(horario) && fechaChecada.TimeOfDay <= horario.Salida
+                ? fecha.AddDays(-1)
+                : fecha;
+        }
+
+        internal static bool EsRetardo(DateTime fechaChecada, DateOnly fechaLaboral, Turno turno, TimeSpan tolerancia) =>
+            fechaChecada > Inicio(fechaLaboral, turno).Add(tolerancia);
+    }
+
     internal struct Turno
     {
         /// <summary>
@@ -942,16 +987,12 @@ namespace Checador_FXE
         public static Horario GetInOutTimes(int turnNumber)
         {
             Turno[] _horariosTurnos = GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
+            Turno? targetTurn = _horariosTurnos.Where(t => t.ID == turnNumber).Select(t => (Turno?)t).FirstOrDefault();
 
-            if (turnNumber > _horariosTurnos.Length - 1)
+            if (targetTurn is null)
                 throw new IndexOutOfRangeException("El numero de turno proporcionado no existe en la lista de turnos.");
 
-            Turno _targetTurn = _horariosTurnos[turnNumber];
-
-            if (!_targetTurn.SegundoHorario.Equals(new Horario()))
-                return new Horario(_targetTurn.PrimerHorario.Entrada, _targetTurn.SegundoHorario.Salida);
-
-            return new Horario(_targetTurn.PrimerHorario.Entrada, _targetTurn.PrimerHorario.Salida);
+            return CalendarioTurnos.ObtenerHorarioLaboral(targetTurn.Value);
         }
 
         public override string ToString() => $"{ID} - {Nombre}";

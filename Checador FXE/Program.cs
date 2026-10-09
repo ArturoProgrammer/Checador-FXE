@@ -41,8 +41,8 @@ namespace Checador_FXE
                 AssemblyVersion = new[] { 1, 0, 0, 0 } ,
                 Author = "IDC Arturo Venegas",
                 Company = "Grupo Mexico Transportes",
-                Compilation = "-1",
-                Description = "",
+                Compilation = Assembly.GetExecutingAssembly().GetName().Version!.ToString(),
+                Description = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "",
                 ID = "-1",
                 Name = "Checador FXE",
             },
@@ -191,6 +191,7 @@ namespace Checador_FXE
 ============================================================================
 
 ");
+            Log.Add(EventType.ERROR, $"{msg}\n\n{ers}");
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace Checador_FXE
                 // To customize application configuration such as set high DPI settings or default font,
                 // see https://aka.ms/applicationconfiguration.
                 ApplicationConfiguration.Initialize();
-                Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
+                //Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 
                 //
                 // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GRÁFICA
@@ -223,15 +224,16 @@ namespace Checador_FXE
                     WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", e.Exception.Message, e.Exception.ToString());
                 };
 
-                //
-                // NOS ASEGURAMOS DE QUE LOS RECURSOS CORRESPONDIENTES EXISTAN EN EL DIRECTORIO
-                //
-                //_DownloadResource(FORMATO_ASIST_1_PROPS);
-                //_DownloadResource(FORMATO_ASIST_2_PROPS);
                 FlowCommonWorkcore.UtilityFunctions.CreateDirectory(DbPath, ForceOverwrite: false);
+                FlowCommonWorkcore.UtilityFunctions.CreateDirectory(logsDir, ForceOverwrite: false);
+
+                Log.Add(EventType.OKAY, $"Manejadores de excepciones inicializados");
+                Log.Add(EventType.OKAY, $"Directorios obligatorios creados");
+
                 RelacionHorarios.InitializeDb();
                 Empleado.InitializeDb();
                 GlobalConfig.InitializeDb();
+                Log.Add(EventType.OKAY, $"Bases de datos inicializadas");
 
                 MainDesktop _mainDesktop = new MainDesktop();
                 Application.Run(_mainDesktop);
