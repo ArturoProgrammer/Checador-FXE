@@ -1,4 +1,6 @@
-﻿using Checador_FXE.Plantillas; 
+﻿//#define DEBUG_MODE
+
+using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
 using FlowControls;
 using FlowControls.Inputs;
@@ -19,6 +21,18 @@ namespace Checador_FXE.MdiForms
 
         bool projByCafOpened = false;
 
+        void includeDebugTools()
+        {
+            #if DEV_MODE
+            this.flQuickAccessPanel1.Buttons.Add(new QuickAccessButton() {
+                Name = "btnDebTools",
+                Text = "DEBUG TOOLS"
+            });
+
+            Program.Log.Add("DEBUG TOOLS inicializadas.");
+            #endif
+        }
+
         /// <summary>
         /// Constructor para opcion: "Nuevo proyecto"
         /// </summary>
@@ -28,6 +42,7 @@ namespace Checador_FXE.MdiForms
         internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent, string localidadRemitente)
         {
             InitializeComponent();
+            includeDebugTools();
             this.Text = title;
             this.Report = rpt;
             this.LegacyParent = mdiParent;
@@ -50,6 +65,7 @@ namespace Checador_FXE.MdiForms
         internal mdiQuincenaView(string title, ReporteAsistencias rpt, MainDesktop mdiParent, CafProjFile projCaf, string projFullname)
         {
             InitializeComponent();
+            includeDebugTools();
             projByCafOpened = true;
 
             this.Text = title;
@@ -68,9 +84,7 @@ namespace Checador_FXE.MdiForms
         Action<DataGridView, string> loadTurnos = (dgv, turnosJson) =>
         {
             dgv.Rows.Clear();
-
             foreach (Turno i in Turno.GetAll(turnosJson))
-            {
                 dgv.Rows.Add(new[]
                 {
                     $"{i.ID}",
@@ -78,7 +92,6 @@ namespace Checador_FXE.MdiForms
                     $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida)}",
                     $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida)}"
                 });
-            }
         };
 
         void LoadAllData()
@@ -569,6 +582,51 @@ namespace Checador_FXE.MdiForms
                     Program.WriteStatus(true, $"Ejecucion de casting finalizada con exito!");
                     #endregion
                     break;
+#if DEV_MODE
+                case "btnDebTools":
+                    #region HERRAMIENTAS DEBUG DISPONIBLES
+                    flDialogResult<string> result = flComboBoxInput.Show("Herramientas de depuracion", "Selecciona una opcion", new[] 
+                    { "[1] - Agregar registro ficticio" }, formStyle: FormStylesGallery.SapClassicStyle);
+
+                    switch (result.Response.Split("-")[0].Trim())
+                    {
+                        case "[1]": // Agregar registro ficticio
+                            {
+                                Func<DateTime, DateTime, IEnumerable<DateOnly>> GetReportDates = (DateTime start, DateTime end) =>
+                                {
+                                    DateOnly current = DateOnly.FromDateTime(start.Date);
+                                    DateOnly last = DateOnly.FromDateTime(end.Date);
+
+                                    while (current <= last)
+                                    {
+                                        yield return current;
+                                        current = current.AddDays(1);
+                                    }
+                                };
+
+                                flDialogResult<string> selectionBox_Empleado = flListItemExplorerBox.Show("Empleados del proyecto actual", 
+                                                                                                          Report.Chequeos.Keys.ToArray(), 
+                                                                                                          FormStylesGallery.SapClassicStyle);
+
+                                if (selectionBox_Empleado.DialogResult != DialogResult.OK)
+                                    return;
+
+                                string empleadoSeleccionado = selectionBox_Empleado.Response;
+                                MessageBox.Show(empleadoSeleccionado);
+
+                                flDialogResult<string> selectionBox_Day = flListItemExplorerBox.Show("Dias disponibles",
+                                                                                                     Report.ReportPeriod, 
+                                                                                                     FormStylesGallery.SapClassicStyle);
+
+                                /* 
+                                 * Agregamos entradas aleatorios en dias aleatorios dentro de Report.Chequeos
+                                 * */
+                            }
+                            break;
+                    }
+                    #endregion
+                    break;
+#endif
             }
         }
 

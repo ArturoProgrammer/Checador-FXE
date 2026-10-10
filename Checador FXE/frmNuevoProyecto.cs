@@ -13,6 +13,20 @@ namespace Checador_FXE
             InitializeComponent();
         }
 
+        bool FastCreation = false;
+        string fastCreationPath = "-1";
+
+        /// <summary>
+        /// Creacion rapida de proyecto
+        /// </summary>
+        /// <param name="path"></param>
+        public frmNuevoProyecto(string rptPath)
+        {
+            InitializeComponent();
+            FastCreation = true;
+            fastCreationPath = rptPath;
+        }
+
         private void frmNuevoProyecto_Load(object sender, EventArgs e)
         {
             // Cargamos los modelos de dispositivos soportados
@@ -24,6 +38,19 @@ namespace Checador_FXE
             this.cboxLocalidadRemitente.Value = Properties.Settings.Default.LOCALIDAD_DEFAULT; // Seleccionamos la localidad por default
 
             this.txtTitulo.Focus();
+
+#if DEV_MODE
+            if (FastCreation)
+            {
+                this.txtTitulo.Value = "Reporte de Prueba Rapida (DEV MODE)";
+                this.txtRutaArchivo.Value = fastCreationPath;
+                // Localidad = por defecto
+                // Aparato checador = por defecto
+
+                ValidateClauses();
+                this.btnAceptar.PerformClick();
+            }
+#endif
         }
 
         private void btnExaminar_Click(object sender, EventArgs e)

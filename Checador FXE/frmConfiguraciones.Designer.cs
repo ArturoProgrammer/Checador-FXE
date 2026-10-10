@@ -603,6 +603,7 @@
             Controls.Add(btnCerrar);
             Controls.Add(flTabMenuControl1);
             Font = new Font("Segoe UI", 10F);
+            MinimumSize = new Size(827, 459);
             Name = "frmConfiguraciones";
             Text = "Configuraciones";
             Load += frmConfiguraciones_Load;

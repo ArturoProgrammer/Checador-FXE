@@ -36,7 +36,7 @@ namespace Checador_FXE
                 ID = "-1",
                 Name = ProjectMetadataReader.GetAttributeValue("AssemblyTitle"),
             },*/
-            new SoftwareProperties()
+            new SoftwareProperties
             {
                 AssemblyVersion = new[] { 1, 0, 0, 0 } ,
                 Author = "IDC Arturo Venegas",
@@ -141,37 +141,26 @@ namespace Checador_FXE
             _WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
         };
 
-        static Action<bool, string> _writeStatusCommon = (s, t) =>
-        {
-            lblStatus.ForeColor = s ? Color.FromKnownColor(KnownColor.Green) : Color.FromKnownColor(KnownColor.IndianRed);
-            lblStatus.Text = s ? "Listo" : "Error";
-            lblOperation.Text = $"[ {DateTime.Now:t} ] {t}";
-        };
 
         /// <summary>
         /// Escribe el estatus y el texto de la operacion que se esta llevando acabo
         /// </summary>
-        /// <param name="Status"></param>
-        /// <param name="Text"></param>
         internal static void WriteStatus(bool Status, string Text)
         {
-            if (lblStatus == null || lblOperation == null)
+            if (lblStatus is null || lblOperation is null)
                 return;
 
-            _writeStatusCommon(Status, Text);
+            lblStatus.ForeColor = Status ? Color.FromKnownColor(KnownColor.Green) : Color.FromKnownColor(KnownColor.IndianRed);
+            lblStatus.Text = Status ? "Listo" : "Error";
+            lblOperation.Text = $"[ {DateTime.Now:t} ] {Text}";
         }
 
         /// <summary>
         /// Escribe el estatus y el texto de la operacion que se esta llevando acabo y mostraremos un mensaje de error
         /// </summary>
-        /// <param name="Status"></param>
-        /// <param name="Text"></param>
         internal static void WriteStatus(bool Status, string Text, string ErrorMessage, string ErrorStack)
         {
-            if (lblStatus == null || lblOperation == null)
-                return;
-
-            _writeStatusCommon(Status, Text);
+            WriteStatus(Status, Text);
             ReportFailureExposed(Text, ErrorMessage, ErrorStack);
 
             flMessageBox.Show(ErrorMessage, "Error Inesperado - Seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);

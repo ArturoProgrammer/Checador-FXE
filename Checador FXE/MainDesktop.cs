@@ -1,10 +1,6 @@
 using Checador_FXE.MdiForms;
 using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
-using Org.BouncyCastle.Pqc.Crypto.Falcon;
-using System.Security.Cryptography;
-using ZstdSharp.Unsafe;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Checador_FXE
 {
@@ -18,6 +14,59 @@ namespace Checador_FXE
             //this.IsMdiContainer = true;
             Program.lblStatus = this.lblStatusText;
             Program.lblOperation = this.lblOperationText;
+
+#if DEV_MODE
+            // Agregamos un boton para creacion rapida del proyecto
+            var btn = new ToolStripButton()
+            {
+                Text = "CREACION DE PROYECTO RAPIDO",
+                Name = "toolStrpBtn_CreacionProyectoRapido",
+            };
+            btn.Click += (s, e) =>
+            {
+                frmNuevoProyecto frm_n = new frmNuevoProyecto(Path.Combine(Application.StartupPath, "1_report_unprotected.xlsx"));
+                frm_n.ShowDialog();
+
+                if (frm_n.DialogResult != DialogResult.OK)
+                {
+                    Program.WriteStatus(false, "Operacion cancelada por el usuario!");
+                    return;
+                }
+
+                ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path,
+                                                                   frm_n.Response.Device,
+                                                                   frm_n.Response.LocalidadRemitente);
+
+                // Early Return para validar que no este abierto actualmente
+                string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
+                string[] nodesTexts = this.treeViewProyectosQuincenas.Nodes.Cast<TreeNode>().Select(n => n.Text.Trim()).ToArray();
+                if (nodesTexts.Contains(targetName))
+                {
+                    Program.WriteStatus(false, $"Ya se encuentra abierto el reporte '{targetName}'");
+                    return;
+                }
+
+                // Abrimos el proyecto
+                mdiQuincenaView frm = new mdiQuincenaView(frm_n.Response.Titulo, report, this, frm_n.Response.LocalidadRemitente);
+                frm.TopLevel = false;
+                frm.Tag = UtilityFunctions.HASHGenerator();
+                frm.Dock = DockStyle.Fill;
+                MDI_PANEL.Controls.Add(frm);
+                frm.BringToFront();
+                frm.Show();
+
+                // Agregamos el nodo correspondiente
+                this.treeViewProyectosQuincenas.Nodes.Add(new TreeNode()
+                {
+                    Text = targetName,
+                    Tag = Int32.Parse(frm.Tag.ToString()!)
+                });
+
+                this.actualView = frm;
+            };
+
+            this.flCustomToolStrip1.Items.Add(btn);
+#endif
         }
 
         private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)

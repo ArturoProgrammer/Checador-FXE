@@ -31,6 +31,8 @@
 	<RepositoryType>git</RepositoryType>
 	<RepositoryUrl>https://github.com/ArturoProgrammer/Checador-FXE</RepositoryUrl>
 	<Configurations>Debug;Release;Dev R1</Configurations>
+
+	<DefineConstants>$(DefineConstants);DEV_MODE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -67,6 +69,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="1_report_unprotected.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="FORMATO ASISTENCIA TAB 1-15 form.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
