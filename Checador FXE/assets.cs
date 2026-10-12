@@ -106,6 +106,23 @@ namespace Checador_FXE
 
     internal static class Utils
     {
+        internal static IEnumerable<DateOnly> GetReportDates(DateTime start, DateTime end)
+        {
+            DateOnly current = DateOnly.FromDateTime(start.Date);
+            DateOnly last = DateOnly.FromDateTime(end.Date);
+
+            while (current <= last)
+            {
+                yield return current;
+                current = current.AddDays(1);
+            }
+        }
+
+        internal static TipoChecada RandomTipoChecada()
+        {
+            
+        }
+
         internal static BaseColor GetBaseColorByName(string bc_name) => bc_name.Trim().ToUpper() switch
         {
             "ROJO" => BaseColor.RED,

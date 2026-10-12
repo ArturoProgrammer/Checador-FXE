@@ -592,35 +592,29 @@ namespace Checador_FXE.MdiForms
                     {
                         case "[1]": // Agregar registro ficticio
                             {
-                                Func<DateTime, DateTime, IEnumerable<DateOnly>> GetReportDates = (DateTime start, DateTime end) =>
-                                {
-                                    DateOnly current = DateOnly.FromDateTime(start.Date);
-                                    DateOnly last = DateOnly.FromDateTime(end.Date);
-
-                                    while (current <= last)
-                                    {
-                                        yield return current;
-                                        current = current.AddDays(1);
-                                    }
-                                };
-
                                 flDialogResult<string> selectionBox_Empleado = flListItemExplorerBox.Show("Empleados del proyecto actual", 
                                                                                                           Report.Chequeos.Keys.ToArray(), 
                                                                                                           FormStylesGallery.SapClassicStyle);
-
                                 if (selectionBox_Empleado.DialogResult != DialogResult.OK)
                                     return;
-
-                                string empleadoSeleccionado = selectionBox_Empleado.Response;
-                                MessageBox.Show(empleadoSeleccionado);
-
+                                
                                 flDialogResult<string> selectionBox_Day = flListItemExplorerBox.Show("Dias disponibles",
-                                                                                                     Report.ReportPeriod, 
+                                                                                                     Utils.GetReportDates(Report.ReportPeriod.Start, Report.ReportPeriod.End).Select(t => t.ToString("d")).ToArray(), 
                                                                                                      FormStylesGallery.SapClassicStyle);
-
+                                if (selectionBox_Day.DialogResult != DialogResult.OK)
+                                    return;
                                 /* 
-                                 * Agregamos entradas aleatorios en dias aleatorios dentro de Report.Chequeos
+                                 * Agregamos entradas aleatorias en el dia indicada
                                  * */
+                                List<Checada> PRE_DEAD = Report.Chequeos[selectionBox_Empleado.Response].ToList();
+                                PRE_DEAD.Add(new Checada()
+                                {
+                                    Fecha = DateTime.Parse(selectionBox_Day.Response),
+                                    Empleado = selectionBox_Empleado.Response,
+                                    NumEmpleado = Report.Chequeos[selectionBox_Empleado.Response].FirstOrDefault()!.NumEmpleado,
+                                    Tipo = 
+                                });
+                                this.Report.Chequeos[selectionBox_Empleado.Response] = PRE_DEAD.ToArray();
                             }
                             break;
                     }
