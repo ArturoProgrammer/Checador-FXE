@@ -595,7 +595,7 @@
             // frmConfiguraciones
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientInactiveCaption;
             CancelButton = btnCerrar;
             ClientSize = new Size(811, 420);

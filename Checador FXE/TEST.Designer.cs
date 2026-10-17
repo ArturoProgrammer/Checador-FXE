@@ -33,7 +33,7 @@
             // TEST
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(800, 450);
             Name = "TEST";
             Text = "TEST";

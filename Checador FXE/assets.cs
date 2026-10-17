@@ -120,7 +120,12 @@ namespace Checador_FXE
 
         internal static TipoChecada RandomTipoChecada()
         {
-            
+            var valores = Enum.GetValues<TipoChecada>();
+
+            if (valores.Length == 0)
+                throw new InvalidOperationException($"El enum {nameof(TipoChecada)} no contiene valores.");
+
+            return valores[Random.Shared.Next(valores.Length)];
         }
 
         internal static BaseColor GetBaseColorByName(string bc_name) => bc_name.Trim().ToUpper() switch

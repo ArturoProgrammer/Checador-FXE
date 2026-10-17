@@ -141,7 +141,7 @@
             flExtendedTabControl1.Name = "flExtendedTabControl1";
             flExtendedTabControl1.SelectedIndex = 0;
             flExtendedTabControl1.SelectionColor = Color.DeepSkyBlue;
-            flExtendedTabControl1.Size = new Size(830, 586);
+            flExtendedTabControl1.Size = new Size(916, 520);
             flExtendedTabControl1.SizeMode = TabSizeMode.Fixed;
             flExtendedTabControl1.TabIndex = 0;
             flExtendedTabControl1.UnselectionColor = Color.LightGray;
@@ -153,7 +153,7 @@
             pageGeneral.Controls.Add(tableLayoutPanel4);
             pageGeneral.Location = new Point(4, 44);
             pageGeneral.Name = "pageGeneral";
-            pageGeneral.Size = new Size(822, 538);
+            pageGeneral.Size = new Size(908, 472);
             pageGeneral.TabIndex = 0;
             pageGeneral.Text = "General";
             // 
@@ -167,9 +167,9 @@
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 2;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 47.2014923F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 52.7985077F));
-            tableLayoutPanel4.Size = new Size(820, 536);
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 71.13095F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 28.8690472F));
+            tableLayoutPanel4.Size = new Size(906, 470);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // panel3
@@ -183,7 +183,7 @@
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.Size = new Size(814, 247);
+            panel3.Size = new Size(900, 328);
             panel3.TabIndex = 0;
             // 
             // txtAutorizador
@@ -282,7 +282,7 @@
             headerAsistencias.MinimumSize = new Size(0, 45);
             headerAsistencias.Name = "headerAsistencias";
             headerAsistencias.Padding = new Padding(20, 3, 20, 5);
-            headerAsistencias.Size = new Size(814, 45);
+            headerAsistencias.Size = new Size(900, 45);
             headerAsistencias.TabIndex = 1;
             // 
             // pageParsingResults
@@ -290,9 +290,9 @@
             pageParsingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageParsingResults.BorderStyle = BorderStyle.FixedSingle;
             pageParsingResults.Controls.Add(splitContainer1);
-            pageParsingResults.Location = new Point(4, 29);
+            pageParsingResults.Location = new Point(4, 44);
             pageParsingResults.Name = "pageParsingResults";
-            pageParsingResults.Size = new Size(192, 67);
+            pageParsingResults.Size = new Size(908, 472);
             pageParsingResults.TabIndex = 2;
             pageParsingResults.Text = "Resultados del Parsing";
             // 
@@ -311,8 +311,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(lviewRegistros);
-            splitContainer1.Size = new Size(190, 65);
-            splitContainer1.SplitterDistance = 36;
+            splitContainer1.Size = new Size(906, 470);
+            splitContainer1.SplitterDistance = 430;
             splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -331,8 +331,8 @@
             // 
             splitContainer2.Panel2.BackColor = SystemColors.GradientInactiveCaption;
             splitContainer2.Panel2.Controls.Add(tableLayoutPanel1);
-            splitContainer2.Size = new Size(190, 36);
-            splitContainer2.SplitterDistance = 161;
+            splitContainer2.Size = new Size(906, 430);
+            splitContainer2.SplitterDistance = 741;
             splitContainer2.TabIndex = 2;
             // 
             // calendarAsistencias
@@ -353,7 +353,7 @@
             calendarAsistencias.Name = "calendarAsistencias";
             calendarAsistencias.ShowHolidays = true;
             calendarAsistencias.ShowMonthHeader = true;
-            calendarAsistencias.Size = new Size(159, 34);
+            calendarAsistencias.Size = new Size(739, 428);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
             calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
@@ -374,7 +374,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(23, 34);
+            tableLayoutPanel1.Size = new Size(159, 428);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -397,7 +397,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(23, 1);
+            lviewDayEvents.Size = new Size(159, 358);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -438,7 +438,7 @@
             dateFechaSeleccionada.MinimumSize = new Size(100, 30);
             dateFechaSeleccionada.Name = "dateFechaSeleccionada";
             dateFechaSeleccionada.RootLineColor = Color.Gray;
-            dateFechaSeleccionada.Size = new Size(100, 30);
+            dateFechaSeleccionada.Size = new Size(159, 30);
             dateFechaSeleccionada.TabIndex = 1;
             dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
             dateFechaSeleccionada.TextBoxWidth = 120;
@@ -457,7 +457,7 @@
             txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
             txtEmpleadoSeleccionado.Placeholder = "";
             txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
-            txtEmpleadoSeleccionado.Size = new Size(100, 30);
+            txtEmpleadoSeleccionado.Size = new Size(153, 30);
             txtEmpleadoSeleccionado.TabIndex = 2;
             txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtEmpleadoSeleccionado.Value = "";
@@ -469,10 +469,11 @@
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(190, 25);
+            lviewRegistros.Size = new Size(906, 36);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
+            lviewRegistros.View = View.Details;
             lviewRegistros.SelectedIndexChanged += lviewRegistros_SelectedIndexChanged;
             lviewRegistros.DoubleClick += lviewRegistros_DoubleClick;
             // 
@@ -591,7 +592,7 @@
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgvTurnosHorarios.ColumnHeadersHeight = 23;
+            dgvTurnosHorarios.ColumnHeadersHeight = 27;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dgvTurnosHorarios.CurrentCell = null;
@@ -639,6 +640,7 @@
             colTurnoNom.HeaderText = "Turno No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 121;
             // 
             // colNombre
             // 
@@ -646,7 +648,7 @@
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 89;
+            colNombre.Width = 107;
             // 
             // colHorarioUno_Entrada
             // 
@@ -654,7 +656,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 116;
+            colHorarioUno_Entrada.Width = 139;
             // 
             // colHorarioUno_Salida
             // 
@@ -662,7 +664,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 113;
+            colHorarioUno_Salida.Width = 136;
             // 
             // colHorarioDos_Entrada
             // 
@@ -670,7 +672,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 120;
+            colHorarioDos_Entrada.Width = 144;
             // 
             // colHorarioDos_Salida
             // 
@@ -678,7 +680,7 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 117;
+            colHorarioDos_Salida.Width = 141;
             // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
@@ -761,9 +763,9 @@
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Bottom;
-            label1.Location = new Point(0, 423);
+            label1.Location = new Point(0, 419);
             label1.Name = "label1";
-            label1.Size = new Size(13, 19);
+            label1.Size = new Size(15, 23);
             label1.TabIndex = 8;
             label1.Text = " ";
             // 
@@ -960,7 +962,8 @@
             treePagingResultadosCasting.HeaderForeColor = SystemColors.ControlText;
             treePagingResultadosCasting.HidePagingIfSinglePage = false;
             treePagingResultadosCasting.ItemSize = 34;
-            treePagingResultadosCasting.Location = new Point(4, 38);
+            treePagingResultadosCasting.Location = new Point(4, 39);
+            treePagingResultadosCasting.Margin = new Padding(3, 4, 3, 4);
             treePagingResultadosCasting.MinimumSize = new Size(119, 140);
             treePagingResultadosCasting.Name = "treePagingResultadosCasting";
             treePagingResultadosCasting.PageSize = 15;
@@ -1019,7 +1022,7 @@
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 39F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(836, 631);
+            tableLayoutPanel2.Size = new Size(922, 565);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // flQuickAccessPanel1
@@ -1090,16 +1093,15 @@
             flQuickAccessPanel1.Location = new Point(3, 3);
             flQuickAccessPanel1.MinimumSize = new Size(0, 34);
             flQuickAccessPanel1.Name = "flQuickAccessPanel1";
-            flQuickAccessPanel1.Size = new Size(830, 34);
+            flQuickAccessPanel1.Size = new Size(916, 34);
             flQuickAccessPanel1.TabIndex = 1;
             flQuickAccessPanel1.OnButtonClicked += flQuickAccessPanel1_OnButtonClicked;
             // 
             // mdiQuincenaView
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(856, 651);
+            ClientSize = new Size(942, 585);
             Controls.Add(tableLayoutPanel2);
             Font = new Font("Segoe UI", 10F);
             FormBorderStyle = FormBorderStyle.None;

@@ -604,17 +604,107 @@ namespace Checador_FXE.MdiForms
                                 if (selectionBox_Day.DialogResult != DialogResult.OK)
                                     return;
                                 /* 
-                                 * Agregamos entradas aleatorias en el dia indicada
-                                 * */
+                                 * Agregamos entradas aleatorias en el dia indicado.
+                                 * Genera entre 1 y 4 marcas (preferentemente 2-4). Si hay marcas
+                                 * con horas que retroceden (p. ej. 22:00 seguido de 06:00) se
+                                 * ajusta la segunda marca al día siguiente para simular turnos nocturnos.
+                                 */
                                 List<Checada> PRE_DEAD = Report.Chequeos[selectionBox_Empleado.Response].ToList();
-                                PRE_DEAD.Add(new Checada()
+
+                                DateTime baseDate = DateTime.Parse(selectionBox_Day.Response).Date;
+                                int count = Random.Shared.Next(2, 5); // 2..4 marcas
+
+                                // Generamos horas aleatorias (no ordenadas a propósito para simular cruces)
+                                List<DateTime> marcas = new List<DateTime>();
+                                for (int i = 0; i < count; i++)
                                 {
-                                    Fecha = DateTime.Parse(selectionBox_Day.Response),
-                                    Empleado = selectionBox_Empleado.Response,
-                                    NumEmpleado = Report.Chequeos[selectionBox_Empleado.Response].FirstOrDefault()!.NumEmpleado,
-                                    Tipo = 
-                                });
-                                this.Report.Chequeos[selectionBox_Empleado.Response] = PRE_DEAD.ToArray();
+                                    int hour = Random.Shared.Next(0, 24);
+                                    int minute = Random.Shared.Next(0, 60);
+                                    marcas.Add(baseDate.AddHours(hour).AddMinutes(minute));
+                                }
+
+                                // Ajuste: si una marca posterior tiene TimeOfDay < anterior, se asume del día siguiente
+                                for (int i = 1; i < marcas.Count; i++)
+                                {
+                                    if (marcas[i].TimeOfDay < marcas[i - 1].TimeOfDay)
+                                        marcas[i] = marcas[i].AddDays(1);
+                                }
+
+                                int numEmp = Report.Chequeos[selectionBox_Empleado.Response].FirstOrDefault()?.NumEmpleado ?? -1;
+
+                                for (int i = 0; i < marcas.Count; i++)
+                                {
+                                    TipoChecada tipo;
+                                    if (marcas.Count == 1)
+                                        tipo = TipoChecada.ENTRADA;
+                                    else if (marcas.Count == 2)
+                                        tipo = (i == 0) ? TipoChecada.ENTRADA : TipoChecada.SALIDA;
+                                    else if (marcas.Count == 3)
+                                    {
+                                        tipo = i switch
+                                        {
+                                            0 => TipoChecada.ENTRADA,
+                                            1 => TipoChecada.IDA_COMIDA,
+                                            2 => TipoChecada.SALIDA,
+                                            _ => TipoChecada.UNKWN
+                                        };
+                                    }
+                                    else // 4 o más
+                                    {
+                                        tipo = i switch
+                                        {
+                                            0 => TipoChecada.ENTRADA,
+                                            1 => TipoChecada.IDA_COMIDA,
+                                            2 => TipoChecada.REGRESO_COMIDA,
+                                            3 => TipoChecada.SALIDA,
+                                            _ => TipoChecada.UNKWN
+                                        };
+                                    }
+
+                                    PRE_DEAD.Add(new Checada()
+                                    {
+                                        Fecha = marcas[i],
+                                        Empleado = selectionBox_Empleado.Response,
+                                        NumEmpleado = numEmp,
+                                        Tipo = tipo
+                                    });
+                                }
+
+                                // Reemplazamos el array con las nuevas marcas añadidas
+                                var updatedArray = PRE_DEAD.ToArray();
+                                this.Report.Chequeos[selectionBox_Empleado.Response] = updatedArray;
+
+                                // Actualizamos el Tag del ListViewItem correspondiente si existe
+                                var lvItem = this.lviewRegistros.Items.Cast<ListViewItem>().FirstOrDefault(l => l.Text == selectionBox_Empleado.Response);
+                                if (lvItem != null)
+                                    lvItem.Tag = updatedArray;
+
+                                // Añadimos los dias generados al calendario de visualización de registros
+                                // Obtenemos las fechas distintas (DateOnly) de las marcas añadidas
+                                try
+                                {
+                                    var dias = updatedArray.Select(c => DateOnly.FromDateTime(c.Fecha.Date)).Distinct();
+                                    foreach (var d in dias)
+                                    {
+                                        // Añadimos un evento visual para indicar que hay registro
+                                        this.calendarAsistencias.AddEvent(d, "Registró", Color.Red);
+                                    }
+
+                                    // Si el empleado modificado está actualmente seleccionado, refrescamos la vista del día
+                                    if (actualSelectedEmpleado != null && actualSelectedEmpleado.Text == selectionBox_Empleado.Response)
+                                    {
+                                        // Simular la carga que hace el doble click en el listview
+                                        this.calendarAsistencias.ClearEvents();
+                                        var selectedData = updatedArray;
+                                        var diasAsistidos = selectedData.Select(c => c.Fecha).Distinct();
+                                        foreach (DateTime dt in diasAsistidos)
+                                            this.calendarAsistencias.AddEvent(DateOnly.FromDateTime(dt.Date), "Registró", Color.Red);
+
+                                        this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.Text;
+                                        this.lviewDayEvents.Items.Clear();
+                                    }
+                                }
+                                catch { /* Ignorar errores visuales en debug tools */ }
                             }
                             break;
                     }

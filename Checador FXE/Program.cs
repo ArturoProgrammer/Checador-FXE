@@ -193,10 +193,16 @@ namespace Checador_FXE
 
             if (SingleInstance.Acquire(_MutexName, out _mutex))
             {
-                // To customize application configuration such as set high DPI settings or default font,
-                // see https://aka.ms/applicationconfiguration.
+                // For consistent rendering across monitors with different DPI settings,
+                // prefer PerMonitorV2. Must set high DPI mode before creating windows.
+                try
+                {
+                    Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+                }
+                catch { /* Silently ignore if runtime/platform doesn't support */ }
+
+                // Initialize application configuration (fonts, visual styles, etc.)
                 ApplicationConfiguration.Initialize();
-                //Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 
                 //
                 // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GRÁFICA

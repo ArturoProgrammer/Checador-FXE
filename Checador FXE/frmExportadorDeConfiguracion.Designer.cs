@@ -214,7 +214,7 @@ namespace Checador_FXE
             // frmExportadorDeConfiguracion
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(982, 366);
             Controls.Add(rtxtExplicacionDelModo);

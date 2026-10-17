@@ -346,7 +346,7 @@ namespace Checador_FXE
             // frmCrudRelacionHorarios
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(936, 453);
             Controls.Add(statusStrip1);

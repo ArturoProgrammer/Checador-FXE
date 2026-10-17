@@ -51,14 +51,13 @@
        deben establecer la configuración "EnableWindowsFormsHighDpiAutoResizing" en "true" en app.config. 
        
        Hace que la aplicación sea compatible con rutas de acceso largas. Consulte https://docs.microsoft.com/windows/win32/fileio/maximum-file-path-limitation -->
-  <!--
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
     <windowsSettings>
-      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+      <!-- Enable Per Monitor v2 DPI awareness for consistent rendering on multi-monitor setups -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
       <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
     </windowsSettings>
   </application>
-  -->
 
   <!-- Habilitar los temas para los controles y cuadros de diálogo comunes de Windows (Windows XP y versiones posteriores) -->
   <!--

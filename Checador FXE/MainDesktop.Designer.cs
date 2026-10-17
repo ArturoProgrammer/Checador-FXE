@@ -328,7 +328,7 @@
             // MainDesktop
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientActiveCaption;
             ClientSize = new Size(1107, 662);
             Controls.Add(splitContainer_ProyectosVisualizacion);
