@@ -1,4 +1,6 @@
-﻿namespace Checador_FXE.MdiForms
+﻿using FlowControls;
+
+namespace Checador_FXE.MdiForms
 {
     partial class mdiQuincenaView
     {
@@ -30,66 +32,71 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mdiQuincenaView));
-            FlowControls.QuickAccessButton quickAccessButton1 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton2 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton3 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton4 = new FlowControls.QuickAccessButton();
-            FlowControls.QuickAccessButton quickAccessButton5 = new FlowControls.QuickAccessButton();
-            flExtendedTabControl1 = new FlowControls.flExtendedTabControl();
+            QuickAccessButton quickAccessButton1 = new QuickAccessButton();
+            QuickAccessButton quickAccessButton2 = new QuickAccessButton();
+            QuickAccessButton quickAccessButton3 = new QuickAccessButton();
+            QuickAccessButton quickAccessButton4 = new QuickAccessButton();
+            QuickAccessButton quickAccessButton5 = new QuickAccessButton();
+            flExtendedTabControl1 = new flExtendedTabControl();
             pageGeneral = new TabPage();
             tableLayoutPanel4 = new TableLayoutPanel();
             panel3 = new Panel();
-            txtAutorizador = new FlowControls.flTextBoxLabelJoint();
-            txtNombreElaborador = new FlowControls.flTextBoxLabelJoint();
-            dateFechaRemitente = new FlowControls.flDateLabelJoint();
-            txtLugarRemitente = new FlowControls.flTextBoxLabelJoint();
-            txtAreaRemitente = new FlowControls.flTextBoxLabelJoint();
-            headerAsistencias = new FlowControls.flLabelHeader();
+            txtAutorizador = new flTextBoxLabelJoint();
+            txtNombreElaborador = new flTextBoxLabelJoint();
+            dateFechaRemitente = new flDateLabelJoint();
+            txtLugarRemitente = new flTextBoxLabelJoint();
+            txtAreaRemitente = new flTextBoxLabelJoint();
+            headerAsistencias = new flLabelHeader();
             pageParsingResults = new TabPage();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
-            calendarAsistencias = new FlowControls.flEventCalendar();
+            calendarAsistencias = new flEventCalendar();
             tableLayoutPanel1 = new TableLayoutPanel();
-            lviewDayEvents = new FlowControls.flCustomListView();
+            lviewDayEvents = new flCustomListView();
             colIcon = new ColumnHeader();
             colHora = new ColumnHeader();
             colTipo = new ColumnHeader();
             imageList1 = new ImageList(components);
-            dateFechaSeleccionada = new FlowControls.flDateLabelJoint();
-            txtEmpleadoSeleccionado = new FlowControls.flTextBoxLabelJoint();
-            lviewRegistros = new ListView();
+            dateFechaSeleccionada = new flDateLabelJoint();
+            txtEmpleadoSeleccionado = new flTextBoxLabelJoint();
+            lviewRegistros = new flCustomListView();
+            colImage = new ColumnHeader();
+            colNo = new ColumnHeader();
+            colNumEmp = new ColumnHeader();
+            colNombreEmpleado = new ColumnHeader();
+            colTotalRegistros = new ColumnHeader();
             pageCastingSetting = new TabPage();
             tableLayoutPanel5 = new TableLayoutPanel();
             panel5 = new Panel();
-            flLabelHeader1 = new FlowControls.flLabelHeader();
-            btnSincronizarAjustes = new FlowControls.flCustomButton();
+            flLabelHeader1 = new flLabelHeader();
+            btnSincronizarAjustes = new flCustomButton();
             panel1 = new Panel();
-            dgvTurnosHorarios = new FlowControls.flExtendedDataGridView();
+            dgvTurnosHorarios = new flExtendedDataGridView();
             colTurnoNom = new DataGridViewTextBoxColumn();
             colNombre = new DataGridViewTextBoxColumn();
             colHorarioUno_Entrada = new DataGridViewTextBoxColumn();
             colHorarioUno_Salida = new DataGridViewTextBoxColumn();
             colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
             colHorarioDos_Salida = new DataGridViewTextBoxColumn();
-            txtMaximoRetrasoMinutosPermitidos = new FlowControls.flTimeLabelJoint();
-            chckDomingosNoLaborables = new FlowControls.flCheckBoxLabelJoint();
+            txtMaximoRetrasoMinutosPermitidos = new flTimeLabelJoint();
+            chckDomingosNoLaborables = new flCheckBoxLabelJoint();
             panel6 = new Panel();
-            btnDefinirRelacionMensual = new FlowControls.flCustomButton();
-            btnExpandir = new FlowControls.flCustomButton();
+            btnDefinirRelacionMensual = new flCustomButton();
+            btnExpandir = new flCustomButton();
             label1 = new Label();
-            flLabelHeader2 = new FlowControls.flLabelHeader();
+            flLabelHeader2 = new flLabelHeader();
             panel4 = new Panel();
-            dgvRelacionDeHorarios = new FlowControls.flExtendedDataGridView();
+            dgvRelacionDeHorarios = new flExtendedDataGridView();
             pageCastingResults = new TabPage();
             splitResultadosCasting_Background = new SplitContainer();
             tableLayoutPanel3 = new TableLayoutPanel();
-            txtBusqueda = new FlowControls.flTextBoxLabelJoint();
-            lblTotalDeEmpleados = new FlowControls.flLabelJoint();
-            treePagingResultadosCasting = new FlowControls.flTreeViewPaging();
+            txtBusqueda = new flTextBoxLabelJoint();
+            lblTotalDeEmpleados = new flLabelJoint();
+            treePagingResultadosCasting = new flTreeViewPaging();
             panel2 = new Panel();
-            calendarEmpleadoCasteado = new FlowControls.flEventCalendar();
+            calendarEmpleadoCasteado = new flEventCalendar();
             tableLayoutPanel2 = new TableLayoutPanel();
-            flQuickAccessPanel1 = new FlowControls.flQuickAccessPanel();
+            flQuickAccessPanel1 = new flQuickAccessPanel();
             flExtendedTabControl1.SuspendLayout();
             pageGeneral.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -189,8 +196,8 @@
             // txtAutorizador
             // 
             txtAutorizador.EntryFont = new Font("Consolas", 10F);
-            txtAutorizador.InputContentType = FlowControls.InputMode.GENERAL;
-            txtAutorizador.InputStyle = FlowControls.TextStyle.Normal;
+            txtAutorizador.InputContentType = InputMode.GENERAL;
+            txtAutorizador.InputStyle = TextStyle.Normal;
             txtAutorizador.Label = "Autorizador:";
             txtAutorizador.Location = new Point(18, 168);
             txtAutorizador.MinimumSize = new Size(100, 30);
@@ -206,8 +213,8 @@
             // txtNombreElaborador
             // 
             txtNombreElaborador.EntryFont = new Font("Consolas", 10F);
-            txtNombreElaborador.InputContentType = FlowControls.InputMode.GENERAL;
-            txtNombreElaborador.InputStyle = FlowControls.TextStyle.Normal;
+            txtNombreElaborador.InputContentType = InputMode.GENERAL;
+            txtNombreElaborador.InputStyle = TextStyle.Normal;
             txtNombreElaborador.Label = "Nombre del elaborador:";
             txtNombreElaborador.Location = new Point(18, 129);
             txtNombreElaborador.MinimumSize = new Size(100, 30);
@@ -237,8 +244,8 @@
             // txtLugarRemitente
             // 
             txtLugarRemitente.EntryFont = new Font("Consolas", 10F);
-            txtLugarRemitente.InputContentType = FlowControls.InputMode.GENERAL;
-            txtLugarRemitente.InputStyle = FlowControls.TextStyle.Normal;
+            txtLugarRemitente.InputContentType = InputMode.GENERAL;
+            txtLugarRemitente.InputStyle = TextStyle.Normal;
             txtLugarRemitente.Label = "Lugar remitente:";
             txtLugarRemitente.Location = new Point(18, 90);
             txtLugarRemitente.MinimumSize = new Size(100, 30);
@@ -253,8 +260,8 @@
             // txtAreaRemitente
             // 
             txtAreaRemitente.EntryFont = new Font("Consolas", 10F);
-            txtAreaRemitente.InputContentType = FlowControls.InputMode.GENERAL;
-            txtAreaRemitente.InputStyle = FlowControls.TextStyle.Normal;
+            txtAreaRemitente.InputContentType = InputMode.GENERAL;
+            txtAreaRemitente.InputStyle = TextStyle.Normal;
             txtAreaRemitente.Label = "Area remitente:";
             txtAreaRemitente.Location = new Point(18, 51);
             txtAreaRemitente.MinimumSize = new Size(100, 30);
@@ -290,9 +297,9 @@
             pageParsingResults.BackColor = SystemColors.GradientInactiveCaption;
             pageParsingResults.BorderStyle = BorderStyle.FixedSingle;
             pageParsingResults.Controls.Add(splitContainer1);
-            pageParsingResults.Location = new Point(4, 44);
+            pageParsingResults.Location = new Point(4, 29);
             pageParsingResults.Name = "pageParsingResults";
-            pageParsingResults.Size = new Size(908, 472);
+            pageParsingResults.Size = new Size(192, 67);
             pageParsingResults.TabIndex = 2;
             pageParsingResults.Text = "Resultados del Parsing";
             // 
@@ -311,8 +318,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(lviewRegistros);
-            splitContainer1.Size = new Size(906, 470);
-            splitContainer1.SplitterDistance = 430;
+            splitContainer1.Size = new Size(190, 65);
+            splitContainer1.SplitterDistance = 36;
             splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -331,8 +338,10 @@
             // 
             splitContainer2.Panel2.BackColor = SystemColors.GradientInactiveCaption;
             splitContainer2.Panel2.Controls.Add(tableLayoutPanel1);
-            splitContainer2.Size = new Size(906, 430);
-            splitContainer2.SplitterDistance = 741;
+            splitContainer2.Panel2MinSize = 100;
+            splitContainer2.Size = new Size(190, 36);
+            splitContainer2.SplitterDistance = 25;
+            splitContainer2.SplitterWidth = 8;
             splitContainer2.TabIndex = 2;
             // 
             // calendarAsistencias
@@ -344,7 +353,7 @@
             calendarAsistencias.ColorEncabezado = Color.SteelBlue;
             calendarAsistencias.ColorEventoPredeterminado = Color.Blue;
             calendarAsistencias.ColorTextoEncabezado = Color.White;
-            calendarAsistencias.DayNameSize = FlowControls.DayNameDisplaySize.SHORT;
+            calendarAsistencias.DayNameSize = DayNameDisplaySize.SHORT;
             calendarAsistencias.Dock = DockStyle.Fill;
             calendarAsistencias.FechaActual = new DateOnly(2026, 2, 4);
             calendarAsistencias.FuenteEventos = new Font("Segoe UI", 8F);
@@ -353,7 +362,7 @@
             calendarAsistencias.Name = "calendarAsistencias";
             calendarAsistencias.ShowHolidays = true;
             calendarAsistencias.ShowMonthHeader = true;
-            calendarAsistencias.Size = new Size(739, 428);
+            calendarAsistencias.Size = new Size(23, 34);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
             calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
@@ -374,7 +383,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(159, 428);
+            tableLayoutPanel1.Size = new Size(159, 34);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -386,6 +395,7 @@
             lviewDayEvents.Dock = DockStyle.Fill;
             lviewDayEvents.Font = new Font("Segoe UI", 9F);
             lviewDayEvents.FullRowSelect = true;
+            lviewDayEvents.GridLines = true;
             lviewDayEvents.HeaderBackColor = Color.SteelBlue;
             lviewDayEvents.HeaderForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.LargeImageList = imageList1;
@@ -397,7 +407,7 @@
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(159, 358);
+            lviewDayEvents.Size = new Size(159, 1);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -449,8 +459,8 @@
             txtEmpleadoSeleccionado.Dock = DockStyle.Fill;
             txtEmpleadoSeleccionado.Enabled = false;
             txtEmpleadoSeleccionado.EntryFont = new Font("Consolas", 9F);
-            txtEmpleadoSeleccionado.InputContentType = FlowControls.InputMode.GENERAL;
-            txtEmpleadoSeleccionado.InputStyle = FlowControls.TextStyle.Normal;
+            txtEmpleadoSeleccionado.InputContentType = InputMode.GENERAL;
+            txtEmpleadoSeleccionado.InputStyle = TextStyle.Normal;
             txtEmpleadoSeleccionado.Label = "Emp.:";
             txtEmpleadoSeleccionado.Location = new Point(3, 38);
             txtEmpleadoSeleccionado.MinimumSize = new Size(100, 30);
@@ -464,18 +474,55 @@
             // 
             // lviewRegistros
             // 
+            lviewRegistros.AlternateRowColor = SystemColors.GradientInactiveCaption;
             lviewRegistros.BackColor = SystemColors.GradientActiveCaption;
+            lviewRegistros.BorderStyle = BorderStyle.FixedSingle;
+            lviewRegistros.Columns.AddRange(new ColumnHeader[] { colImage, colNo, colNumEmp, colNombreEmpleado, colTotalRegistros });
             lviewRegistros.Dock = DockStyle.Fill;
+            lviewRegistros.Font = new Font("Segoe UI", 9F);
+            lviewRegistros.FullRowSelect = true;
+            lviewRegistros.GridLines = true;
+            lviewRegistros.HeaderBackColor = Color.SteelBlue;
+            lviewRegistros.HeaderForeColor = SystemColors.ActiveCaptionText;
             lviewRegistros.LargeImageList = imageList1;
             lviewRegistros.Location = new Point(0, 0);
+            lviewRegistros.MultiSelect = false;
             lviewRegistros.Name = "lviewRegistros";
-            lviewRegistros.Size = new Size(906, 36);
+            lviewRegistros.OwnerDraw = true;
+            lviewRegistros.RowLineColor = Color.SteelBlue;
+            lviewRegistros.SelectedItemColor = Color.FromArgb(0, 120, 215);
+            lviewRegistros.SelectedItemForeColor = SystemColors.ActiveCaptionText;
+            lviewRegistros.ShowGridLines = true;
+            lviewRegistros.Size = new Size(190, 25);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
+            lviewRegistros.UseAlternatingRowColors = false;
             lviewRegistros.UseCompatibleStateImageBehavior = false;
             lviewRegistros.View = View.Details;
             lviewRegistros.SelectedIndexChanged += lviewRegistros_SelectedIndexChanged;
             lviewRegistros.DoubleClick += lviewRegistros_DoubleClick;
+            // 
+            // colImage
+            // 
+            colImage.Text = "";
+            // 
+            // colNo
+            // 
+            colNo.Text = "No.";
+            // 
+            // colNumEmp
+            // 
+            colNumEmp.Text = "Num. Emp.";
+            colNumEmp.Width = 90;
+            // 
+            // colNombreEmpleado
+            // 
+            colNombreEmpleado.Text = "Nombre en Registro";
+            colNombreEmpleado.Width = 250;
+            // 
+            // colTotalRegistros
+            // 
+            colTotalRegistros.Text = "Total";
             // 
             // pageCastingSetting
             // 
@@ -592,7 +639,7 @@
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgvTurnosHorarios.ColumnHeadersHeight = 27;
+            dgvTurnosHorarios.ColumnHeadersHeight = 23;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dgvTurnosHorarios.CurrentCell = null;
@@ -609,7 +656,7 @@
             dgvTurnosHorarios.Dock = DockStyle.Fill;
             dgvTurnosHorarios.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvTurnosHorarios.EnableHeadersVisualStyles = false;
-            dgvTurnosHorarios.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
+            dgvTurnosHorarios.EnterKeyPressDefaultAction = EnterKeyAction.Default;
             dgvTurnosHorarios.ExtraReservedBottomHeight = 0;
             dgvTurnosHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvTurnosHorarios.HoverRowBackColor = Color.AntiqueWhite;
@@ -640,7 +687,6 @@
             colTurnoNom.HeaderText = "Turno No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 121;
             // 
             // colNombre
             // 
@@ -648,7 +694,7 @@
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 107;
+            colNombre.Width = 89;
             // 
             // colHorarioUno_Entrada
             // 
@@ -656,7 +702,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 139;
+            colHorarioUno_Entrada.Width = 116;
             // 
             // colHorarioUno_Salida
             // 
@@ -664,7 +710,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 136;
+            colHorarioUno_Salida.Width = 113;
             // 
             // colHorarioDos_Entrada
             // 
@@ -672,7 +718,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 144;
+            colHorarioDos_Entrada.Width = 120;
             // 
             // colHorarioDos_Salida
             // 
@@ -680,7 +726,7 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 141;
+            colHorarioDos_Salida.Width = 117;
             // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
@@ -763,9 +809,9 @@
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Bottom;
-            label1.Location = new Point(0, 419);
+            label1.Location = new Point(0, 423);
             label1.Name = "label1";
-            label1.Size = new Size(15, 23);
+            label1.Size = new Size(13, 19);
             label1.TabIndex = 8;
             label1.Text = " ";
             // 
@@ -843,7 +889,7 @@
             dgvRelacionDeHorarios.Dock = DockStyle.Fill;
             dgvRelacionDeHorarios.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             dgvRelacionDeHorarios.EnableHeadersVisualStyles = false;
-            dgvRelacionDeHorarios.EnterKeyPressDefaultAction = FlowControls.EnterKeyAction.Default;
+            dgvRelacionDeHorarios.EnterKeyPressDefaultAction = EnterKeyAction.Default;
             dgvRelacionDeHorarios.ExtraReservedBottomHeight = 0;
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
@@ -896,7 +942,6 @@
             splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
             splitResultadosCasting_Background.Size = new Size(190, 65);
             splitResultadosCasting_Background.SplitterDistance = 161;
-            splitResultadosCasting_Background.SplitterWidth = 6;
             splitResultadosCasting_Background.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -922,8 +967,8 @@
             // 
             txtBusqueda.Dock = DockStyle.Fill;
             txtBusqueda.EntryFont = new Font("Consolas", 9F);
-            txtBusqueda.InputContentType = FlowControls.InputMode.GENERAL;
-            txtBusqueda.InputStyle = FlowControls.TextStyle.Normal;
+            txtBusqueda.InputContentType = InputMode.GENERAL;
+            txtBusqueda.InputStyle = TextStyle.Normal;
             txtBusqueda.Label = "Buscar:";
             txtBusqueda.Location = new Point(4, 4);
             txtBusqueda.MinimumSize = new Size(100, 30);
@@ -995,7 +1040,7 @@
             calendarEmpleadoCasteado.ColorEncabezado = Color.SteelBlue;
             calendarEmpleadoCasteado.ColorEventoPredeterminado = Color.Blue;
             calendarEmpleadoCasteado.ColorTextoEncabezado = Color.White;
-            calendarEmpleadoCasteado.DayNameSize = FlowControls.DayNameDisplaySize.SHORT;
+            calendarEmpleadoCasteado.DayNameSize = DayNameDisplaySize.SHORT;
             calendarEmpleadoCasteado.Dock = DockStyle.Fill;
             calendarEmpleadoCasteado.FechaActual = new DateOnly(2026, 2, 4);
             calendarEmpleadoCasteado.FuenteEventos = new Font("Segoe UI", 8F);
@@ -1150,7 +1195,7 @@
         private TabPage pageGeneral;
         private TabPage pageParsingResults;
         private SplitContainer splitContainer1;
-        private ListView lviewRegistros;
+        private flCustomListView lviewRegistros;
         private ImageList imageList1;
         private SplitContainer splitContainer2;
         private FlowControls.flEventCalendar calendarAsistencias;
@@ -1201,5 +1246,10 @@
         private Label label1;
         private FlowControls.flCustomButton btnDefinirRelacionMensual;
         private ColumnHeader colIcon;
+        private ColumnHeader colImage;
+        private ColumnHeader colNo;
+        private ColumnHeader colNumEmp;
+        private ColumnHeader colNombreEmpleado;
+        private ColumnHeader colTotalRegistros;
     }
 }

@@ -23,14 +23,15 @@ namespace Checador_FXE.MdiForms
 
         void includeDebugTools()
         {
-            #if DEV_MODE
-            this.flQuickAccessPanel1.Buttons.Add(new QuickAccessButton() {
+#if DEV_MODE
+            this.flQuickAccessPanel1.Buttons.Add(new QuickAccessButton()
+            {
                 Name = "btnDebTools",
                 Text = "DEBUG TOOLS"
             });
 
             Program.Log.Add("DEBUG TOOLS inicializadas.");
-            #endif
+#endif
         }
 
         /// <summary>
@@ -113,18 +114,27 @@ namespace Checador_FXE.MdiForms
             this.txtLugarRemitente.Value = LugarRemitente;
             this.dateFechaRemitente.Value = DateTime.Now;
 
+            int counter = 1;
             // Cargamos los chequeos obtenidos del analisis
-            foreach (string key in Report.Chequeos.Keys)
+            foreach (string employeeName in Report.Chequeos.Keys)
             {
-                string employeeName = key;
-                ListViewItem lvitem = new ListViewItem(employeeName, 0)
+                int noEmp = Report.Turnos.Items.FirstOrDefault(t => t.Nombre.Equals(employeeName, StringComparison.InvariantCultureIgnoreCase))!.NoEmp;
+                ListViewItem lvitem = new ListViewItem("", 0)
                 {
-                    Tag = Report.Chequeos[key],
+                    Tag = Report.Chequeos[employeeName],
                     ImageIndex = 0,
                     StateImageIndex = 1,
                 };
+                lvitem.SubItems.AddRange(new string[]
+                {
+                    $"{counter}",
+                    $"{noEmp}",
+                    employeeName,
+                    $"{Report.Chequeos[employeeName].Length}"
+                });
 
                 this.lviewRegistros.Items.Add(lvitem);
+                counter++;
             }
 
             // Cargamos las configuraciones de horario que usaremos
@@ -227,10 +237,20 @@ namespace Checador_FXE.MdiForms
                     diasAsistidos.Add(i.Fecha);
             }
 
-            foreach (DateTime i in diasAsistidos)
-                this.calendarAsistencias.AddEvent(DateOnly.Parse(i.ToString("d")), "Registró", Color.Red);
+            Dictionary<DateOnly, int> regs = new Dictionary<DateOnly, int>();
 
-            this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.Text;
+            foreach (DateTime i in diasAsistidos)
+            {
+                DateOnly day = DateOnly.Parse(i.ToString("d"));
+                if (!regs.ContainsKey(day))
+                    regs.Add(day, 0);
+                regs[day] = selectedData.Count(d => d.Fecha.DayOfYear == day.DayOfYear);
+            }
+
+            foreach (DateOnly i in regs.Keys)
+                this.calendarAsistencias.AddEvent(DateOnly.Parse(i.ToString("d")), $"{regs[i]} Registro(s)", Color.Red);
+
+            this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.SubItems[3]!.Text;
 
             /* 
              * Limpiamos los valores del listView de registros del dia seleccionado
@@ -344,6 +364,12 @@ namespace Checador_FXE.MdiForms
                     {
                         string[] _paths = GeneratePdf($@"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\{Properties.Settings.Default.DEFAULT_FILENAME}.pdf");
 
+                        if (_paths == null || _paths.Length == 0 || _paths[0] == "-1")
+                        {
+                            flMessageBox.Show("No hay archivo disponible para imprimir. Ejecuta 'Ejecutar' para generar datos antes de imprimir.", "Imprimir", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            break;
+                        }
+
                         foreach (string filePath in _paths)
                         {
                             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -375,6 +401,17 @@ namespace Checador_FXE.MdiForms
                                         UseShellExecute = true
                                     };
                                     var p = Process.Start(psi);
+
+                                    // Intentar esperar un breve periodo a que la aplicación lance la impresión
+                                    if (p != null)
+                                    {
+                                        try { p.WaitForExit(10000); } catch { }
+                                    }
+                                    else
+                                    {
+                                        // Si Process.Start devolvió null (caso de shell), esperar un poco antes de eliminar archivos
+                                        System.Threading.Thread.Sleep(2000);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -383,10 +420,16 @@ namespace Checador_FXE.MdiForms
                             }
                         }
 
-                        // Eliminamos los archivos correspondientes
+                        // Eliminamos los archivos correspondientes de forma segura
                         foreach (string p in _paths)
-                            if (File.Exists(p))
-                                File.Delete(p);
+                        {
+                            try
+                            {
+                                if (File.Exists(p))
+                                    File.Delete(p);
+                            }
+                            catch { /* Ignorar errores al eliminar archivos temporales */ }
+                        }
                     }
                     #endregion
                     break;
@@ -404,7 +447,7 @@ namespace Checador_FXE.MdiForms
                             ProcessStartInfo psi = new ProcessStartInfo()
                             {
                                 FileName = i,
-                                UseShellExecute = true
+                                UseShellExecute = true 
                             };
 
                             Process.Start(psi);
@@ -425,14 +468,27 @@ namespace Checador_FXE.MdiForms
                     #region HELPERS DE CODIGO
                     RelacionHorarios _relac = this.RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Select(r => r).ToArray());
 
-                    // Obtiene el turno correspondiente del dia y el usuario indicado
+                    // Obtiene el turno correspondiente del dia y el usuario indicado (con validaciones)
                     /* 
                      * VERSION NUEVA DE LA FUNCION EN LA CUAL YA SE IMPLEMENTA LA CLASE DE TURNOS, 
                      * POR LO QUE SE SIMPLIFICA BASTANTE EL PROCESO DE OBTENCION DEL TURNO CORRESPONDIENTE
-                     * */
+                     * Esta versión añade comprobaciones para evitar NullReference/IndexOutOfRange.
+                     */
                     Func<TurnoEmpleadoCollection, DateOnly, string, int> _GetTurn = delegate (TurnoEmpleadoCollection c, DateOnly fecha, string empNombre)
                     {
-                        return c[c.Items.Cast<TurnoEmpleado>().FirstOrDefault(e => e.Nombre == empNombre).NoEmp, fecha.Day].Turno;
+                        var emp = c.Items.Cast<TurnoEmpleado>().FirstOrDefault(e => e.Nombre == empNombre);
+                        if (emp == null)
+                            return -1;
+
+                        try
+                        {
+                            var info = c[emp.NoEmp, fecha.Day];
+                            return info?.Turno ?? -1;
+                        }
+                        catch
+                        {
+                            return -1;
+                        }
                     };
 
                     // Determina si el empleado debe trabajar ese día.
@@ -585,23 +641,27 @@ namespace Checador_FXE.MdiForms
 #if DEV_MODE
                 case "btnDebTools":
                     #region HERRAMIENTAS DEBUG DISPONIBLES
-                    flDialogResult<string> result = flComboBoxInput.Show("Herramientas de depuracion", "Selecciona una opcion", new[] 
+                    flDialogResult<string> result = flComboBoxInput.Show("Herramientas de depuracion", "Selecciona una opcion", new[]
                     { "[1] - Agregar registro ficticio" }, formStyle: FormStylesGallery.SapClassicStyle);
 
-                    switch (result.Response.Split("-")[0].Trim())
+                    if (result.DialogResult != DialogResult.OK || string.IsNullOrWhiteSpace(result.Response))
+                        break;
+
+                    string choice = result.Response.Split('-')[0].Trim();
+                    switch (choice)
                     {
                         case "[1]": // Agregar registro ficticio
                             {
-                                flDialogResult<string> selectionBox_Empleado = flListItemExplorerBox.Show("Empleados del proyecto actual", 
-                                                                                                          Report.Chequeos.Keys.ToArray(), 
+                                flDialogResult<string> selectionBox_Empleado = flListItemExplorerBox.Show("Empleados del proyecto actual",
+                                                                                                          Report.Chequeos.Keys.ToArray(),
                                                                                                           FormStylesGallery.SapClassicStyle);
-                                if (selectionBox_Empleado.DialogResult != DialogResult.OK)
+                                if (selectionBox_Empleado.DialogResult != DialogResult.OK || string.IsNullOrWhiteSpace(selectionBox_Empleado.Response))
                                     return;
-                                
+
                                 flDialogResult<string> selectionBox_Day = flListItemExplorerBox.Show("Dias disponibles",
-                                                                                                     Utils.GetReportDates(Report.ReportPeriod.Start, Report.ReportPeriod.End).Select(t => t.ToString("d")).ToArray(), 
+                                                                                                     Utils.GetReportDates(Report.ReportPeriod.Start, Report.ReportPeriod.End).Select(t => t.ToString("d")).ToArray(),
                                                                                                      FormStylesGallery.SapClassicStyle);
-                                if (selectionBox_Day.DialogResult != DialogResult.OK)
+                                if (selectionBox_Day.DialogResult != DialogResult.OK || string.IsNullOrWhiteSpace(selectionBox_Day.Response))
                                     return;
                                 /* 
                                  * Agregamos entradas aleatorias en el dia indicado.
@@ -611,7 +671,10 @@ namespace Checador_FXE.MdiForms
                                  */
                                 List<Checada> PRE_DEAD = Report.Chequeos[selectionBox_Empleado.Response].ToList();
 
-                                DateTime baseDate = DateTime.Parse(selectionBox_Day.Response).Date;
+                                DateTime baseDate;
+                                if (!DateTime.TryParse(selectionBox_Day.Response, out baseDate))
+                                    baseDate = DateTime.Now.Date;
+                                baseDate = baseDate.Date;
                                 int count = Random.Shared.Next(2, 5); // 2..4 marcas
 
                                 // Generamos horas aleatorias (no ordenadas a propósito para simular cruces)
@@ -623,7 +686,10 @@ namespace Checador_FXE.MdiForms
                                     marcas.Add(baseDate.AddHours(hour).AddMinutes(minute));
                                 }
 
-                                // Ajuste: si una marca posterior tiene TimeOfDay < anterior, se asume del día siguiente
+                                // Ordenamos marcas por hora del dia para asignar tipos de forma cronologica
+                                marcas = marcas.OrderBy(m => m.TimeOfDay).ToList();
+
+                                // Ajuste: si detectamos un cruce (una marca con TimeOfDay menor que la precedente), la consideramos del dia siguiente
                                 for (int i = 1; i < marcas.Count; i++)
                                 {
                                     if (marcas[i].TimeOfDay < marcas[i - 1].TimeOfDay)
@@ -674,8 +740,9 @@ namespace Checador_FXE.MdiForms
                                 var updatedArray = PRE_DEAD.ToArray();
                                 this.Report.Chequeos[selectionBox_Empleado.Response] = updatedArray;
 
-                                // Actualizamos el Tag del ListViewItem correspondiente si existe
-                                var lvItem = this.lviewRegistros.Items.Cast<ListViewItem>().FirstOrDefault(l => l.Text == selectionBox_Empleado.Response);
+                                // Actualizamos el Tag del ListViewItem correspondiente si existe (el nombre del empleado está en SubItems[3])
+                                var lvItem = this.lviewRegistros.Items.Cast<ListViewItem>()
+                                                    .FirstOrDefault(l => l.SubItems.Count > 3 && l.SubItems[3].Text == selectionBox_Empleado.Response);
                                 if (lvItem != null)
                                     lvItem.Tag = updatedArray;
 
@@ -691,7 +758,7 @@ namespace Checador_FXE.MdiForms
                                     }
 
                                     // Si el empleado modificado está actualmente seleccionado, refrescamos la vista del día
-                                    if (actualSelectedEmpleado != null && actualSelectedEmpleado.Text == selectionBox_Empleado.Response)
+                                    if (actualSelectedEmpleado != null && actualSelectedEmpleado.SubItems.Count > 3 && actualSelectedEmpleado.SubItems[3].Text == selectionBox_Empleado.Response)
                                     {
                                         // Simular la carga que hace el doble click en el listview
                                         this.calendarAsistencias.ClearEvents();
@@ -700,7 +767,7 @@ namespace Checador_FXE.MdiForms
                                         foreach (DateTime dt in diasAsistidos)
                                             this.calendarAsistencias.AddEvent(DateOnly.FromDateTime(dt.Date), "Registró", Color.Red);
 
-                                        this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.Text;
+                                        this.txtEmpleadoSeleccionado.Value = actualSelectedEmpleado.SubItems[3].Text;
                                         this.lviewDayEvents.Items.Clear();
                                     }
                                 }
@@ -736,7 +803,14 @@ namespace Checador_FXE.MdiForms
 
             try
             {
-                path = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia!, new ReportProperties(
+                // Validar que existan resultados antes de generar
+                if (PairEmpleado_FechaAsistencia == null)
+                {
+                    Program.WriteStatus(false, "No hay resultados para generar informe", "Ejecuta 'Ejecutar' antes de generar o imprimir.", "");
+                    return new string[] { "-1" };
+                }
+
+                path = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia, new ReportProperties(
                         this.txtAreaRemitente.Value,
                         this.txtLugarRemitente.Value,
                         DateOnly.FromDateTime(this.dateFechaRemitente.Value.HasValue ? this.dateFechaRemitente.Value.Value : DateTime.Now),
@@ -999,6 +1073,11 @@ namespace Checador_FXE.MdiForms
                 this.dgvTurnosHorarios.Rows.Count > 1
                 ? (int.Parse(this.dgvTurnosHorarios.Rows[ROW_I - 1].Cells[0].Value.ToString()) + 1).ToString()
                 : "1";
+        }
+
+        private void calendarEmpleadoCasteado_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
