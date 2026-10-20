@@ -33,7 +33,7 @@ namespace Checador_FXE
             actualView = rows.ToList();
         }
 
-        void WriteStatus(bool status, string message)
+        void WriteStatus(bool status, string message, bool ReportOnGui = true)
         {
             this.lblStatus.Text = status ? "Listo" : "Error";
             this.lblStatus.ForeColor = status ? Color.DarkGreen : Color.IndianRed;

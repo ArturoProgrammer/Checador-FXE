@@ -18,7 +18,7 @@
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-	<ManualVersion>1.0.1</ManualVersion>  
+	<ManualVersion>1.0.2</ManualVersion>  
 	<VersionSuffix>beta-dev</VersionSuffix>
 	<AssemblyVersion>$(ManualVersion).$([System.DateTime]::Now.ToString('yyMM'))</AssemblyVersion>
 	<InformationalVersion>$(AssemblyVersion)-$(VersionSuffix)</InformationalVersion>
@@ -32,7 +32,7 @@
 	<RepositoryUrl>https://github.com/ArturoProgrammer/Checador-FXE</RepositoryUrl>
 	<Configurations>Debug;Release;Dev R1</Configurations>
 
-	<DefineConstants>$(DefineConstants);DEV_MODE</DefineConstants>
+	<DefineConstants>$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -72,10 +72,10 @@
     <None Update="1_report_unprotected.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="FORMATO ASISTENCIA TAB 1-15 form.pdf">
+    <None Update="FORMATO_ASISTENCIA_TAB_1_15_form.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="FORMATO ASUSTENCIA TAB 16-31 form.pdf">
+    <None Update="FORMATO_ASISTENCIA_TAB_16_31_form.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">

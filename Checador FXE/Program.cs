@@ -80,7 +80,7 @@ namespace Checador_FXE
         /// <summary>
         /// Valida el valor de turno ingresado en la celda
         /// </summary>
-        internal static Action<Action<bool, string>, flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (_WriteStatus, sender, actualView, e) =>
+        internal static Action<Action<bool, string, bool>, flExtendedDataGridView, List<DataGridViewRow>, DataGridViewCellValidatingEventArgs> DefaultCellValidating = (_WriteStatus, sender, actualView, e) =>
         {
             // Validar índices
             if (e.RowIndex < 0 || e.RowIndex >= sender.Rows.Count)
@@ -91,7 +91,7 @@ namespace Checador_FXE
             // Ignorar fila nueva o columnas no editables
             if (row.IsNewRow || e.ColumnIndex <= RelacionHorariosGridCells.NOMBRE_COMP.GetIndex())
             {
-                _WriteStatus(false, "No se puede editar esta celda!");
+                _WriteStatus(false, "No se puede editar esta celda!", true);
                 return;
             }
 
@@ -138,21 +138,29 @@ namespace Checador_FXE
             if (actualView != null && e.RowIndex >= 0 && e.RowIndex < actualView.Count)
                 actualView[e.RowIndex].Cells[e.ColumnIndex].Value = cell?.Value;
 
-            _WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'");
+            _WriteStatus(true, $"Valor de celda actualizado de '{oldValue}' -> '{newValue}'", true);
         };
 
 
         /// <summary>
         /// Escribe el estatus y el texto de la operacion que se esta llevando acabo
         /// </summary>
-        internal static void WriteStatus(bool Status, string Text)
+        internal static void WriteStatus(bool Status, string Text, bool ReportOnGui = true)
         {
             if (lblStatus is null || lblOperation is null)
                 return;
 
+            string preBuildString = $"[ {DateTime.Now:t} ] {Text}";
+
+            Trace.WriteLineIf(Status, $"SEGUIMIENTO NORMAL: {preBuildString}");
+            Program.Log.Add("GLOBAL", preBuildString);
+
+            if (!ReportOnGui)
+                return;
+
             lblStatus.ForeColor = Status ? Color.FromKnownColor(KnownColor.Green) : Color.FromKnownColor(KnownColor.IndianRed);
             lblStatus.Text = Status ? "Listo" : "Error";
-            lblOperation.Text = $"[ {DateTime.Now:t} ] {Text}";
+            lblOperation.Text = preBuildString;
         }
 
         /// <summary>
@@ -208,7 +216,8 @@ namespace Checador_FXE
                 // EXCEPCIONES PRODUCIDAS EN HILLOS SECUNDARIOS NO DE LA INTERFAZ GRÁFICA
                 //
                 AppDomain.CurrentDomain.UnhandledException += (object s, UnhandledExceptionEventArgs e) => {
-                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", ((Exception)e.ExceptionObject).Message, ((Exception)e.ExceptionObject).ToString());
+                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", 
+                                ((Exception)e.ExceptionObject).Message, ((Exception)e.ExceptionObject).ToString());
                 };
 
                 //
@@ -216,7 +225,8 @@ namespace Checador_FXE
                 //
                 Application.ThreadException += (object s, ThreadExceptionEventArgs e) =>
                 {
-                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", e.Exception.Message, e.Exception.ToString());
+                    WriteStatus(false, "Ocurrió un error inesperado. Por favor, contacte al soporte técnico.", 
+                                e.Exception.Message, e.Exception.ToString());
                 };
 
                 FlowCommonWorkcore.UtilityFunctions.CreateDirectory(DbPath, ForceOverwrite: false);

@@ -280,11 +280,11 @@ No se pudieron validar todos los controles. Corrige los siguientes errores a int
             // GENERAL
             //
             Properties.Settings.Default.DISPOSITIVO_DEFAULT = this.cboxDispositivoDefault.Value;
-            Properties.Settings.Default.MINUTOS_TOLERANCIA = this.txtMaximoRetrasoMinutosPermitidos.Value!.Value.Minutes;
-            Properties.Settings.Default.COLOR_PINCEL = this.cboxColorPincel.Value;
-            Properties.Settings.Default.DEFAULT_FILENAME = this.txtNombreArchivoDefecto.Value;
+            Properties.Settings.Default.MINUTOS_TOLERANCIA  = this.txtMaximoRetrasoMinutosPermitidos.Value!.Value.Minutes;
+            Properties.Settings.Default.COLOR_PINCEL        = this.cboxColorPincel.Value;
+            Properties.Settings.Default.DEFAULT_FILENAME    = this.txtNombreArchivoDefecto.Value;
 
-            Properties.Settings.Default.LOCALIDAD_DEFAULT = this.cboxLocalidadEstablecida.Value;
+            Properties.Settings.Default.LOCALIDAD_DEFAULT   = this.cboxLocalidadEstablecida.Value;
 
             //
             // AJUSTES DE HORARIO
@@ -313,8 +313,9 @@ No se pudieron validar todos los controles. Corrige los siguientes errores a int
                 (string Nombres, string NoEmp, int Turno)[] EmpleadosAfectadosRelacionActual = 
                     RelacionHorarios.Get(RelacionHorarioID.GetActualId(this.cboxLocalidadEstablecida.Value)).Object!.Relacion.Items
                         .Where(t => turnosEliminados.Contains(t.Turno))
-                                                                                                                                                            .Select(t => (t.Nombre, t.NoEmp.ToString(), t.Turno))
-                                                                                                                                                            .ToArray();
+                        .Select(t => (t.Nombre, t.NoEmp.ToString(), t.Turno))
+                        .ToArray();
+
                 // "Early Return" para efectos practicos
                 if (EmpleadosAfectadosTurnoDefecto.Length == 0 && EmpleadosAfectadosRelacionActual.Length == 0)
                     SaveFlag_NuevosTurnos = true; // No hay afectaciones

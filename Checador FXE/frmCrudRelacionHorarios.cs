@@ -39,7 +39,7 @@ namespace Checador_FXE
                 Program.ReportFailureExposed(message, ex.Message, ex.ToString());
         }
 
-        void WriteStatus(bool status, string message)
+        void WriteStatus(bool status, string message, bool ReportOnGui = true)
         {
             this.lblStatus.Text = status ? "Listo" : "Error";
             this.lblStatus.ForeColor = status ? Color.DarkGreen : Color.IndianRed;

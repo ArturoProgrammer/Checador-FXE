@@ -290,6 +290,8 @@ namespace Checador_FXE.Plantillas
                 SqliteDataReader _reader = _connection.MakeQuery("*", 
                                                                  "WHERE (ID=@ID)", 
                                                                  ("@ID", id.ToString()));
+                _response.Log.Add($"ID a usar '{id}'...");
+                _response.Log.Add($"Consulta '{_connection.QueryChain}' realizada...");
                 RelacionHorarios _obj = new RelacionHorarios();
                 _obj.ID = id;
 
@@ -298,6 +300,7 @@ namespace Checador_FXE.Plantillas
                     _obj.Relacion = TurnoEmpleadoCollection.ParseJson(_reader.GetString(2));
                     _obj.HASH = new HexaHash(_reader.GetString(3));
                     haveRelaciones = true;
+                    _response.Log.Add($"Relacion solicitada obtenida");
                 }
 
                 if (!haveRelaciones)
@@ -316,23 +319,23 @@ namespace Checador_FXE.Plantillas
                             _response.Log.Add($"Relacion de horarios por defecto para el mes '{id}' guardada correctamente!");
                     }
                     #endregion
+                    _response.Log.Add($"Se genero la relacion por defecto");
                 }
 
-                _response.Success = true;
-                _response.Message = $"Objeto '{id}' obtenido correctamente";
-                _response.Object = _obj;
-                _response.Tag = haveRelaciones;
+                _response.EndWithSuccess($"Objeto '{id}' obtenido correctamente", _obj, haveRelaciones);
             }
             catch (Exception ex)
             {
                 _response.Log.Add(ex.ToString());
-                _response.Success = false;
-                _response.Message = ex.Message;
-                _response.Object = null;
+                _response.EndWithError(ex.Message, null);
             }
 
             if (ShowObjectLog)
                 flMessageBox.Show(_response.GetBuildedLog(), "Log del Objeto");
+
+            Program.WriteStatus(_response.Success, 
+                                _response.GetBuildedLog(),
+                                ReportOnGui: false);
 
             return _response;
             #endregion

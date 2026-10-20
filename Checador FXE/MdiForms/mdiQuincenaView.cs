@@ -293,7 +293,7 @@ namespace Checador_FXE.MdiForms
                     this.lviewDayEvents.Items.Add(item);
                 }
 
-                Program.WriteStatus(true, $"Asistencias el empleado cargados con exito!");
+                Program.WriteStatus(true, $"Asistencias del empleado '{this.txtEmpleadoSeleccionado.Value}' para el dia '{e.Date}' cargados con exito!");
             }
             catch (Exception ex)
             {
@@ -810,13 +810,19 @@ namespace Checador_FXE.MdiForms
                     return new string[] { "-1" };
                 }
 
-                path = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia, new ReportProperties(
+                Response<string[]> generateProc = Reporteador.Generate(pdf_path, Report, PairEmpleado_FechaAsistencia, new ReportProperties(
                         this.txtAreaRemitente.Value,
                         this.txtLugarRemitente.Value,
                         DateOnly.FromDateTime(this.dateFechaRemitente.Value.HasValue ? this.dateFechaRemitente.Value.Value : DateTime.Now),
                         this.txtNombreElaborador.Value,
                         this.txtAutorizador.Value
                     ));
+
+                if (generateProc.Success is false)
+                    throw (generateProc.Tag as Exception)!;
+
+                path = generateProc.Object!;
+
                 Program.WriteStatus(true, $"Informes PDF ({path.Length}), listos...");
             }
             catch (Exception ex)
