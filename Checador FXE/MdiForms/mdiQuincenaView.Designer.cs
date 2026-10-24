@@ -639,7 +639,7 @@ namespace Checador_FXE.MdiForms
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvTurnosHorarios.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgvTurnosHorarios.ColumnHeadersHeight = 23;
+            dgvTurnosHorarios.ColumnHeadersHeight = 27;
             dgvTurnosHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTurnosHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dgvTurnosHorarios.CurrentCell = null;
@@ -687,6 +687,7 @@ namespace Checador_FXE.MdiForms
             colTurnoNom.HeaderText = "Turno No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
+            colTurnoNom.Width = 121;
             // 
             // colNombre
             // 
@@ -694,7 +695,7 @@ namespace Checador_FXE.MdiForms
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 89;
+            colNombre.Width = 107;
             // 
             // colHorarioUno_Entrada
             // 
@@ -702,7 +703,7 @@ namespace Checador_FXE.MdiForms
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 116;
+            colHorarioUno_Entrada.Width = 139;
             // 
             // colHorarioUno_Salida
             // 
@@ -710,7 +711,7 @@ namespace Checador_FXE.MdiForms
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 113;
+            colHorarioUno_Salida.Width = 136;
             // 
             // colHorarioDos_Entrada
             // 
@@ -718,7 +719,7 @@ namespace Checador_FXE.MdiForms
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 120;
+            colHorarioDos_Entrada.Width = 144;
             // 
             // colHorarioDos_Salida
             // 
@@ -726,7 +727,7 @@ namespace Checador_FXE.MdiForms
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 117;
+            colHorarioDos_Salida.Width = 141;
             // 
             // txtMaximoRetrasoMinutosPermitidos
             // 
@@ -809,9 +810,9 @@ namespace Checador_FXE.MdiForms
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Bottom;
-            label1.Location = new Point(0, 423);
+            label1.Location = new Point(0, 419);
             label1.Name = "label1";
-            label1.Size = new Size(13, 19);
+            label1.Size = new Size(15, 23);
             label1.TabIndex = 8;
             label1.Text = " ";
             // 

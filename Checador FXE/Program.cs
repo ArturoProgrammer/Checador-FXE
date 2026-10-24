@@ -191,6 +191,11 @@ namespace Checador_FXE
             Log.Add(EventType.ERROR, $"{msg}\n\n{ers}");
         }
 
+        internal enum EXPORT_CONFIG_SESSION
+        {
+            LISTADO_EMPLEADOS, AJUSTES_TURNOS, AJUSTES_HORARIOS
+        }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

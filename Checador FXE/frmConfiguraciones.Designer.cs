@@ -48,7 +48,7 @@
             colHorarioUno_Salida = new DataGridViewTextBoxColumn();
             colHorarioDos_Entrada = new DataGridViewTextBoxColumn();
             colHorarioDos_Salida = new DataGridViewTextBoxColumn();
-            tabServidor = new TabPage();
+            tabBaseDatos = new TabPage();
             flowLayoutPanel2 = new FlowLayoutPanel();
             flLabelHeader3 = new FlowControls.flLabelHeader();
             txtHostnameTcpIp = new FlowControls.flTextBoxLabelJoint();
@@ -66,7 +66,7 @@
             flowLayoutPanel1.SuspendLayout();
             tabAjustesHorario.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).BeginInit();
-            tabServidor.SuspendLayout();
+            tabBaseDatos.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -77,7 +77,7 @@
             flTabMenuControl1.ControlBackColor = SystemColors.GradientInactiveCaption;
             flTabMenuControl1.Controls.Add(tabGeneral);
             flTabMenuControl1.Controls.Add(tabAjustesHorario);
-            flTabMenuControl1.Controls.Add(tabServidor);
+            flTabMenuControl1.Controls.Add(tabBaseDatos);
             flTabMenuControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
             flTabMenuControl1.ForeSelectionColor = Color.White;
             flTabMenuControl1.ForeUnselectedColor = Color.DimGray;
@@ -294,7 +294,7 @@
             dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
             dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvAjustesHorarios.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgvAjustesHorarios.ColumnHeadersHeight = 23;
+            dgvAjustesHorarios.ColumnHeadersHeight = 27;
             dgvAjustesHorarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAjustesHorarios.Columns.AddRange(new DataGridViewColumn[] { colTurnoNom, colNombre, colHorarioUno_Entrada, colHorarioUno_Salida, colHorarioDos_Entrada, colHorarioDos_Salida });
             dgvAjustesHorarios.CurrentCell = null;
@@ -342,7 +342,7 @@
             colTurnoNom.HeaderText = "No.";
             colTurnoNom.MinimumWidth = 6;
             colTurnoNom.Name = "colTurnoNom";
-            colTurnoNom.Width = 60;
+            colTurnoNom.Width = 71;
             // 
             // colNombre
             // 
@@ -350,7 +350,7 @@
             colNombre.HeaderText = "Nombre";
             colNombre.MinimumWidth = 6;
             colNombre.Name = "colNombre";
-            colNombre.Width = 89;
+            colNombre.Width = 107;
             // 
             // colHorarioUno_Entrada
             // 
@@ -358,7 +358,7 @@
             colHorarioUno_Entrada.HeaderText = "1er Hor. Ent.";
             colHorarioUno_Entrada.MinimumWidth = 6;
             colHorarioUno_Entrada.Name = "colHorarioUno_Entrada";
-            colHorarioUno_Entrada.Width = 116;
+            colHorarioUno_Entrada.Width = 139;
             // 
             // colHorarioUno_Salida
             // 
@@ -366,7 +366,7 @@
             colHorarioUno_Salida.HeaderText = "1er Hor. Sal.";
             colHorarioUno_Salida.MinimumWidth = 6;
             colHorarioUno_Salida.Name = "colHorarioUno_Salida";
-            colHorarioUno_Salida.Width = 113;
+            colHorarioUno_Salida.Width = 136;
             // 
             // colHorarioDos_Entrada
             // 
@@ -374,7 +374,7 @@
             colHorarioDos_Entrada.HeaderText = "2do Hor. Ent.";
             colHorarioDos_Entrada.MinimumWidth = 6;
             colHorarioDos_Entrada.Name = "colHorarioDos_Entrada";
-            colHorarioDos_Entrada.Width = 120;
+            colHorarioDos_Entrada.Width = 144;
             // 
             // colHorarioDos_Salida
             // 
@@ -382,21 +382,21 @@
             colHorarioDos_Salida.HeaderText = "2do Hor. Sal.";
             colHorarioDos_Salida.MinimumWidth = 6;
             colHorarioDos_Salida.Name = "colHorarioDos_Salida";
-            colHorarioDos_Salida.Width = 117;
+            colHorarioDos_Salida.Width = 141;
             // 
-            // tabServidor
+            // tabBaseDatos
             // 
-            tabServidor.BackColor = SystemColors.GradientInactiveCaption;
-            tabServidor.BorderStyle = BorderStyle.FixedSingle;
-            tabServidor.Controls.Add(flowLayoutPanel2);
-            tabServidor.Controls.Add(btnTestConnection);
-            tabServidor.ImageIndex = 2;
-            tabServidor.Location = new Point(4, 4);
-            tabServidor.Name = "tabServidor";
-            tabServidor.Padding = new Padding(3);
-            tabServidor.Size = new Size(616, 352);
-            tabServidor.TabIndex = 2;
-            tabServidor.Text = "Servidor";
+            tabBaseDatos.BackColor = SystemColors.GradientInactiveCaption;
+            tabBaseDatos.BorderStyle = BorderStyle.FixedSingle;
+            tabBaseDatos.Controls.Add(flowLayoutPanel2);
+            tabBaseDatos.Controls.Add(btnTestConnection);
+            tabBaseDatos.ImageIndex = 2;
+            tabBaseDatos.Location = new Point(4, 4);
+            tabBaseDatos.Name = "tabBaseDatos";
+            tabBaseDatos.Padding = new Padding(3);
+            tabBaseDatos.Size = new Size(616, 352);
+            tabBaseDatos.TabIndex = 2;
+            tabBaseDatos.Text = "Base de Datos";
             // 
             // flowLayoutPanel2
             // 
@@ -594,7 +594,6 @@
             // 
             // frmConfiguraciones
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientInactiveCaption;
             CancelButton = btnCerrar;
@@ -613,7 +612,7 @@
             flowLayoutPanel1.ResumeLayout(false);
             tabAjustesHorario.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvAjustesHorarios).EndInit();
-            tabServidor.ResumeLayout(false);
+            tabBaseDatos.ResumeLayout(false);
             flowLayoutPanel2.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -630,7 +629,7 @@
         private FlowControls.flTimeLabelJoint txtMaximoRetrasoMinutosPermitidos;
         private FlowControls.flComboBoxLabelJoint cboxDispositivoDefault;
         private FlowControls.flComboBoxLabelJoint cboxColorPincel;
-        private TabPage tabServidor;
+        private TabPage tabBaseDatos;
         private FlowControls.flTextBoxLabelJoint txtPassServidor;
         private FlowControls.flTextBoxLabelJoint txtUsuarioServidor;
         private FlowControls.flTextBoxLabelJoint txtHostnameTcpIp;

@@ -41,12 +41,14 @@ namespace Checador_FXE
             flLabelHeader1 = new flLabelHeader();
             rbtnlistModoDeEscritura = new flRadioButtonListLabelJoint();
             rtxtExplicacionDelModo = new flRichTextBox();
+            lblPerfilSeleccionado = new flLabelJoint();
             SuspendLayout();
             // 
             // btnAceptar
             // 
             btnAceptar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnAceptar.BackColor = SystemColors.ActiveCaption;
+            btnAceptar.BorderRadius = 0;
             btnAceptar.Enabled = false;
             btnAceptar.FlatStyle = FlatStyle.Flat;
             btnAceptar.Font = new Font("Segoe UI", 10F);
@@ -65,6 +67,7 @@ namespace Checador_FXE
             // 
             btnCerrar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCerrar.BackColor = SystemColors.ActiveCaption;
+            btnCerrar.BorderRadius = 0;
             btnCerrar.FlatStyle = FlatStyle.Flat;
             btnCerrar.Font = new Font("Segoe UI", 10F);
             btnCerrar.Image = Properties.Resources.cancel_16;
@@ -83,6 +86,7 @@ namespace Checador_FXE
             txtRutaIngreso.Enabled = false;
             txtRutaIngreso.EntryFont = new Font("Consolas", 9F);
             txtRutaIngreso.InputContentType = InputMode.GENERAL;
+            txtRutaIngreso.InputStyle = TextStyle.Normal;
             txtRutaIngreso.Label = "Origen:";
             txtRutaIngreso.Location = new Point(13, 69);
             txtRutaIngreso.Margin = new Padding(3, 4, 3, 4);
@@ -99,6 +103,7 @@ namespace Checador_FXE
             // btnExaminarIngreso
             // 
             btnExaminarIngreso.BackColor = SystemColors.ActiveCaption;
+            btnExaminarIngreso.BorderRadius = 0;
             btnExaminarIngreso.FlatStyle = FlatStyle.Flat;
             btnExaminarIngreso.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminarIngreso.Image = Properties.Resources.buscar_16;
@@ -113,6 +118,7 @@ namespace Checador_FXE
             // btnExaminarDestino
             // 
             btnExaminarDestino.BackColor = SystemColors.ActiveCaption;
+            btnExaminarDestino.BorderRadius = 0;
             btnExaminarDestino.FlatStyle = FlatStyle.Flat;
             btnExaminarDestino.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnExaminarDestino.Image = Properties.Resources.buscar_16;
@@ -129,6 +135,7 @@ namespace Checador_FXE
             txtRutaDestino.Enabled = false;
             txtRutaDestino.EntryFont = new Font("Consolas", 9F);
             txtRutaDestino.InputContentType = InputMode.GENERAL;
+            txtRutaDestino.InputStyle = TextStyle.Normal;
             txtRutaDestino.Label = "Destino:";
             txtRutaDestino.Location = new Point(13, 113);
             txtRutaDestino.Margin = new Padding(3, 4, 3, 4);
@@ -205,18 +212,34 @@ namespace Checador_FXE
             rtxtExplicacionDelModo.PlaceholdeForeColor = Color.Gray;
             rtxtExplicacionDelModo.Placeholder = "Escribe aqui...";
             rtxtExplicacionDelModo.ReadOnly = true;
+            rtxtExplicacionDelModo.Rtf = "{\\rtf1\\ansi\\deff0\\nouicompat{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.26100}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\lang2058 flRichTextBox1\\par\r\n}\r\n";
             rtxtExplicacionDelModo.ScrollBars = RichTextBoxScrollBars.Both;
             rtxtExplicacionDelModo.Size = new Size(322, 100);
             rtxtExplicacionDelModo.TabIndex = 18;
             rtxtExplicacionDelModo.Text = "flRichTextBox1";
             rtxtExplicacionDelModo.WordWrap = true;
             // 
+            // lblPerfilSeleccionado
+            // 
+            lblPerfilSeleccionado.AutoSize = true;
+            lblPerfilSeleccionado.EntryFont = new Font("Segoe UI", 10F);
+            lblPerfilSeleccionado.InfoLabelFont = new Font("Consolas", 9F);
+            lblPerfilSeleccionado.InfoLabelForeColor = SystemColors.MenuHighlight;
+            lblPerfilSeleccionado.InfoLabelText = "-";
+            lblPerfilSeleccionado.Label = "Texto:";
+            lblPerfilSeleccionado.Location = new Point(13, 302);
+            lblPerfilSeleccionado.MinimumSize = new Size(150, 30);
+            lblPerfilSeleccionado.Name = "lblPerfilSeleccionado";
+            lblPerfilSeleccionado.RootLineColor = Color.Gray;
+            lblPerfilSeleccionado.Size = new Size(334, 38);
+            lblPerfilSeleccionado.TabIndex = 19;
+            // 
             // frmExportadorDeConfiguracion
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(982, 366);
+            Controls.Add(lblPerfilSeleccionado);
             Controls.Add(rtxtExplicacionDelModo);
             Controls.Add(rbtnlistModoDeEscritura);
             Controls.Add(flLabelHeader1);
@@ -232,11 +255,13 @@ namespace Checador_FXE
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
+            MinimumSize = new Size(1000, 413);
             Name = "frmExportadorDeConfiguracion";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Exportar Configuracion";
             Load += frmExportadorDeConfiguracion_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -251,5 +276,6 @@ namespace Checador_FXE
         private FlowControls.flLabelHeader flLabelHeader1;
         private flRadioButtonListLabelJoint rbtnlistModoDeEscritura;
         private flRichTextBox rtxtExplicacionDelModo;
+        private flLabelJoint lblPerfilSeleccionado;
     }
 }

@@ -10,20 +10,20 @@ using System.Globalization;
 
 namespace Checador_FXE
 {
-    public partial class frmConfiguraciones : Form
+    internal partial class frmConfiguraciones : Form
     {
-        public frmConfiguraciones()
+        internal frmConfiguraciones()
         {
             InitializeComponent();
         }
 
-        public frmConfiguraciones(string tabName)
+        internal frmConfiguraciones(string tabName)
         {
             InitializeComponent();
             GoToTab(tabName);
         }
 
-        public void GoToTab(string tabName) => this.flTabMenuControl1.SelectTab(tabName);
+        internal void GoToTab(string tabName) => this.flTabMenuControl1.SelectTab(tabName);
 
         private void frmConfiguraciones_Load(object sender, EventArgs e)
         {
@@ -32,7 +32,7 @@ namespace Checador_FXE
              * Establecemos por seguridad una contraseña para las opciones de configuracion de
              * conexion al servidor
              */
-            this.flTabMenuControl1.SetPrivateTab("tabServidor", new PasswordAuthPolicy("F3rr0m3x1c0"));
+            this.flTabMenuControl1.SetPrivateTab("tabBaseDatos", new PasswordAuthPolicy("F3rr0m3x1c0"));
 
             //
             // GENERAL
@@ -137,7 +137,7 @@ namespace Checador_FXE
             List<Control> _arrayControls = new List<Control>();
             _arrayControls.AddRange(_arrayControls.Concat(this.tabGeneral.Controls[0].Controls.Cast<Control>().ToArray())
                                                 .Concat(this.tabAjustesHorario.Controls.Cast<Control>().ToArray())
-                                                .Concat(this.tabServidor.Controls[0].Controls.Cast<Control>().ToArray()));
+                                                .Concat(this.tabBaseDatos.Controls[0].Controls.Cast<Control>().ToArray()));
 
             Multivalidator mv = new Multivalidator(this, _arrayControls.ToArray());
             bool flag;

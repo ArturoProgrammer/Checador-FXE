@@ -286,7 +286,7 @@ namespace Checador_FXE
             actualView.SavedFlag = _CommonSaveMethod(targetPath);
         }
 
-        private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e) 
+        private void registroDePersonalToolStripMenuItem_Click(object sender, EventArgs e)
             => new frmCrudEmpleados().ShowDialog();
 
         private void relacionDeHorariosToolStripMenuItem_Click(object sender, EventArgs e)

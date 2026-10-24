@@ -242,7 +242,18 @@ namespace Checador_FXE
         {
             // TODO: Tarea en ticket ##100183##
             string loc = this.cboxLocalidadSeleccionada.SelectedItem!.ToString()!;
-            frmExportadorDeConfiguracion frm = new frmExportadorDeConfiguracion(Empleado.GetAll(loc).Object, loc);
+
+            Response<Empleado[]> serv_resp = Empleado.GetAll(loc);
+            if (!serv_resp.Success)
+            {
+                Program.WriteStatus(false, "No se pudo abrir el exportador de configuraciones debido a un error inesperado", 
+                                    serv_resp.Message, serv_resp.GetBuildedLog());
+                return;
+            }
+
+            frmExportadorDeConfiguracion frm = new frmExportadorDeConfiguracion(Program.EXPORT_CONFIG_SESSION.LISTADO_EMPLEADOS);
+            frm.SetEmpleadosData(serv_resp.Object!);
+            frm.SetLocalidadOrgien(loc);
             frm.ShowDialog();
         }
 
