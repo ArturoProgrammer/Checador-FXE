@@ -200,7 +200,7 @@ namespace Checador_FXE
                                 while (!emptyRowFound)
                                 {
                                     // Eliminamos el contenido de las filas
-                                    var cellValue = ws.Cell(ACTUAL_ROW, COLS.PH_IN).GetValue<string>().Trim();
+                                    var cellValue = ws.Cell(ACTUAL_ROW, COLS.ID).GetValue<string>().Trim();
                                     if (String.IsNullOrWhiteSpace(cellValue))
                                     {
                                         emptyRowFound = true;
@@ -219,19 +219,19 @@ namespace Checador_FXE
                                 
                                 // Escribimos el contenido nuevo
                                 ACTUAL_ROW = FIRST_ROW;
-                                while (true)
+                                for (int i = ACTUAL_ROW; i < LIMIT_ROW; i++)
                                 {
                                     int _rowId = int.Parse(ws.Cell(ACTUAL_ROW, COLS.ID).Value.ToString());
 
                                     if (!serv_resp.Any(t => t.ID == _rowId))
-                                        break;
+                                        continue;
 
-                                    Turno i = serv_resp.FirstOrDefault(t => t.ID == _rowId);
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_IN).Value = i.PrimerHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_OUT).Value = i.PrimerHorario.Salida.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_IN).Value = i.SegundoHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_OUT).Value = i.SegundoHorario.Salida.ToString("HH:mm");
-                                    ACTUAL_ROW++;
+                                    Turno t = serv_resp.FirstOrDefault(t => t.ID == _rowId);
+                                    ws.Cell(i, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(i, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
+                                    ws.Cell(i, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(i, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
+                                    //ACTUAL_ROW++;
                                 }
 
                                 OPERATION_FLAG = true;
@@ -241,18 +241,83 @@ namespace Checador_FXE
                         case WriteMode.UPDATE_AND_ALL:
                             #region
                             {
+                                int ACTUAL_ROW = FIRST_ROW;
 
+                                // Buscamos la relacion de horarios actuales
+                                Turno[] serv_resp = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
+
+                                // Escribimos el contenido nuevo
+                                for (int i = ACTUAL_ROW; i < LIMIT_ROW; i++)
+                                {
+                                    int _rowId = int.Parse(ws.Cell(ACTUAL_ROW, COLS.ID).Value.ToString());
+
+                                    if (!serv_resp.Any(t => t.ID == _rowId))
+                                        continue;
+
+                                    // Vaciamos los datos de la fila actual
+                                    foreach (string c in new string[] { COLS.PH_IN, COLS.PH_OUT, COLS.SH_IN, COLS.SH_OUT })
+                                        ws.Cell(ACTUAL_ROW, c).Clear(XLClearOptions.Contents);
+
+                                    // Grabamos los datos nuevos
+                                    Turno t = serv_resp.FirstOrDefault(t => t.ID == _rowId);
+                                    ws.Cell(i, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(i, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
+                                    ws.Cell(i, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(i, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
+                                    //ACTUAL_ROW++;
+                                }
+
+                                OPERATION_FLAG = true;
                             }
                             #endregion
                             break;
                         case WriteMode.ADD_INEXISTENTS:
                             #region
                             {
+                                int ACTUAL_ROW = FIRST_ROW;
 
+                                Turno[] serv_resp = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
+
+                                // Obtener IDs ya existentes en la hoja
+                                HashSet<int> existingIds = new HashSet<int>();
+
+                                for (int row = FIRST_ROW; row < LIMIT_ROW; row++)
+                                {
+                                    string value = ws.Cell(row, COLS.ID).GetValue<string>().Trim();
+
+                                    if (int.TryParse(value, out int id))
+                                        existingIds.Add(id);
+                                }
+
+                                // Buscar primera fila libre
+                                while (ACTUAL_ROW < LIMIT_ROW &&
+                                       !string.IsNullOrWhiteSpace(ws.Cell(ACTUAL_ROW, COLS.ID).GetValue<string>()))
+                                {
+                                    ACTUAL_ROW++;
+                                }
+
+                                // Agregar únicamente los que no existen
+                                foreach (Turno t in serv_resp)
+                                {
+                                    if (existingIds.Contains(t.ID))
+                                        continue;
+
+                                    if (ACTUAL_ROW >= LIMIT_ROW)
+                                        break;
+
+                                    ws.Cell(ACTUAL_ROW, COLS.ID).Value = t.ID;
+                                    ws.Cell(ACTUAL_ROW, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(ACTUAL_ROW, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
+                                    ws.Cell(ACTUAL_ROW, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
+                                    ws.Cell(ACTUAL_ROW, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
+
+                                    ACTUAL_ROW++;
+                                }
+
+                                OPERATION_FLAG = true;
                             }
                             #endregion
                             break;
-
                         default:
                             throw new IndexOutOfRangeException("El modo de escritura seleccionado no es valido.");
                     }
@@ -272,7 +337,15 @@ namespace Checador_FXE
 
         bool WriteAjustesTurnos()
         {
-            
+            #region
+            try
+            {
+
+            } catch (Exception ex)
+            {
+
+            }
+            #endregion
         }
 
         /// <summary>
@@ -337,7 +410,6 @@ namespace Checador_FXE
                             OPERATION_FLAG = true;
                             #endregion
                             break;
-
                         case WriteMode.UPDATE_AND_ALL:
                             #region
                             List<(Empleado Emp, bool Listo)> ArrayEmpleados = new List<(Empleado Emp, bool Listo)>();
@@ -383,7 +455,6 @@ namespace Checador_FXE
                             OPERATION_FLAG = true;
                             #endregion
                             break;
-
                         case WriteMode.ADD_INEXISTENTS:
                             #region
                             // Recopilamos todos los números de empleado que ya existen en la hoja de Excel
@@ -417,7 +488,6 @@ namespace Checador_FXE
                             OPERATION_FLAG = true;
                             #endregion
                             break;
-
                         default:
                             throw new IndexOutOfRangeException("El modo de escritura seleccionado no es valido.");
                     }
