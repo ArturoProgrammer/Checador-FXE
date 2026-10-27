@@ -18,7 +18,7 @@
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-	<ManualVersion>1.0.2</ManualVersion>  
+	<ManualVersion>1.0.3</ManualVersion>  
 	<VersionSuffix>beta-dev</VersionSuffix>
 	<AssemblyVersion>$(ManualVersion).$([System.DateTime]::Now.ToString('yyMM'))</AssemblyVersion>
 	<InformationalVersion>$(AssemblyVersion)-$(VersionSuffix)</InformationalVersion>
