@@ -14,6 +14,11 @@ namespace Checador_FXE
         #region SETTERS
         internal void SetEmpleadosData(Empleado[] emps) => this.empleados = emps;
         internal void SetLocalidadOrgien(string site) => this.localidadOrigen = site;
+        internal void SetRelacionHorarioId(RelacionHorarioID id)
+        {
+            this.relacHorarioId = id;
+            this.localidadOrigen = id.Site;
+        }
 
         #endregion
 
@@ -175,164 +180,102 @@ namespace Checador_FXE
         /// <returns>true si la operación se realizó correctamente; de lo contrario, false.</returns>
         bool WriteAjustesHorarios()
         {
-            #region
             try
             {
-                bool OPERATION_FLAG = false;
-
                 using (XLWorkbook wb = new XLWorkbook(this.txtRutaIngreso.Value))
                 {
                     var ws = wb.Worksheet("Ajuste de Horarios");
+                    (string ID, string PH_IN, string PH_OUT, string SH_IN, string SH_OUT, string TE_IN, string TE_OUT) COLS =
+                        ("A", "B", "C", "D", "E", "F", "G");
+                    const int FIRST_ROW = 6;
+                    const int LAST_ROW = 29;
+                    Turno[] turns = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
 
-                    // Columnas según la configuración
-                    (string ID, string PH_IN, string PH_OUT, string SH_IN, string SH_OUT) COLS = ("A", "B", "C", "D", "E");
-                    int FIRST_ROW = 6;
-                    int LIMIT_ROW = 29;
+                    Action<int, Turno> writeTurn = (row, turn) =>
+                    {
+                        ws.Cell(row, COLS.PH_IN).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Entrada);
+                        ws.Cell(row, COLS.PH_OUT).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Salida);
+                        ws.Cell(row, COLS.SH_IN).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Entrada);
+                        ws.Cell(row, COLS.SH_OUT).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Salida);
+                        ws.Cell(row, COLS.TE_IN).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Entrada);
+                        ws.Cell(row, COLS.TE_OUT).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Salida);
+                    };
+                    Action<int> clearTurn = row =>
+                    {
+                        foreach (string column in new[] { COLS.PH_IN, COLS.PH_OUT, COLS.SH_IN, COLS.SH_OUT, COLS.TE_IN, COLS.TE_OUT })
+                            ws.Cell(row, column).Clear(XLClearOptions.Contents);
+                    };
 
                     switch (getWriteMode())
                     {
                         case WriteMode.OVERWRITE_ALL:
-                            #region
+                            for (int row = FIRST_ROW; row <= LAST_ROW; row++)
                             {
-                                int ACTUAL_ROW = FIRST_ROW;
-                                bool emptyRowFound = false;
-
-                                while (!emptyRowFound)
+                                clearTurn(row);
+                                if (Int32.TryParse(ws.Cell(row, COLS.ID).GetValue<string>().Trim(), out int id))
                                 {
-                                    // Eliminamos el contenido de las filas
-                                    var cellValue = ws.Cell(ACTUAL_ROW, COLS.ID).GetValue<string>().Trim();
-                                    if (String.IsNullOrWhiteSpace(cellValue))
-                                    {
-                                        emptyRowFound = true;
-                                        break;
-                                    }
-
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_IN).Clear(XLClearOptions.Contents);
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_OUT).Clear(XLClearOptions.Contents);
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_IN).Clear(XLClearOptions.Contents);
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_OUT).Clear(XLClearOptions.Contents);
-                                    ACTUAL_ROW++;
+                                    Turno? turn = turns.FirstOrDefault(candidate => candidate.ID == id);
+                                    if (turn is not null)
+                                        writeTurn(row, turn.Value);
                                 }
-
-                                // Buscamos la relacion de horarios actuales
-                                Turno[] serv_resp = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
-                                
-                                // Escribimos el contenido nuevo
-                                ACTUAL_ROW = FIRST_ROW;
-                                for (int i = ACTUAL_ROW; i < LIMIT_ROW; i++)
-                                {
-                                    int _rowId = int.Parse(ws.Cell(ACTUAL_ROW, COLS.ID).Value.ToString());
-
-                                    if (!serv_resp.Any(t => t.ID == _rowId))
-                                        continue;
-
-                                    Turno t = serv_resp.FirstOrDefault(t => t.ID == _rowId);
-                                    ws.Cell(i, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(i, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
-                                    ws.Cell(i, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(i, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
-                                    //ACTUAL_ROW++;
-                                }
-
-                                OPERATION_FLAG = true;
                             }
-                            #endregion
                             break;
                         case WriteMode.UPDATE_AND_ALL:
-                            #region
+                            for (int row = FIRST_ROW; row <= LAST_ROW; row++)
                             {
-                                int ACTUAL_ROW = FIRST_ROW;
+                                if (!Int32.TryParse(ws.Cell(row, COLS.ID).GetValue<string>().Trim(), out int id))
+                                    continue;
 
-                                // Buscamos la relacion de horarios actuales
-                                Turno[] serv_resp = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
+                                Turno? turn = turns.FirstOrDefault(candidate => candidate.ID == id);
+                                if (turn is null)
+                                    continue;
 
-                                // Escribimos el contenido nuevo
-                                for (int i = ACTUAL_ROW; i < LIMIT_ROW; i++)
-                                {
-                                    int _rowId = int.Parse(ws.Cell(ACTUAL_ROW, COLS.ID).Value.ToString());
-
-                                    if (!serv_resp.Any(t => t.ID == _rowId))
-                                        continue;
-
-                                    // Vaciamos los datos de la fila actual
-                                    foreach (string c in new string[] { COLS.PH_IN, COLS.PH_OUT, COLS.SH_IN, COLS.SH_OUT })
-                                        ws.Cell(ACTUAL_ROW, c).Clear(XLClearOptions.Contents);
-
-                                    // Grabamos los datos nuevos
-                                    Turno t = serv_resp.FirstOrDefault(t => t.ID == _rowId);
-                                    ws.Cell(i, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(i, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
-                                    ws.Cell(i, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(i, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
-                                    //ACTUAL_ROW++;
-                                }
-
-                                OPERATION_FLAG = true;
+                                clearTurn(row);
+                                writeTurn(row, turn.Value);
                             }
-                            #endregion
+
+                            int nextRow = FIRST_ROW;
+                            foreach (Turno turn in turns.Where(turn => !Enumerable.Range(FIRST_ROW, LAST_ROW - FIRST_ROW + 1)
+                                .Any(row => Int32.TryParse(ws.Cell(row, COLS.ID).GetValue<string>().Trim(), out int id) && id == turn.ID)))
+                            {
+                                while (nextRow <= LAST_ROW && !String.IsNullOrWhiteSpace(ws.Cell(nextRow, COLS.ID).GetValue<string>()))
+                                    nextRow++;
+                                if (nextRow > LAST_ROW)
+                                    break;
+
+                                ws.Cell(nextRow, COLS.ID).Value = turn.ID;
+                                writeTurn(nextRow, turn);
+                                nextRow++;
+                            }
                             break;
                         case WriteMode.ADD_INEXISTENTS:
-                            #region
+                            HashSet<int> existingIds = Enumerable.Range(FIRST_ROW, LAST_ROW - FIRST_ROW + 1)
+                                .Select(row => ws.Cell(row, COLS.ID).GetValue<string>().Trim())
+                                .Where(value => Int32.TryParse(value, out _))
+                                .Select(Int32.Parse)
+                                .ToHashSet();
+                            int firstEmptyRow = FIRST_ROW;
+                            foreach (Turno turn in turns.Where(turn => !existingIds.Contains(turn.ID)))
                             {
-                                int ACTUAL_ROW = FIRST_ROW;
+                                while (firstEmptyRow <= LAST_ROW && !String.IsNullOrWhiteSpace(ws.Cell(firstEmptyRow, COLS.ID).GetValue<string>()))
+                                    firstEmptyRow++;
+                                if (firstEmptyRow > LAST_ROW)
+                                    break;
 
-                                Turno[] serv_resp = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS);
-
-                                // Obtener IDs ya existentes en la hoja
-                                HashSet<int> existingIds = new HashSet<int>();
-
-                                for (int row = FIRST_ROW; row < LIMIT_ROW; row++)
-                                {
-                                    string value = ws.Cell(row, COLS.ID).GetValue<string>().Trim();
-
-                                    if (int.TryParse(value, out int id))
-                                        existingIds.Add(id);
-                                }
-
-                                // Buscar primera fila libre
-                                while (ACTUAL_ROW < LIMIT_ROW &&
-                                       !string.IsNullOrWhiteSpace(ws.Cell(ACTUAL_ROW, COLS.ID).GetValue<string>()))
-                                {
-                                    ACTUAL_ROW++;
-                                }
-
-                                // Agregar únicamente los que no existen
-                                foreach (Turno t in serv_resp)
-                                {
-                                    if (existingIds.Contains(t.ID))
-                                        continue;
-
-                                    if (ACTUAL_ROW >= LIMIT_ROW)
-                                        break;
-
-                                    ws.Cell(ACTUAL_ROW, COLS.ID).Value = t.ID;
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_IN).Value = t.PrimerHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.PH_OUT).Value = t.PrimerHorario.Salida.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_IN).Value = t.SegundoHorario.Entrada.ToString("HH:mm");
-                                    ws.Cell(ACTUAL_ROW, COLS.SH_OUT).Value = t.SegundoHorario.Salida.ToString("HH:mm");
-
-                                    ACTUAL_ROW++;
-                                }
-
-                                OPERATION_FLAG = true;
+                                ws.Cell(firstEmptyRow, COLS.ID).Value = turn.ID;
+                                writeTurn(firstEmptyRow, turn);
+                                firstEmptyRow++;
                             }
-                            #endregion
                             break;
                         default:
                             throw new IndexOutOfRangeException("El modo de escritura seleccionado no es valido.");
                     }
-
-                    if (OPERATION_FLAG)
-                    {
-                        // Guardamos los cambios en el archivo destino especificado
-                        wb.SaveAs(this.txtRutaDestino.Value);
-                    }
+                    wb.SaveAs(this.txtRutaDestino.Value);
                 }
             }
             catch { return false; }
 
             return true;
-            #endregion
         }
 
         bool WriteAjustesTurnos()
@@ -340,11 +283,145 @@ namespace Checador_FXE
             #region
             try
             {
+                const int FIRST_ROW = 6;
+                const int FIRST_DAY_COLUMN = 5; // E
+                const int LAST_DAY_COLUMN = 35; // AI
+                const int DATE_ROW = 3;
+                const int DAY_NUMBER_ROW = 4;
+                const int DAY_NAME_ROW = 5;
 
-            } catch (Exception ex)
-            {
+                string localidad = !String.IsNullOrWhiteSpace(relacHorarioId.Site)
+                    ? relacHorarioId.Site
+                    : !String.IsNullOrWhiteSpace(localidadOrigen)
+                        ? localidadOrigen
+                        : Properties.Settings.Default.LOCALIDAD_DEFAULT;
+                RelacionHorarioID relationId = !String.IsNullOrWhiteSpace(relacHorarioId.Site)
+                    ? relacHorarioId
+                    : RelacionHorarioID.GetActualId(localidad);
 
+                var relationResponse = RelacionHorarios.Get(relationId, SaveIfDefault: true);
+                if (!relationResponse.Success || relationResponse.Object is null)
+                    return false;
+
+                Dictionary<int, TurnoEmpleado[]> turnsByEmployee = relationResponse.Object.Relacion.Items
+                    .GroupBy(turn => turn.NoEmp)
+                    .ToDictionary(group => group.Key, group => group.ToArray());
+
+                var employeesResponse = Empleado.GetAll(localidad);
+                if (!employeesResponse.Success || employeesResponse.Object is null)
+                    return false;
+
+                Dictionary<int, Empleado> employeesById = employeesResponse.Object
+                    .Where(employee => Int32.TryParse(employee.NoEmp, out _))
+                    .GroupBy(employee => Int32.Parse(employee.NoEmp))
+                    .ToDictionary(group => group.Key, group => group.First());
+
+                using (XLWorkbook wb = new XLWorkbook(this.txtRutaIngreso.Value))
+                {
+                    var ws = wb.Worksheet("Ajuste de Turnos");
+                    int lastRow = Math.Max(FIRST_ROW, ws.LastRowUsed()?.RowNumber() ?? FIRST_ROW);
+                    DateTime firstDay = new DateTime(relationId.Year,
+                        DateTime.ParseExact(relationId.Month, "MMMM", Program.CurrentCultureInfo).Month, 1);
+
+                    ws.Cell(DATE_ROW, FIRST_DAY_COLUMN).Value = firstDay;
+                    ws.Cell(DATE_ROW, FIRST_DAY_COLUMN).Style.DateFormat.Format = "yyyy-MM-dd";
+                    for (int day = 1; day <= 31; day++)
+                    {
+                        int column = FIRST_DAY_COLUMN + day - 1;
+                        if (day <= DateTime.DaysInMonth(firstDay.Year, firstDay.Month))
+                        {
+                            DateTime date = firstDay.AddDays(day - 1);
+                            ws.Cell(DAY_NUMBER_ROW, column).Value = day;
+                            ws.Cell(DAY_NAME_ROW, column).Value = date.ToString("ddd", Program.CurrentCultureInfo)
+                                .TrimEnd('.').ToUpper(Program.CurrentCultureInfo);
+                        }
+                        else
+                        {
+                            ws.Cell(DAY_NUMBER_ROW, column).Clear(XLClearOptions.Contents);
+                            ws.Cell(DAY_NAME_ROW, column).Clear(XLClearOptions.Contents);
+                        }
+                    }
+
+                    Dictionary<int, int> rowsByEmployee = new Dictionary<int, int>();
+                    for (int row = FIRST_ROW; row <= lastRow; row++)
+                    {
+                        if (Int32.TryParse(ws.Cell(row, "A").GetValue<string>().Trim(), out int employeeId))
+                            rowsByEmployee[employeeId] = row;
+                    }
+
+                    Action<int> clearAssignments = row =>
+                    {
+                        for (int column = FIRST_DAY_COLUMN; column <= LAST_DAY_COLUMN; column++)
+                            ws.Cell(row, column).Clear(XLClearOptions.Contents);
+                    };
+                    Action<int, TurnoEmpleado[]> writeAssignments = (row, employeeTurns) =>
+                    {
+                        foreach (TurnoEmpleado turn in employeeTurns)
+                        {
+                            if (turn.Dia.Year != relationId.Year || turn.Dia.Month != firstDay.Month)
+                                continue;
+
+                            ws.Cell(row, FIRST_DAY_COLUMN + turn.Dia.Day - 1).Value =
+                                turn.Turno == 0 ? String.Empty : turn.Turno;
+                        }
+                    };
+
+                    switch (getWriteMode())
+                    {
+                        case WriteMode.OVERWRITE_ALL:
+                            foreach (int row in rowsByEmployee.Values)
+                                clearAssignments(row);
+                            foreach ((int employeeId, TurnoEmpleado[] employeeTurns) in turnsByEmployee)
+                                if (rowsByEmployee.TryGetValue(employeeId, out int row))
+                                    writeAssignments(row, employeeTurns);
+                            break;
+
+                        case WriteMode.UPDATE_AND_ALL:
+                            foreach ((int employeeId, TurnoEmpleado[] employeeTurns) in turnsByEmployee)
+                            {
+                                if (!rowsByEmployee.TryGetValue(employeeId, out int row))
+                                {
+                                    if (!employeesById.TryGetValue(employeeId, out Empleado employee))
+                                        continue;
+                                    row = ++lastRow;
+                                    ws.Cell(row, "A").Value = employee.NoEmp;
+                                    ws.Cell(row, "B").Value = employee.Nombres;
+                                    ws.Cell(row, "C").Value = employee.Area;
+                                    rowsByEmployee.Add(employeeId, row);
+                                }
+                                clearAssignments(row);
+                                writeAssignments(row, employeeTurns);
+                            }
+                            break;
+
+                        case WriteMode.ADD_INEXISTENTS:
+                            foreach ((int employeeId, TurnoEmpleado[] employeeTurns) in turnsByEmployee)
+                            {
+                                if (rowsByEmployee.ContainsKey(employeeId) ||
+                                    !employeesById.TryGetValue(employeeId, out Empleado employee))
+                                    continue;
+
+                                int row = ++lastRow;
+                                ws.Cell(row, "A").Value = employee.NoEmp;
+                                ws.Cell(row, "B").Value = employee.Nombres;
+                                ws.Cell(row, "C").Value = employee.Area;
+                                writeAssignments(row, employeeTurns);
+                                rowsByEmployee.Add(employeeId, row);
+                            }
+                            break;
+                        default:
+                            throw new IndexOutOfRangeException("El modo de escritura seleccionado no es valido.");
+                    }
+
+                    wb.SaveAs(this.txtRutaDestino.Value);
+                }
             }
+            catch
+            {
+                return false;
+            }
+
+            return true;
             #endregion
         }
 

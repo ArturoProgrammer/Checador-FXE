@@ -38,6 +38,7 @@ namespace Checador_FXE
             toolStrpBtn_NuevoTurno = new ToolStripButton();
             toolStrpBtn_EliminarRelacionHorario = new ToolStripButton();
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado = new ToolStripButton();
+            toolStrpBtn_ExportarRelacion = new ToolStripButton();
             flCustomToolStripSeparator1 = new flCustomToolStripSeparator();
             cboxMonth = new ToolStripComboBox();
             txtYear = new ToolStripTextBox();
@@ -66,7 +67,7 @@ namespace Checador_FXE
             flCustomToolStrip1.Font = new Font("Segoe UI", 10F);
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, toolStrpBtn_EliminarRelacionHorario, toolStrpBtn_EstablecerTurnosDefectoAEmpleado, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito, lblLocalidadSeleccionada, toolStripLabel2 });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, toolStrpBtn_EliminarRelacionHorario, toolStrpBtn_EstablecerTurnosDefectoAEmpleado, toolStrpBtn_ExportarRelacion, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito, lblLocalidadSeleccionada, toolStripLabel2 });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
             flCustomToolStrip1.Size = new Size(936, 27);
@@ -125,7 +126,17 @@ namespace Checador_FXE
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Size = new Size(23, 24);
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Text = "Establecer turnos por defecto";
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Click += toolStrpBtn_EstablecerTurnosDefectoAEmpleado_Click;
-            // 
+            //
+            // toolStrpBtn_ExportarRelacion
+            //
+            toolStrpBtn_ExportarRelacion.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStrpBtn_ExportarRelacion.Image = Properties.Resources.exportar_16;
+            toolStrpBtn_ExportarRelacion.ImageTransparentColor = Color.Magenta;
+            toolStrpBtn_ExportarRelacion.Name = "toolStrpBtn_ExportarRelacion";
+            toolStrpBtn_ExportarRelacion.Size = new Size(23, 24);
+            toolStrpBtn_ExportarRelacion.Text = "Exportar ajustes de turnos";
+            toolStrpBtn_ExportarRelacion.Click += toolStrpBtn_ExportarRelacion_Click;
+            //
             // flCustomToolStripSeparator1
             // 
             flCustomToolStripSeparator1.AutoSize = false;
@@ -391,5 +402,6 @@ namespace Checador_FXE
         private ToolStripLabel lblLocalidadSeleccionada;
         private ToolStripButton toolStrpBtn_EliminarRelacionHorario;
         private ToolStripButton toolStrpBtn_EstablecerTurnosDefectoAEmpleado;
+        private ToolStripButton toolStrpBtn_ExportarRelacion;
     }
 }

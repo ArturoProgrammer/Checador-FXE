@@ -327,6 +327,20 @@ namespace Checador_FXE
             }
         }
 
+        private void toolStrpBtn_ExportarRelacion_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(actualSelected.ID.Site))
+            {
+                WriteStatus(false, "No hay una relación de horarios cargada para exportar.");
+                return;
+            }
+
+            frmExportadorDeConfiguracion form = new frmExportadorDeConfiguracion(
+                Program.EXPORT_CONFIG_SESSION.AJUSTES_TURNOS);
+            form.SetRelacionHorarioId(actualSelected.ID);
+            form.ShowDialog(this);
+        }
+
         private void lblLocalidadSeleccionada_Click(object sender, EventArgs e)
         {
             // Abrimos el selector de localidad para hacer el cambio
