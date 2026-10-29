@@ -5,6 +5,7 @@ using FlowControls.Inputs;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Checador_FXE
 {
@@ -19,8 +20,8 @@ namespace Checador_FXE
         internal static DataGridStyle StandardGridStyle { get; } = DataGridStylesGallery.BlueStyle.SetAutoSizeColumnsMode(DataGridViewAutoSizeColumnsMode.AllCells);
         internal static FormStyle StandardFormStyle { get; } = FormStylesGallery.BlueStyle;
 
-        static string logsDir = Path.Combine(Application.StartupPath, "logs");
-        static string logFilePath = $@"{logsDir}\execution_log_{DateTime.Now.ToString("ddMMyy-HHmm")}.txt";
+        internal static string logsDir = Path.Combine(Application.StartupPath, "logs");
+        internal static string logFilePath = $@"{logsDir}\execution_log_{DateTime.Now.ToString("ddMMyy-HHmm")}.txt";
 
         internal static SystemLog Log = new SystemLog(
             logFilePath,
@@ -161,6 +162,10 @@ namespace Checador_FXE
             lblStatus.ForeColor = Status ? Color.FromKnownColor(KnownColor.Green) : Color.FromKnownColor(KnownColor.IndianRed);
             lblStatus.Text = Status ? "Listo" : "Error";
             lblOperation.Text = preBuildString;
+
+            lblOperation.IsLink = !Status;
+
+            LastBoolStatus = Status;
         }
 
         /// <summary>
@@ -190,6 +195,8 @@ namespace Checador_FXE
 ");
             Log.Add(EventType.ERROR, $"{msg}\n\n{ers}");
         }
+
+        internal static bool LastBoolStatus = true;
 
         internal enum EXPORT_CONFIG_SESSION
         {

@@ -1,14 +1,15 @@
 ﻿using Checador_FXE.Plantillas;
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using FlowControls;
 using FlowControls.Inputs;
-using iTextSharp.text;
 using Newtonsoft.Json.Linq;
-using SpreadsheetLight;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security.Principal;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Checador_FXE
 {
@@ -128,13 +129,13 @@ namespace Checador_FXE
             return valores[Random.Shared.Next(valores.Length)];
         }
 
-        internal static BaseColor GetBaseColorByName(string bc_name) => bc_name.Trim().ToUpper() switch
+        internal static System.Drawing.Color GetBaseColorByName(string bc_name) => bc_name.Trim().ToUpper() switch
         {
-            "ROJO" => BaseColor.RED,
-            "AZUL" => BaseColor.BLUE,
-            "NEGRO" => BaseColor.BLACK,
-            "GRIS" => BaseColor.GRAY,
-            _ => BaseColor.GRAY,
+            "ROJO" => System.Drawing.Color.Red,
+            "AZUL" => System.Drawing.Color.Blue,
+            "NEGRO" => System.Drawing.Color.Black,
+            "GRIS" => System.Drawing.Color.Gray,
+            _ => System.Drawing.Color.Gray,
         };
 
         /// <summary>
@@ -167,7 +168,12 @@ namespace Checador_FXE
         internal static string ParseJsonHorariosByDgv(flExtendedDataGridView dgv)
         {
             List<string> _jsonParts = new List<string>();
-            Func<TimeSpan, int> _buildMilitaryTimeString = (TimeSpan time) => int.Parse($"{time.Hours:00}{time.Minutes:00}");
+            Func<Horario, bool, int> buildMilitaryTime = (horario, entrada) =>
+            {
+                bool establecida = entrada ? horario.EntradaEstablecida : horario.SalidaEstablecida;
+                TimeSpan hora = entrada ? horario.Entrada : horario.Salida;
+                return establecida ? (hora.Hours * 100) + hora.Minutes : -1;
+            };
 
             foreach (Turno i in ParseHorariosTurnosByDgv(dgv))
             {
@@ -175,18 +181,18 @@ namespace Checador_FXE
     ""titulo"" : ""{i.Nombre}"",
     ""primer_horario"" : 
     {{
-        ""entrada"" : {_buildMilitaryTimeString(i.PrimerHorario.Entrada)},
-        ""salida"" : {_buildMilitaryTimeString(i.PrimerHorario.Salida)}
+        ""entrada"" : {buildMilitaryTime(i.PrimerHorario, true)},
+        ""salida"" : {buildMilitaryTime(i.PrimerHorario, false)}
     }},
     ""segundo_horario"" : 
     {{
-        ""entrada"" : {_buildMilitaryTimeString(i.SegundoHorario.Entrada)},
-        ""salida"" : {_buildMilitaryTimeString(i.SegundoHorario.Salida)}
+        ""entrada"" : {buildMilitaryTime(i.SegundoHorario, true)},
+        ""salida"" : {buildMilitaryTime(i.SegundoHorario, false)}
     }},
     ""tiempo_extra"" : 
     {{
-        ""entrada"" : {_buildMilitaryTimeString(i.TiempoExtra.Entrada)},
-        ""salida"" : {_buildMilitaryTimeString(i.TiempoExtra.Salida)}
+        ""entrada"" : {buildMilitaryTime(i.TiempoExtra, true)},
+        ""salida"" : {buildMilitaryTime(i.TiempoExtra, false)}
     }}
 }}";
                 _jsonParts.Add(words);
@@ -205,22 +211,28 @@ namespace Checador_FXE
 
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                Func<object, TimeSpan> _TryParseTime = delegate (object cellValue)
+                Func<object, (TimeSpan Hora, bool Establecida)> tryParseTime = delegate (object cellValue)
                 {
                     if (cellValue is null)
-                        return TimeSpan.Zero;
+                        return (TimeSpan.Zero, false);
 
-                    string tVal = (string)cellValue;
+                    string tVal = cellValue.ToString()!;
                     if (String.IsNullOrEmpty(tVal.Trim()))
-                        return TimeSpan.Zero;
+                        return (TimeSpan.Zero, false);
 
-                    return TimeSpan.Parse(tVal);
+                    return (TimeSpan.ParseExact(tVal.Trim(), "hh\\:mm", System.Globalization.CultureInfo.InvariantCulture), true);
                 };
 
                 int turnoNum = int.Parse(row.Cells[0].Value.ToString()!);
                 string turnoNombre = row.Cells[1].Value.ToString()!;
-                Horario primerHorario = new Horario(_TryParseTime(row.Cells[2].Value), _TryParseTime(row.Cells[3].Value));
-                Horario segundoHorario = new Horario(_TryParseTime(row.Cells[4].Value), _TryParseTime(row.Cells[5].Value));
+                var primerEntrada = tryParseTime(row.Cells[2].Value);
+                var primerSalida = tryParseTime(row.Cells[3].Value);
+                var segundaEntrada = tryParseTime(row.Cells[4].Value);
+                var segundaSalida = tryParseTime(row.Cells[5].Value);
+                Horario primerHorario = new Horario(primerEntrada.Hora, primerSalida.Hora,
+                    primerEntrada.Establecida, primerSalida.Establecida);
+                Horario segundoHorario = new Horario(segundaEntrada.Hora, segundaSalida.Hora,
+                    segundaEntrada.Establecida, segundaSalida.Establecida);
 
                 _horariosTurnos.Add(new Turno()
                 {
@@ -268,7 +280,8 @@ namespace Checador_FXE
         }
 
 
-        internal static Func<TimeSpan, string> WriteNotEmptyTimes = (TimeSpan time) => !time.Equals(TimeSpan.Zero) ? $"{time.Hours:00}:{time.Minutes:00}" : "";
+        internal static string WriteNotEmptyTimes(TimeSpan time, bool establecida) =>
+            establecida ? $"{time.Hours:00}:{time.Minutes:00}" : "";
 
         internal static int GetColumnInt(string colLetter)
         {
@@ -358,6 +371,8 @@ namespace Checador_FXE
         /// RelacionID para el turno correspondiente
         /// </summary>
         internal RelacionHorarioID RelacionID { get; }
+        internal bool IsValid { get; }
+        internal string ParseError { get; } = string.Empty;
 
         Func<DateTime, string, RelacionHorarioID> _GetRelacionIdByXlsx = (DateTime date, string localidad) =>
             new RelacionHorarioID(site: localidad,
@@ -373,13 +388,16 @@ namespace Checador_FXE
         {
             var parser = sourceDevice switch
             {
-                Dispositivo.ZKTECO_K40_KIT => READER_ZK_TECO_K40(path),
-                Dispositivo.ZKTECO_K40 => READER_ZK_TECO_K40(path),
+                Dispositivo.ZKTECO_K40_KIT => READER_ZK_TECO_K40_ClosedXml(path),
+                Dispositivo.ZKTECO_K40 => READER_ZK_TECO_K40_ClosedXml(path),
                 _ => throw new IndexOutOfRangeException($"No se encuentra en la lista de dispositivos admitidos al elemento '{sourceDevice.GetText()}'!")
             };
 
             if (!parser.Status)
+            {
+                ParseError = parser.Error;
                 return;
+            }
 
             Chequeos = parser.Chequeos;
             Turnos = parser.RelacionTurnos;
@@ -387,6 +405,7 @@ namespace Checador_FXE
             DeviceModel = sourceDevice;
             SourcePath = path;
             RelacionID = _GetRelacionIdByXlsx(parser.PeriodTime.Start, localidad);
+            IsValid = true;
         }
 
         /// <summary>
@@ -399,13 +418,16 @@ namespace Checador_FXE
 
             var parser = proj.AssetsFile.Device switch
             {
-                Dispositivo.ZKTECO_K40_KIT => READER_ZK_TECO_K40(path),
-                Dispositivo.ZKTECO_K40 => READER_ZK_TECO_K40(path),
+                Dispositivo.ZKTECO_K40_KIT => READER_ZK_TECO_K40_ClosedXml(path),
+                Dispositivo.ZKTECO_K40 => READER_ZK_TECO_K40_ClosedXml(path),
                 _ => throw new IndexOutOfRangeException($"No se encuentra en la lista de dispositivos admitidos al elemento '{proj.AssetsFile.Device.GetText()}'!")
             };
 
             if (!parser.Status)
+            {
+                ParseError = parser.Error;
                 return;
+            }
 
             Chequeos = parser.Chequeos;
             Turnos = parser.RelacionTurnos;
@@ -413,9 +435,202 @@ namespace Checador_FXE
             DeviceModel = proj.AssetsFile.Device;
             SourcePath = path;
             RelacionID = _GetRelacionIdByXlsx(parser.PeriodTime.Start, proj.General.LugarRemitente);
+            IsValid = true;
         }
 
 
+        /// <summary>
+        /// Lee el formato de ZKTeco mediante ClosedXML. Se evita SpreadsheetLight,
+        /// cuya ejecución no es confiable bajo .NET 8.
+        /// </summary>
+        private (bool Status,
+                 TurnoEmpleadoCollection RelacionTurnos,
+                 Dictionary<string, Checada[]> Chequeos,
+                 (DateTime Start, DateTime End) PeriodTime,
+                 string Error)
+        READER_ZK_TECO_K40_ClosedXml(string path)
+        {
+            const string attendanceSheetName = "Reporte de Asistencia";
+            const string turnsSheetName = "Reporte de Turnos";
+            const int attendancePeriodRow = 3;
+            const int attendanceDaysRow = 4;
+            const int firstAttendanceHeaderRow = 5;
+            const int firstTurnsRow = 5;
+            const int turnsDaysRow = 3;
+            const int turnsFirstDayColumn = 4;
+
+            (DateTime Start, DateTime End) emptyPeriod = (DateTime.MinValue, DateTime.MinValue);
+
+            try
+            {
+                if (!File.Exists(path))
+                    throw new FileNotFoundException("No se encontró el archivo de reporte.", path);
+
+                using XLWorkbook workbook = new XLWorkbook(path);
+                if (!workbook.Worksheets.Contains(attendanceSheetName) || !workbook.Worksheets.Contains(turnsSheetName))
+                    throw new FormatException($"El reporte debe contener las hojas '{attendanceSheetName}' y '{turnsSheetName}'.");
+
+                IXLWorksheet attendance = workbook.Worksheet(attendanceSheetName);
+                IXLWorksheet turns = workbook.Worksheet(turnsSheetName);
+                Func<IXLWorksheet, int, int, string> cellText = (sheet, row, column) => sheet.Cell(row, column).GetString().Trim();
+
+                string[] periodParts = cellText(attendance, attendancePeriodRow, 3)
+                    .Replace(" ", string.Empty)
+                    .Split('~', StringSplitOptions.RemoveEmptyEntries);
+                if (periodParts.Length != 2 ||
+                    !DateTime.TryParseExact(periodParts[0], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime periodStart) ||
+                    !DateTime.TryParseExact(periodParts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime periodEnd) ||
+                    periodEnd < periodStart)
+                {
+                    throw new FormatException("La celda C3 de 'Reporte de Asistencia' debe contener un periodo válido: yyyy-MM-dd ~ yyyy-MM-dd.");
+                }
+
+                List<(int Column, DateTime Date)> reportDays = new List<(int Column, DateTime Date)>();
+                DateTime expectedDate = periodStart.Date;
+                for (int column = 1; ; column++)
+                {
+                    string rawDay = cellText(attendance, attendanceDaysRow, column);
+                    if (string.IsNullOrEmpty(rawDay))
+                        break;
+
+                    if (!int.TryParse(rawDay, out int day) || day != expectedDate.Day)
+                        throw new FormatException($"El día de la columna {column} en '{attendanceSheetName}' no coincide con el periodo declarado.");
+
+                    reportDays.Add((column, expectedDate));
+                    expectedDate = expectedDate.AddDays(1);
+                }
+
+                if (reportDays.Count == 0 || reportDays[^1].Date != periodEnd.Date)
+                    throw new FormatException("Los días de 'Reporte de Asistencia' no cubren exactamente el periodo declarado en C3.");
+
+                List<(int NoEmp, string Name)> employees = new List<(int NoEmp, string Name)>();
+                Dictionary<string, List<Checada>> checksByEmployee = new Dictionary<string, List<Checada>>(StringComparer.OrdinalIgnoreCase);
+                Regex timePattern = new Regex(@"(?:[01]\d|2[0-3]):[0-5]\d", RegexOptions.CultureInvariant);
+
+                for (int headerRow = firstAttendanceHeaderRow; ; headerRow += 2)
+                {
+                    if (string.IsNullOrEmpty(cellText(attendance, headerRow, 1)))
+                        break;
+
+                    string rawNoEmp = cellText(attendance, headerRow, 3);
+                    string employeeName = cellText(attendance, headerRow, 11);
+                    if (!int.TryParse(rawNoEmp, out int noEmp) || string.IsNullOrWhiteSpace(employeeName))
+                        throw new FormatException($"El empleado en la fila {headerRow} de '{attendanceSheetName}' no tiene ID o nombre válidos.");
+                    if (employees.Any(employee => employee.NoEmp == noEmp) || checksByEmployee.ContainsKey(employeeName))
+                        throw new FormatException($"El empleado '{employeeName}' ({noEmp}) está repetido en '{attendanceSheetName}'.");
+
+                    employees.Add((noEmp, employeeName));
+                    List<Checada> employeeChecks = new List<Checada>();
+                    checksByEmployee.Add(employeeName, employeeChecks);
+
+                    foreach ((int column, DateTime date) in reportDays)
+                    {
+                        string rawTimes = cellText(attendance, headerRow + 1, column);
+                        if (string.IsNullOrEmpty(rawTimes))
+                            continue;
+
+                        MatchCollection matches = timePattern.Matches(rawTimes);
+                        if (matches.Count == 0 || !string.IsNullOrWhiteSpace(timePattern.Replace(rawTimes, string.Empty)))
+                            throw new FormatException($"La celda {attendance.Cell(headerRow + 1, column).Address} contiene checadas con un formato inválido.");
+
+                        List<Checada> dayChecks = new List<Checada>();
+                        for (int index = 0; index < matches.Count; index++)
+                        {
+                            if (!TimeSpan.TryParseExact(matches[index].Value, @"hh\:mm", CultureInfo.InvariantCulture, out TimeSpan time))
+                                throw new FormatException($"La hora '{matches[index].Value}' no es válida en {attendance.Cell(headerRow + 1, column).Address}.");
+
+                            TipoChecada type = matches.Count switch
+                            {
+                                1 => TipoChecada.ENTRADA,
+                                2 => index == 0 ? TipoChecada.ENTRADA : TipoChecada.SALIDA,
+                                3 => index switch
+                                {
+                                    0 => TipoChecada.ENTRADA,
+                                    1 => TipoChecada.IDA_COMIDA,
+                                    _ => TipoChecada.SALIDA
+                                },
+                                _ => index switch
+                                {
+                                    0 => TipoChecada.ENTRADA,
+                                    1 => TipoChecada.IDA_COMIDA,
+                                    2 => TipoChecada.REGRESO_COMIDA,
+                                    3 => TipoChecada.SALIDA,
+                                    _ => TipoChecada.UNKWN
+                                }
+                            };
+
+                            dayChecks.Add(new Checada
+                            {
+                                Empleado = employeeName,
+                                NumEmpleado = noEmp,
+                                Fecha = date.Add(time),
+                                Tipo = type
+                            });
+                        }
+
+                        for (int index = 1; index < dayChecks.Count; index++)
+                        {
+                            if (dayChecks[index].Fecha.TimeOfDay < dayChecks[index - 1].Fecha.TimeOfDay)
+                                dayChecks[index].Fecha = dayChecks[index].Fecha.AddDays(1);
+                        }
+
+                        employeeChecks.AddRange(dayChecks);
+                    }
+                }
+
+                if (employees.Count == 0)
+                    throw new FormatException("No se encontraron empleados en 'Reporte de Asistencia'.");
+
+                Dictionary<int, int> turnsRowByEmployee = new Dictionary<int, int>();
+                for (int row = firstTurnsRow; ; row++)
+                {
+                    string rawNoEmp = cellText(turns, row, 1);
+                    if (string.IsNullOrEmpty(rawNoEmp))
+                        break;
+                    if (!int.TryParse(rawNoEmp, out int noEmp))
+                        throw new FormatException($"El ID de empleado en la fila {row} de '{turnsSheetName}' no es válido.");
+                    if (!turnsRowByEmployee.TryAdd(noEmp, row))
+                        throw new FormatException($"El empleado {noEmp} está repetido en '{turnsSheetName}'.");
+                }
+
+                TurnoEmpleadoCollection employeeTurns = new TurnoEmpleadoCollection();
+                foreach ((int noEmp, string employeeName) in employees)
+                {
+                    if (!turnsRowByEmployee.TryGetValue(noEmp, out int turnsRow))
+                        throw new FormatException($"No se encontró el empleado '{employeeName}' ({noEmp}) en '{turnsSheetName}'.");
+
+                    for (int index = 0; index < reportDays.Count; index++)
+                    {
+                        int turnsColumn = turnsFirstDayColumn + index;
+                        string rawTurnDay = cellText(turns, turnsDaysRow, turnsColumn);
+                        if (!int.TryParse(rawTurnDay, out int turnDay) || turnDay != reportDays[index].Date.Day)
+                            throw new FormatException($"El día de la columna {turnsColumn} en '{turnsSheetName}' no coincide con el reporte de asistencia.");
+
+                        string rawTurn = cellText(turns, turnsRow, turnsColumn);
+                        int turn = 0;
+                        if (!string.IsNullOrEmpty(rawTurn) && !int.TryParse(rawTurn, out turn))
+                            throw new FormatException($"El turno en {turns.Cell(turnsRow, turnsColumn).Address} no es numérico.");
+
+                        employeeTurns.Add(new TurnoEmpleado(noEmp, turn, employeeName, DateOnly.FromDateTime(reportDays[index].Date)));
+                    }
+                }
+
+                return (true,
+                        employeeTurns,
+                        checksByEmployee.ToDictionary(item => item.Key, item => item.Value.ToArray(), StringComparer.OrdinalIgnoreCase),
+                        (periodStart, periodEnd),
+                        string.Empty);
+            }
+            catch (Exception exception)
+            {
+                string error = $"No se pudo analizar el reporte '{Path.GetFileName(path)}': {exception.Message}";
+                Program.Log.Add("ReporteAsistencias", $"{error}\n{exception}");
+                Program.WriteStatus(false, $"{error}\n{exception}", ReportOnGui: false);
+                return (false, new TurnoEmpleadoCollection(), new Dictionary<string, Checada[]>(), emptyPeriod, error);
+            }
+        }
+
+#if false // Lector heredado de SpreadsheetLight; sustituido por ClosedXML para .NET 8.
         /// <summary>
         /// Lector e interprete del formato
         /// </summary>
@@ -859,6 +1074,7 @@ namespace Checador_FXE
                 return (false, new TurnoEmpleadoCollection(), new Dictionary<string, Checada[]>(), period);
             }
         }
+#endif
     }
 
 
@@ -876,11 +1092,15 @@ namespace Checador_FXE
     {
         public TimeSpan Entrada { get; } = TimeSpan.Zero;
         public TimeSpan Salida { get; } = TimeSpan.Zero;
+        public bool EntradaEstablecida { get; } = false;
+        public bool SalidaEstablecida { get; } = false;
 
-        public Horario(TimeSpan _entrada, TimeSpan _salida) 
+        public Horario(TimeSpan entrada, TimeSpan salida, bool entradaEstablecida = true, bool salidaEstablecida = true)
         {
-            Entrada = _entrada;
-            Salida = _salida;
+            Entrada = entrada;
+            Salida = salida;
+            EntradaEstablecida = entradaEstablecida;
+            SalidaEstablecida = salidaEstablecida;
         }
     }
 
@@ -891,10 +1111,10 @@ namespace Checador_FXE
     internal static class CalendarioTurnos
     {
         internal static bool CruzaMedianoche(Horario horario) =>
-            horario.Entrada != TimeSpan.Zero && horario.Salida != TimeSpan.Zero && horario.Salida <= horario.Entrada;
+            horario.EntradaEstablecida && horario.SalidaEstablecida && horario.Salida <= horario.Entrada;
 
         internal static Horario ObtenerHorarioLaboral(Turno turno) =>
-            turno.SegundoHorario.Entrada != TimeSpan.Zero || turno.SegundoHorario.Salida != TimeSpan.Zero
+            turno.SegundoHorario.EntradaEstablecida || turno.SegundoHorario.SalidaEstablecida
                 ? new Horario(turno.PrimerHorario.Entrada, turno.SegundoHorario.Salida)
                 : turno.PrimerHorario;
 
@@ -963,30 +1183,28 @@ namespace Checador_FXE
                 _turn.ID = int.Parse(i.Key.ToString());
                 _turn.Nombre = i.Value!["titulo"]?.ToString() ?? "-1";
 
-                Func<string, TimeSpan> _DivideMakeTimeSpan = delegate (string t)
+                Func<int, TimeSpan> parseMilitaryTime = delegate (int value)
                 {
-                    List<string> grupos = new List<string>();
+                    if (value < 0 || value > 2359 || value % 100 > 59)
+                        throw new FormatException($"La hora '{value}' no cumple el formato HHmm.");
 
-                    for (int i = t.Length; i > 0; i -= 2)
-                    {
-                        int start = Math.Max(i - 2, 0);
-                        int length = i - start;
-                        grupos.Insert(0, t.Substring(start, length));
-                    }
-
-                    return TimeSpan.Parse($"{grupos[0]:00}:{grupos[1]:00}");
+                    return new TimeSpan(value / 100, value % 100, 0);
                 };
 
                 Func<string, Horario> BuildTimeSpan = delegate (string SCHEDULE)
                 {
                     var horario = i.Value[SCHEDULE];
-                    string entrada = horario["entrada"]!.ToString();
-                    string salida = horario["salida"]!.ToString();
+                    int entrada = horario["entrada"]!.Value<int>();
+                    int salida = horario["salida"]!.Value<int>();
 
-                    if (int.Parse(entrada) <= 0 && int.Parse(salida) <= 0)
+                    // Compatibilidad: las configuraciones antiguas usaban 0/0 para indicar un tramo vacío.
+                    if ((entrada == -1 && salida == -1) || (entrada == 0 && salida == 0))
                         return new Horario();
 
-                    return new Horario(_DivideMakeTimeSpan(entrada), _DivideMakeTimeSpan(salida));
+                    if (entrada < -1 || salida < -1 || entrada == -1 || salida == -1)
+                        throw new FormatException($"El tramo '{SCHEDULE}' debe tener entrada y salida, o ambas deben ser -1.");
+
+                    return new Horario(parseMilitaryTime(entrada), parseMilitaryTime(salida));
                 };
 
                 _turn.PrimerHorario = BuildTimeSpan("primer_horario");

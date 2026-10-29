@@ -70,7 +70,7 @@ namespace Checador_FXE
             flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, toolStrpBtn_RevertirCambios, toolStrpBtn_NuevoTurno, toolStrpBtn_EliminarRelacionHorario, toolStrpBtn_EstablecerTurnosDefectoAEmpleado, toolStrpBtn_ExportarRelacion, flCustomToolStripSeparator1, cboxMonth, txtYear, btnIrAMes, flCustomToolStripSeparator2, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito, lblLocalidadSeleccionada, toolStripLabel2 });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(936, 27);
+            flCustomToolStrip1.Size = new Size(936, 31);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
@@ -80,7 +80,7 @@ namespace Checador_FXE
             toolStrpBtn_Guardar.Image = (Image)resources.GetObject("toolStrpBtn_Guardar.Image");
             toolStrpBtn_Guardar.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_Guardar.Name = "toolStrpBtn_Guardar";
-            toolStrpBtn_Guardar.Size = new Size(23, 24);
+            toolStrpBtn_Guardar.Size = new Size(29, 28);
             toolStrpBtn_Guardar.Text = "Guardar cambios";
             toolStrpBtn_Guardar.Click += toolStripButton1_Click;
             // 
@@ -91,7 +91,7 @@ namespace Checador_FXE
             toolStrpBtn_RevertirCambios.Image = (Image)resources.GetObject("toolStrpBtn_RevertirCambios.Image");
             toolStrpBtn_RevertirCambios.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_RevertirCambios.Name = "toolStrpBtn_RevertirCambios";
-            toolStrpBtn_RevertirCambios.Size = new Size(23, 24);
+            toolStrpBtn_RevertirCambios.Size = new Size(29, 28);
             toolStrpBtn_RevertirCambios.Text = "Revertir cambios";
             toolStrpBtn_RevertirCambios.Click += toolStripButton2_Click;
             // 
@@ -102,7 +102,7 @@ namespace Checador_FXE
             toolStrpBtn_NuevoTurno.Image = Properties.Resources.add_16;
             toolStrpBtn_NuevoTurno.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_NuevoTurno.Name = "toolStrpBtn_NuevoTurno";
-            toolStrpBtn_NuevoTurno.Size = new Size(23, 24);
+            toolStrpBtn_NuevoTurno.Size = new Size(29, 28);
             toolStrpBtn_NuevoTurno.Text = "Nuevo turno";
             toolStrpBtn_NuevoTurno.Click += toolStrpBtn_NuevoTurno_Click;
             // 
@@ -113,7 +113,7 @@ namespace Checador_FXE
             toolStrpBtn_EliminarRelacionHorario.Image = Properties.Resources.delete_16;
             toolStrpBtn_EliminarRelacionHorario.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_EliminarRelacionHorario.Name = "toolStrpBtn_EliminarRelacionHorario";
-            toolStrpBtn_EliminarRelacionHorario.Size = new Size(23, 24);
+            toolStrpBtn_EliminarRelacionHorario.Size = new Size(29, 28);
             toolStrpBtn_EliminarRelacionHorario.Text = "Eliminar la relacion de horario";
             toolStrpBtn_EliminarRelacionHorario.Click += toolStrpBtn_EliminarRelacionHorario_Click;
             // 
@@ -123,20 +123,20 @@ namespace Checador_FXE
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Image = Properties.Resources.sync2_16;
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Name = "toolStrpBtn_EstablecerTurnosDefectoAEmpleado";
-            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Size = new Size(23, 24);
+            toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Size = new Size(29, 28);
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Text = "Establecer turnos por defecto";
             toolStrpBtn_EstablecerTurnosDefectoAEmpleado.Click += toolStrpBtn_EstablecerTurnosDefectoAEmpleado_Click;
-            //
+            // 
             // toolStrpBtn_ExportarRelacion
-            //
+            // 
             toolStrpBtn_ExportarRelacion.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStrpBtn_ExportarRelacion.Image = Properties.Resources.exportar_16;
             toolStrpBtn_ExportarRelacion.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_ExportarRelacion.Name = "toolStrpBtn_ExportarRelacion";
-            toolStrpBtn_ExportarRelacion.Size = new Size(23, 24);
+            toolStrpBtn_ExportarRelacion.Size = new Size(29, 28);
             toolStrpBtn_ExportarRelacion.Text = "Exportar ajustes de turnos";
             toolStrpBtn_ExportarRelacion.Click += toolStrpBtn_ExportarRelacion_Click;
-            //
+            // 
             // flCustomToolStripSeparator1
             // 
             flCustomToolStripSeparator1.AutoSize = false;
@@ -154,7 +154,7 @@ namespace Checador_FXE
             cboxMonth.Font = new Font("Segoe UI", 10F);
             cboxMonth.Items.AddRange(new object[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
             cboxMonth.Name = "cboxMonth";
-            cboxMonth.Size = new Size(121, 27);
+            cboxMonth.Size = new Size(121, 31);
             cboxMonth.KeyPress += cboxMonth_KeyPress;
             // 
             // txtYear
@@ -163,7 +163,7 @@ namespace Checador_FXE
             txtYear.BorderStyle = BorderStyle.FixedSingle;
             txtYear.Font = new Font("Segoe UI", 10F);
             txtYear.Name = "txtYear";
-            txtYear.Size = new Size(40, 27);
+            txtYear.Size = new Size(40, 31);
             txtYear.TextBoxTextAlign = HorizontalAlignment.Center;
             txtYear.KeyDown += txtYear_KeyDown;
             txtYear.KeyPress += txtYear_KeyPress;
@@ -174,7 +174,7 @@ namespace Checador_FXE
             btnIrAMes.Image = Properties.Resources.play3_16;
             btnIrAMes.ImageTransparentColor = Color.Magenta;
             btnIrAMes.Name = "btnIrAMes";
-            btnIrAMes.Size = new Size(23, 24);
+            btnIrAMes.Size = new Size(29, 28);
             btnIrAMes.Text = "Ir a mes indicado";
             btnIrAMes.Click += btnIrAMes_Click;
             // 
@@ -191,7 +191,7 @@ namespace Checador_FXE
             // toolStripLabel1
             // 
             toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new Size(71, 24);
+            toolStripLabel1.Size = new Size(88, 28);
             toolStripLabel1.Text = "Limitar a...";
             // 
             // cboxParametroLimitacion
@@ -200,7 +200,7 @@ namespace Checador_FXE
             cboxParametroLimitacion.DropDownStyle = ComboBoxStyle.DropDownList;
             cboxParametroLimitacion.Font = new Font("Segoe UI", 10F);
             cboxParametroLimitacion.Name = "cboxParametroLimitacion";
-            cboxParametroLimitacion.Size = new Size(121, 27);
+            cboxParametroLimitacion.Size = new Size(121, 31);
             cboxParametroLimitacion.SelectedIndexChanged += cboxParametroLimitacion_SelectedIndexChanged;
             // 
             // txtValorLimitacion
@@ -209,7 +209,7 @@ namespace Checador_FXE
             txtValorLimitacion.BorderStyle = BorderStyle.FixedSingle;
             txtValorLimitacion.Font = new Font("Segoe UI", 10F);
             txtValorLimitacion.Name = "txtValorLimitacion";
-            txtValorLimitacion.Size = new Size(160, 27);
+            txtValorLimitacion.Size = new Size(160, 31);
             txtValorLimitacion.KeyDown += txtValorLimitacion_KeyDown;
             // 
             // btnLimitarAmbito
@@ -218,7 +218,7 @@ namespace Checador_FXE
             btnLimitarAmbito.Image = Properties.Resources.filter_24;
             btnLimitarAmbito.ImageTransparentColor = Color.Magenta;
             btnLimitarAmbito.Name = "btnLimitarAmbito";
-            btnLimitarAmbito.Size = new Size(23, 24);
+            btnLimitarAmbito.Size = new Size(29, 28);
             btnLimitarAmbito.Text = "Limitar ambito";
             btnLimitarAmbito.Click += toolStripButton3_Click;
             // 
@@ -230,7 +230,7 @@ namespace Checador_FXE
             lblLocalidadSeleccionada.IsLink = true;
             lblLocalidadSeleccionada.LinkColor = SystemColors.HotTrack;
             lblLocalidadSeleccionada.Name = "lblLocalidadSeleccionada";
-            lblLocalidadSeleccionada.Size = new Size(111, 24);
+            lblLocalidadSeleccionada.Size = new Size(137, 23);
             lblLocalidadSeleccionada.Text = "%LOCALIDAD%";
             lblLocalidadSeleccionada.VisitedLinkColor = SystemColors.HotTrack;
             lblLocalidadSeleccionada.Click += lblLocalidadSeleccionada_Click;
@@ -239,7 +239,7 @@ namespace Checador_FXE
             // 
             toolStripLabel2.Alignment = ToolStripItemAlignment.Right;
             toolStripLabel2.Name = "toolStripLabel2";
-            toolStripLabel2.Size = new Size(69, 24);
+            toolStripLabel2.Size = new Size(86, 23);
             toolStripLabel2.Text = "Localidad:";
             // 
             // imageList1
@@ -299,7 +299,7 @@ namespace Checador_FXE
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvRelacionDeHorarios.Location = new Point(0, 28);
+            dgvRelacionDeHorarios.Location = new Point(0, 31);
             dgvRelacionDeHorarios.Margin = new Padding(0);
             dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
             dgvRelacionDeHorarios.MultiSelect = false;
@@ -315,7 +315,7 @@ namespace Checador_FXE
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(936, 400);
+            dgvRelacionDeHorarios.Size = new Size(936, 397);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.OnAddClick += dgvRelacionDeHorarios_OnAddClick;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
@@ -329,9 +329,9 @@ namespace Checador_FXE
             statusStrip1.BackColor = SystemColors.ActiveCaption;
             statusStrip1.ImageScalingSize = new Size(18, 18);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblStatus, toolStripStatusLabel1, lblMessage });
-            statusStrip1.Location = new Point(0, 431);
+            statusStrip1.Location = new Point(0, 427);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(936, 22);
+            statusStrip1.Size = new Size(936, 26);
             statusStrip1.SizingGrip = false;
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
@@ -339,24 +339,23 @@ namespace Checador_FXE
             // lblStatus
             // 
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(59, 17);
+            lblStatus.Size = new Size(73, 20);
             lblStatus.Text = "%Status%";
             // 
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(10, 17);
+            toolStripStatusLabel1.Size = new Size(13, 20);
             toolStripStatusLabel1.Text = " ";
             // 
             // lblMessage
             // 
             lblMessage.Name = "lblMessage";
-            lblMessage.Size = new Size(73, 17);
+            lblMessage.Size = new Size(91, 20);
             lblMessage.Text = "%Message%";
             // 
             // frmCrudRelacionHorarios
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(936, 453);
@@ -364,6 +363,7 @@ namespace Checador_FXE
             Controls.Add(dgvRelacionDeHorarios);
             Controls.Add(flCustomToolStrip1);
             Font = new Font("Segoe UI", 10F);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(675, 372);
             Name = "frmCrudRelacionHorarios";
             StartPosition = FormStartPosition.CenterParent;

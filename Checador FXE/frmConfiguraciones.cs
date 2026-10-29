@@ -74,8 +74,10 @@ namespace Checador_FXE
                 {
                     $"{i.ID}",
                     $"{i.Nombre}",
-                    $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida)}",
-                    $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida)}"
+                    Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada, i.PrimerHorario.EntradaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida, i.PrimerHorario.SalidaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada, i.SegundoHorario.EntradaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida, i.SegundoHorario.SalidaEstablecida)
                 });
             }
             #endregion
@@ -222,7 +224,13 @@ namespace Checador_FXE
                                 fails.Add((false, $"Los tiempos indicados para el turno '{_ID} - {_Nombre}' no son validos"));
                             
                             // En caso de haber un segundo horario, debe de estar completo (con entrada y salida valida)
-                            if (NullsEmptysCheck(_Secon_In) && NullsEmptysCheck(_Secon_Out))
+                            bool secondInEstablished = NullsEmptysCheck(_Secon_In);
+                            bool secondOutEstablished = NullsEmptysCheck(_Secon_Out);
+                            if (secondInEstablished != secondOutEstablished)
+                            {
+                                fails.Add((false, $"El segundo horario del turno '{_ID} - {_Nombre}' debe tener entrada y salida."));
+                            }
+                            else if (secondInEstablished)
                             {
                                 if (!InOutTimesIntegrityCheck(_Secon_In, _Secon_Out))
                                     fails.Add((false, $"Los tiempos indicados para el turno '{_ID} - {_Nombre}' no son validos"));

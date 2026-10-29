@@ -80,11 +80,25 @@ namespace Checador_FXE.Plantillas
         internal class ResultadosCastingTab
         {
             public static readonly string FILEPATH = @"data\resultados_casting.json";
+            public static readonly string ORIGINAL_FILEPATH = @"data\resultados_casting_original.json";
 
-            //public PeriodoCasteadoCollection PeriodoCasteado { get; private set; }
-            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; private set; }
+            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteado { get; private set; } = new();
+            public Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> PeriodoCasteadoOriginal { get; private set; } = new();
 
             public ResultadosCastingTab() { }
+
+            static string SerializeResults(Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> results)
+            {
+                Dictionary<string, Dictionary<string, string>> serializable = new();
+                foreach (var employee in results)
+                {
+                    serializable[employee.Key] = employee.Value.ToDictionary(
+                        item => item.Key.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        item => item.Value.GetText());
+                }
+
+                return JsonSerializer.Serialize(serializable, new JsonSerializerOptions { WriteIndented = true });
+            }
 
             /// <summary>
             /// 
@@ -94,6 +108,13 @@ namespace Checador_FXE.Plantillas
             /// <exception cref="Exception"></exception>
             public string MakeJson(flTreeViewPaging pagingView)
             {
+                Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> results = pagingView.Items
+                    .Cast<InteropGenericObject>()
+                    .ToDictionary(
+                        item => item.ObjectTitle,
+                        item => (item.GenericObject as Dictionary<DateOnly, TipoAsistencia>)
+                            ?? throw new Exception("Error inesperado al parseo del objeto!"));
+                return SerializeResults(results);
 
                 Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _array = new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
                 List<string> _nodes = new List<string>();
@@ -117,7 +138,9 @@ namespace Checador_FXE.Plantillas
     {String.Join(",\n", _nodes)} 
 }}";
             }
-            public static ResultadosCastingTab? Build(string jsonText)
+            public string MakeJson(Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> results) => SerializeResults(results);
+
+            public static ResultadosCastingTab? Build(string jsonText, string? originalJson = null)
             {
                 if (string.IsNullOrWhiteSpace(jsonText))
                     throw new ArgumentException("El JSON de entrada está vacío.", nameof(jsonText));
@@ -173,18 +196,30 @@ namespace Checador_FXE.Plantillas
                         mapaFechas[fecha] = tipo;
                     }
 
-                    // Sólo agregar si hay al menos una fecha válida
-                    if (mapaFechas.Count > 0)
-                        resultado[empleado] = mapaFechas;
+                    resultado[empleado] = mapaFechas;
                 }
 
                 ResultadosCastingTab _obj = new ResultadosCastingTab()
                 {
                     PeriodoCasteado = resultado,
+                    PeriodoCasteadoOriginal = String.IsNullOrWhiteSpace(originalJson)
+                        ? CloneResults(resultado)
+                        : ParseResults(originalJson),
                 };
 
                 return _obj;
             }
+
+            static Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> ParseResults(string jsonText)
+            {
+                ResultadosCastingTab? parsed = Build(jsonText);
+                return parsed?.PeriodoCasteado ?? new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>();
+            }
+
+            static Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> CloneResults(
+                Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> source) => source.ToDictionary(
+                    employee => employee.Key,
+                    employee => new Dictionary<DateOnly, TipoAsistencia>(employee.Value));
         }
         internal class Assets
         {
@@ -192,6 +227,8 @@ namespace Checador_FXE.Plantillas
 
             public string Title { get; set; }
             public Dispositivo Device { get; set; }
+            public string? SourceFilename { get; set; }
+            public int FormatVersion { get; set; } = 1;
 
             public string MakeJson() => JsonSerializer.Serialize<Assets>(this, options: new JsonSerializerOptions() { WriteIndented = true });
             public static Assets? Build(string jsonText) => JsonSerializer.Deserialize<Assets>(jsonText, options: new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -209,6 +246,46 @@ namespace Checador_FXE.Plantillas
         /// </summary>
         public string TempDir { get; private set; }
 
+        public void CleanupTemporaryFiles()
+        {
+            if (!String.IsNullOrWhiteSpace(TempDir) && Directory.Exists(TempDir))
+                Directory.Delete(TempDir, recursive: true);
+        }
+
+        void SyncFromForm()
+        {
+            if (MdiForm is null)
+                throw new InvalidOperationException("No hay una vista asociada al proyecto.");
+
+            General = new GeneralTab
+            {
+                AreaRemitente = MdiForm.txtAreaRemitente.Value,
+                LugarRemitente = MdiForm.txtLugarRemitente.Value,
+                Fecha = DateOnly.FromDateTime(MdiForm.dateFechaRemitente.Value ?? DateTime.Now),
+                NombreElaborador = MdiForm.txtNombreElaborador.Value,
+                Autorizador = MdiForm.txtAutorizador.Value
+            };
+            ConfiguracionCasting = new ConfiguracionCastingTab
+            {
+                HorariosTurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
+                TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value ?? TimeSpan.Zero,
+                DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
+                TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson(),
+                RelacionTurnosID = MdiForm.RelacionHorarioSelected.ID.ToString(),
+                RelacionHash = MdiForm.RelacionHorarioSelected.HASH
+            };
+            if (File.Exists(MdiForm.Report.SourcePath))
+                SourceFile = (Path.GetFileName(MdiForm.Report.SourcePath), File.ReadAllBytes(MdiForm.Report.SourcePath));
+
+            AssetsFile = new Assets
+            {
+                Title = MdiForm.Text,
+                Device = MdiForm.Report.DeviceModel,
+                SourceFilename = SourceFile.Filename,
+                FormatVersion = 1
+            };
+        }
+
         /// <summary>
         /// Constructor basado en un nuevo proyecto
         /// </summary>
@@ -218,30 +295,9 @@ namespace Checador_FXE.Plantillas
             InitializeClass();
 
             this.MdiForm = frm;
-            this.General = new GeneralTab()
-            {
-                AreaRemitente = MdiForm.txtAreaRemitente.Value,
-                LugarRemitente = MdiForm.txtLugarRemitente.Value,
-                Fecha = DateOnly.Parse(MdiForm.dateFechaRemitente.Value!.Value.ToString("d")),
-                NombreElaborador = MdiForm.txtNombreElaborador.Value,
-                Autorizador = MdiForm.txtAutorizador.Value
-            };
-            this.ConfiguracionCasting = new ConfiguracionCastingTab()
-            {
-                HorariosTurnosCrudJson = Utils.ParseJsonHorariosByDgv(MdiForm.dgvTurnosHorarios),
-                TiempoRetrasoPermitido = MdiForm.txtMaximoRetrasoMinutosPermitidos.Value!.Value,
-                DomingosNoLaborables = MdiForm.chckDomingosNoLaborables.Checked,
-                TurnosEmpleadoJson = MdiForm.RelacionHorarioSelected.Relacion.BuildJson(),
-                RelacionTurnosID = MdiForm.RelacionHorarioSelected.ID.ToString(),
-                RelacionHash = MdiForm.RelacionHorarioSelected.HASH,
-            };
             this.ResultadosCasting = new ResultadosCastingTab();
             this.SourceFile = (new FileInfo(MdiForm.Report.SourcePath).Name, File.ReadAllBytes(MdiForm.Report.SourcePath));
-            this.AssetsFile = new Assets()
-            {
-                Title = MdiForm.Text,
-                Device = MdiForm.Report.DeviceModel,
-            };
+            SyncFromForm();
         }
 
         /// <summary>
@@ -262,14 +318,15 @@ namespace Checador_FXE.Plantillas
         {
             #region CODIGO
             Response _resp = new Response(false, "Iniciando funcion de guardado...");
-
-            string _tempFileName = $"{MdiForm.txtAreaRemitente.Value}_{MdiForm.Report.ReportPeriod.Start.ToString("dd-MM-yyyy")}_{MdiForm.Report.ReportPeriod.End.ToString("dd-MM-yyyy")}";
-            _resp.Log.Add($"Nombre de archivo temporal establecido en '{_tempFileName}'...");
-            string _tempPathDir = $@"{CafProjFile.PathTempFile}\{_tempFileName}";
+            string _tempPathDir = Path.Combine(CafProjFile.PathTempFile, $"save-{Guid.NewGuid():N}");
             _resp.Log.Add($"Ruta temporal establecida en '{_tempPathDir}'...");
 
             try
             {
+                SyncFromForm();
+                if (String.IsNullOrWhiteSpace(filename))
+                    throw new ArgumentException("La ruta de guardado no es válida.", nameof(filename));
+
                 // Creamos la carpeta de guardado en el directorio temporal
                 if (!Directory.Exists(_tempPathDir))
                     Directory.CreateDirectory(_tempPathDir);
@@ -282,8 +339,13 @@ namespace Checador_FXE.Plantillas
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{GeneralTab.FILEPATH}' generado con exito...");
                 File.WriteAllText($@"{_tempPathDir}\{ConfiguracionCastingTab.FILEPATH}", ConfiguracionCasting.MakeJson());
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{ConfiguracionCastingTab.FILEPATH}' generado con exito...");
-                File.WriteAllText($@"{_tempPathDir}\{ResultadosCastingTab.FILEPATH}", ResultadosCasting.MakeJson(MdiForm.treePagingResultadosCasting));
+                string resultsJson = ResultadosCasting.MakeJson(MdiForm.CurrentCastingResults);
+                string originalResultsJson = ResultadosCasting.MakeJson(MdiForm.OriginalCastingResults);
+                ResultadosCasting = ResultadosCastingTab.Build(resultsJson, originalResultsJson) ?? new ResultadosCastingTab();
+                File.WriteAllText($@"{_tempPathDir}\{ResultadosCastingTab.FILEPATH}", resultsJson);
                 _resp.Log.Add($@"Archivo '{_tempPathDir}\{ResultadosCastingTab.FILEPATH}' generado con exito...");
+                File.WriteAllText($@"{_tempPathDir}\{ResultadosCastingTab.ORIGINAL_FILEPATH}", originalResultsJson);
+                _resp.Log.Add($@"Archivo '{_tempPathDir}\{ResultadosCastingTab.ORIGINAL_FILEPATH}' generado con exito...");
                 File.WriteAllBytes($@"{_tempPathDir}\{SourceFile.Filename}", SourceFile.Content);
                 _resp.Log.Add($@"Archivo '{MdiForm.Report.SourcePath}' copiado con exito en '{_tempPathDir}'...");
                 File.WriteAllText($@"{_tempPathDir}\{Assets.FILEPATH}", AssetsFile.MakeJson());
@@ -291,21 +353,21 @@ namespace Checador_FXE.Plantillas
                 TempDir = _tempPathDir;
                 _resp.Log.Add($"Propedad 'TempDir' : '{_tempPathDir}' asignado...");
 
-                // Creamos el archivo comprimido en extension .caf
-                if (File.Exists(filename))
-                    File.Delete(filename);
-
+                // Construimos primero un archivo temporal para no destruir un proyecto válido si el guardado falla.
+                string archiveTempPath = $"{filename}.{Guid.NewGuid():N}.tmp";
                 ZipFile.CreateFromDirectory(
                     sourceDirectoryName: _tempPathDir,
-                    destinationArchiveFileName: filename,
+                    destinationArchiveFileName: archiveTempPath,
                     compressionLevel: CompressionLevel.Optimal,
                     includeBaseDirectory: false
                 );
+                File.Move(archiveTempPath, filename, overwrite: true);
                 _resp.Log.Add($"Archivo de proyecto generado en '{filename}'...");
 
                 _resp.Tag = filename;
                 _resp.Success = true;
                 _resp.Message = "Archivo de proyecto generado con exito!";
+                MdiForm.ProjectFullname = filename;
             }
             catch (Exception ex)
             {
@@ -336,12 +398,7 @@ namespace Checador_FXE.Plantillas
             Response<CafProjFile> _resp = new Response<CafProjFile>(false, "Iniciando construccion del objeto...", null);
             CafProjFile _obj = new CafProjFile();
 
-            string _targetPathDir = $@"{CafProjFile.PathTempFile}\{new FileInfo(filename).Name.Replace(CafProjFile.FileExtension, "")}";
-
-            // Verificamos la existencia del directorio temporal
-            if (Directory.Exists(_targetPathDir))
-                Directory.Delete(_targetPathDir, recursive: true);
-
+            string _targetPathDir = Path.Combine(CafProjFile.PathTempFile, $"open-{Guid.NewGuid():N}");
             Directory.CreateDirectory(_targetPathDir);
 
             try
@@ -354,19 +411,26 @@ namespace Checador_FXE.Plantillas
                 _resp.Log.Add($@"Archivo '{_targetPathDir}\{GeneralTab.FILEPATH}' leido con exito...");
                 _obj.ConfiguracionCasting = ConfiguracionCastingTab.Build(File.ReadAllText($@"{_targetPathDir}\{ConfiguracionCastingTab.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al leer el archivo '{ConfiguracionCastingTab.FILEPATH}'");
                 _resp.Log.Add($@"Archivo '{_targetPathDir}\{ConfiguracionCastingTab.FILEPATH}' leido con exito...");
-                _obj.ResultadosCasting = ResultadosCastingTab.Build(File.ReadAllText($@"{_targetPathDir}\{ResultadosCastingTab.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al leer el archivo '{ResultadosCastingTab.FILEPATH}'");
+                string originalResultsPath = $@"{_targetPathDir}\{ResultadosCastingTab.ORIGINAL_FILEPATH}";
+                _obj.ResultadosCasting = ResultadosCastingTab.Build(
+                    File.ReadAllText($@"{_targetPathDir}\{ResultadosCastingTab.FILEPATH}"),
+                    File.Exists(originalResultsPath) ? File.ReadAllText(originalResultsPath) : null)
+                    ?? throw new Exception($"Ocurrio un error al leer el archivo '{ResultadosCastingTab.FILEPATH}'");
                 _resp.Log.Add($@"Archivo '{_targetPathDir}\{ResultadosCastingTab.FILEPATH}' leido con exito...");
-                DirectoryInfo di = new DirectoryInfo(_targetPathDir);
-                FileInfo? fi = di.GetFiles().Cast<FileInfo>()
-                                            .Where(f => f.Extension.Equals(".xlsx"))
-                                            .FirstOrDefault();
+                _obj.AssetsFile = Assets.Build(File.ReadAllText($@"{_targetPathDir}\{Assets.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al intentar leer el archivo '{Assets.FILEPATH}'");
+                _resp.Log.Add($@"Archivo '{_targetPathDir}\{Assets.FILEPATH}' leido con exito...");
+                string? sourceFilename = _obj.AssetsFile.SourceFilename;
+                FileInfo? fi = !String.IsNullOrWhiteSpace(sourceFilename)
+                    ? new FileInfo(Path.Combine(_targetPathDir, Path.GetFileName(sourceFilename)))
+                    : new DirectoryInfo(_targetPathDir).GetFiles().FirstOrDefault(f =>
+                        f.Extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase));
+                if (fi is not null && !fi.Exists)
+                    fi = null;
                 if (fi is null)
                     throw new Exception($"No se encontro el archivo de reporte '.xlsx' en el directorio '{_targetPathDir}'");
 
                 _obj.SourceFile = (fi.Name, File.ReadAllBytes(fi.FullName));
                 _resp.Log.Add($"Archivo '{fi.Name}' cargado exitosamente...");
-                _obj.AssetsFile = Assets.Build(File.ReadAllText($@"{_targetPathDir}\{Assets.FILEPATH}")) ?? throw new Exception($"Ocurrio un error al intentar leer el archivo '{Assets.FILEPATH}'");
-                _resp.Log.Add($@"Archivo '{_targetPathDir}\{Assets.FILEPATH}' leido con exito...");
                 _obj.TempDir = _targetPathDir;
                 _resp.Log.Add($"Propedad 'TempDir' : '{_targetPathDir}' asignado...");
 
@@ -384,12 +448,8 @@ namespace Checador_FXE.Plantillas
             }
             finally
             {
-                // Una vez terminado, eliminamos la carpeta temporal del directorio
-                /*
-                if (Directory.Exists(_targetPathDir))
+                if (!_resp.Success && Directory.Exists(_targetPathDir))
                     Directory.Delete(_targetPathDir, true);
-                _resp.Log.Add($"Residuos de '{_targetPathDir}' eliminados con exito...");
-                */
             }
 
             if (ShowObjectLog) flMessageBox.Show(_resp.GetBuildedLog(), "Log del Objeto");

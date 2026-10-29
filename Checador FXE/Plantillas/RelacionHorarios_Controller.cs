@@ -653,7 +653,7 @@ namespace Checador_FXE.Plantillas
         {
             Response<RelacionHorarios> _resp = new Response<RelacionHorarios>(false, "Iniciando operacion de parsing", null);
 
-            flMessageBox.Show(relacionTurnosJson, "JSON a parsear");
+            //flMessageBox.Show(relacionTurnosJson, "JSON a parsear");
 
             try 
             {

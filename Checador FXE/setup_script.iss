@@ -110,6 +110,7 @@ Source: "C:\Users\LENOVO\Documents\Proyectos\Checador-FXE\Checador FXE\bin\x64\R
 Source: "C:\Users\LENOVO\Documents\Proyectos\Checador-FXE\Checador FXE\bin\x64\Release\net8.0-windows7.0\zh-Hant\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\LENOVO\Documents\Proyectos\Checador-FXE\Checador FXE\bin\x64\Release\net8.0-windows7.0\FORMATO_ASISTENCIA_TAB_1_15_form.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\LENOVO\Documents\Proyectos\Checador-FXE\Checador FXE\bin\x64\Release\net8.0-windows7.0\FORMATO_ASISTENCIA_TAB_16_31_form.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\LENOVO\Documents\Proyectos\Checador-FXE\Checador FXE\bin\x64\Release\net8.0-windows7.0\MANUAL_USUARIO.html"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 

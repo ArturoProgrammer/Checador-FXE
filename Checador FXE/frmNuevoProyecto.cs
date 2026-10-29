@@ -39,7 +39,7 @@ namespace Checador_FXE
 
             this.txtTitulo.Focus();
 
-#if DEV_MODE
+#if DEV_R1
             if (FastCreation)
             {
                 this.txtTitulo.Value = "Reporte de Prueba Rapida (DEV MODE)";
@@ -62,6 +62,8 @@ namespace Checador_FXE
             {
                 ofd.Title = "Crear nuevo proyecto - Selecciona el archivo de asistencias...";
                 ofd.Filter = "Hoja de cálculo de Microsoft Excel (*.xlsx, *.xls)|*.xlsx;*.xls";
+                ofd.RestoreDirectory = true;
+                ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {

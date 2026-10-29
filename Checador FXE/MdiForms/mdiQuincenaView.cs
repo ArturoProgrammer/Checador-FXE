@@ -23,7 +23,7 @@ namespace Checador_FXE.MdiForms
 
         void includeDebugTools()
         {
-#if DEV_MODE
+#if DEV_R1
             this.flQuickAccessPanel1.Buttons.Add(new QuickAccessButton()
             {
                 Name = "btnDebTools",
@@ -78,7 +78,7 @@ namespace Checador_FXE.MdiForms
             //this.RelacionHorarioSelected = projCaf.ConfiguracionCasting.Relacion ?? throw new Exception("Error durante el parseo de datos");
             this.RelacionHorarioSelected = RelacionHorarios.Parse(projCaf.ConfiguracionCasting.RelacionTurnosID,
                                                                     projCaf.ConfiguracionCasting.TurnosEmpleadoJson,
-                                                                    projCaf.ConfiguracionCasting.RelacionHash.ToString(), ShowObjectLog: true).Object ?? throw new Exception("Error durante el parseo de datos");
+                                                                    projCaf.ConfiguracionCasting.RelacionHash.ToString(), ShowObjectLog: false).Object ?? throw new Exception("Error durante el parseo de datos");
             LoadAllData();
         }
 
@@ -90,8 +90,10 @@ namespace Checador_FXE.MdiForms
                 {
                     $"{i.ID}",
                     $"{i.Nombre}",
-                    $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida)}",
-                    $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada)}", $"{Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida)}"
+                    Utils.WriteNotEmptyTimes(i.PrimerHorario.Entrada, i.PrimerHorario.EntradaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.PrimerHorario.Salida, i.PrimerHorario.SalidaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.SegundoHorario.Entrada, i.SegundoHorario.EntradaEstablecida),
+                    Utils.WriteNotEmptyTimes(i.SegundoHorario.Salida, i.SegundoHorario.SalidaEstablecida)
                 });
         };
 
@@ -110,9 +112,11 @@ namespace Checador_FXE.MdiForms
             this.calendarEmpleadoCasteado.FechaActual = DateOnly.Parse(Report.ReportPeriod.Start.ToString("d"));
 
             // Cargamos los valores de las propiedades
-            this.txtAreaRemitente.Value = "";
-            this.txtLugarRemitente.Value = LugarRemitente;
-            this.dateFechaRemitente.Value = DateTime.Now;
+            this.txtAreaRemitente.Value = projByCafOpened ? ActualCafProject.General.AreaRemitente : "";
+            this.txtLugarRemitente.Value = projByCafOpened ? ActualCafProject.General.LugarRemitente : LugarRemitente;
+            this.dateFechaRemitente.Value = projByCafOpened ? ActualCafProject.General.Fecha.ToDateTime(TimeOnly.MinValue) : DateTime.Now;
+            this.txtNombreElaborador.Value = projByCafOpened ? ActualCafProject.General.NombreElaborador : "";
+            this.txtAutorizador.Value = projByCafOpened ? ActualCafProject.General.Autorizador : "";
 
             int counter = 1;
             // Cargamos los chequeos obtenidos del analisis
@@ -143,7 +147,12 @@ namespace Checador_FXE.MdiForms
             loadTurnos(this.dgvTurnosHorarios.Grid,
                 projByCafOpened ? ActualCafProject.ConfiguracionCasting.HorariosTurnosCrudJson : Properties.Settings.Default.TURNOS_HORARIOS);
             // Cargamos el tiempo maximo de retraso permitido
-            this.txtMaximoRetrasoMinutosPermitidos.Value = new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
+            this.txtMaximoRetrasoMinutosPermitidos.Value = projByCafOpened
+                ? ActualCafProject.ConfiguracionCasting.TiempoRetrasoPermitido
+                : new TimeSpan(0, Properties.Settings.Default.MINUTOS_TOLERANCIA, 0);
+            this.chckDomingosNoLaborables.Checked = projByCafOpened
+                ? ActualCafProject.ConfiguracionCasting.DomingosNoLaborables
+                : this.chckDomingosNoLaborables.Checked;
 
             /*
              * SE MUEVE AL METODO LOAD DEL FORMULARIO DEBIDO A ERRORES DE INVOKE, YA QUE SE ESTABAN
@@ -168,9 +177,9 @@ namespace Checador_FXE.MdiForms
 
         private void mdiQuincenaView_Load(object sender, EventArgs e)
         {
-            this.splitContainer2.SplitterDistance = 570;
-            this.splitContainer1.SplitterDistance = 400;
-            this.splitResultadosCasting_Background.SplitterDistance = 275;
+            // Las pestañas todavía pueden estar ajustando su tamaño durante Load. Se difiere
+            // la distribución para usar el espacio final del formulario, no valores absolutos.
+            BeginInvoke((MethodInvoker)ConfigureInitialSplitContainers);
 
             this.dgvRelacionDeHorarios.SetGridStyle(DataGridStylesGallery.BlueStyle);
             this.dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
@@ -214,6 +223,50 @@ namespace Checador_FXE.MdiForms
 
             // Establecemos las filas innaccesibles
             this.dgvRelacionDeHorarios.SetLockedColumns(2);
+        }
+
+        void ConfigureInitialSplitContainers()
+        {
+            if (IsDisposed)
+                return;
+
+            // Vista de registros: calendario y detalle arriba, lista de empleados abajo.
+            ConfigureHorizontalSplit(splitContainer1, preferredPanel2Size: 180, panel1Minimum: 250, panel2Minimum: 150);
+
+            // Calendario de checadas y detalle diario: ambos deben crecer con la ventana.
+            ConfigureVerticalSplit(splitContainer2, preferredPanel1Ratio: .60, panel1Minimum: 380, panel2Minimum: 280);
+
+            // Resultados del casting: árbol de empleados y calendario del empleado seleccionado.
+            ConfigureVerticalSplit(splitResultadosCasting_Background, preferredPanel1Ratio: .32, panel1Minimum: 240, panel2Minimum: 380);
+        }
+
+        static void ConfigureHorizontalSplit(SplitContainer container, int preferredPanel2Size, int panel1Minimum, int panel2Minimum)
+        {
+            int availableSize = Math.Max(0, container.ClientSize.Height - container.SplitterWidth);
+            int effectivePanel1Minimum = Math.Min(panel1Minimum, Math.Max(0, availableSize - panel2Minimum));
+            int effectivePanel2Minimum = Math.Min(panel2Minimum, Math.Max(0, availableSize - effectivePanel1Minimum));
+
+            container.Panel1MinSize = effectivePanel1Minimum;
+            container.Panel2MinSize = effectivePanel2Minimum;
+            container.SplitterDistance = Math.Clamp(
+                availableSize - preferredPanel2Size,
+                effectivePanel1Minimum,
+                availableSize - effectivePanel2Minimum);
+        }
+
+        static void ConfigureVerticalSplit(SplitContainer container, double preferredPanel1Ratio, int panel1Minimum, int panel2Minimum)
+        {
+            int availableSize = Math.Max(0, container.ClientSize.Width - container.SplitterWidth);
+            int effectivePanel1Minimum = Math.Min(panel1Minimum, Math.Max(0, availableSize - panel2Minimum));
+            int effectivePanel2Minimum = Math.Min(panel2Minimum, Math.Max(0, availableSize - effectivePanel1Minimum));
+            int preferredDistance = (int)Math.Round(availableSize * preferredPanel1Ratio);
+
+            container.Panel1MinSize = effectivePanel1Minimum;
+            container.Panel2MinSize = effectivePanel2Minimum;
+            container.SplitterDistance = Math.Clamp(
+                preferredDistance,
+                effectivePanel1Minimum,
+                availableSize - effectivePanel2Minimum);
         }
 
         ListViewItem actualSelectedEmpleado = null;
@@ -447,7 +500,7 @@ namespace Checador_FXE.MdiForms
                             ProcessStartInfo psi = new ProcessStartInfo()
                             {
                                 FileName = i,
-                                UseShellExecute = true 
+                                UseShellExecute = true
                             };
 
                             Process.Start(psi);
@@ -464,6 +517,7 @@ namespace Checador_FXE.MdiForms
 
                     Program.WriteStatus(true, "Iniciando procesamiendo del casting...");
                     PairEmpleado_FechaAsistencia = null;    // Establecemos este valor default para evitar conflictos
+                    PairEmpleado_FechaAsistenciaOriginal = null;
 
                     #region HELPERS DE CODIGO
                     RelacionHorarios _relac = this.RelacionHorarioSelected.UpdateByGrid(this.dgvRelacionDeHorarios.Rows.Cast<DataGridViewRow>().Select(r => r).ToArray());
@@ -557,10 +611,13 @@ namespace Checador_FXE.MdiForms
                     };
                     #endregion
 
-                    Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
+                    bool useSavedCasting = projByCafOpened && ActualCafProject.ResultadosCasting.PeriodoCasteado.Count > 0;
+                    Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> _PeriodoCasteado = useSavedCasting
+                        ? CloneCastingResults(ActualCafProject.ResultadosCasting.PeriodoCasteado)
+                        : BuildPeriodTimeList();
                     //PeriodoCasteadoCollection _PeriodoCasteado = projByCafOpened ? ActualCafProject.ResultadosCasting.PeriodoCasteado : BuildPeriodTimeList();
 
-                    if (!projByCafOpened)
+                    if (!useSavedCasting)
                     {
                         #region ANALIZAMOS EL CHEQUEO CON LOS HORARIOS Y TURNOS CONFIGURADOS
                         Turno[] _turnos = Utils.ParseHorariosTurnosByDgv(this.dgvTurnosHorarios);   // Hay que modificar aqui
@@ -622,18 +679,22 @@ namespace Checador_FXE.MdiForms
 
                     ObservableCollection<InteropGenericObject> _list = new ObservableCollection<InteropGenericObject>();
 
-                    foreach (string empleado in _PeriodoCasteado.Keys)
+                    PairEmpleado_FechaAsistencia = CloneCastingResults(_PeriodoCasteado);
+                    PairEmpleado_FechaAsistenciaOriginal = useSavedCasting
+                        ? CloneCastingResults(ActualCafProject.ResultadosCasting.PeriodoCasteadoOriginal)
+                        : CloneCastingResults(_PeriodoCasteado);
+
+                    foreach (string empleado in PairEmpleado_FechaAsistencia.Keys)
                         _list.Add(InteropGenericObject.Compatibilize(empleado,
                                                                     "",
-                                                                    _PeriodoCasteado[empleado],
+                                                                    PairEmpleado_FechaAsistencia[empleado],
                                                                     new HexaHash().Hash,
                                                                     0, 1));
 
-                    PairEmpleado_FechaAsistencia = _PeriodoCasteado;
                     CASTING_RESULT = _list;
                     this.treePagingResultadosCasting.Items = _list;
 
-                    this.lblTotalDeEmpleados.InfoLabelText = _PeriodoCasteado.Keys.Count().ToString();
+                    this.lblTotalDeEmpleados.InfoLabelText = PairEmpleado_FechaAsistencia.Keys.Count().ToString();
 
                     Program.WriteStatus(true, $"Ejecucion de casting finalizada con exito!");
                     #endregion
@@ -791,6 +852,22 @@ namespace Checador_FXE.MdiForms
         /// Empleado -> (Fecha -> Tipo de asistencia en la fecha)
         /// </summary>
         Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>? PairEmpleado_FechaAsistencia = null;
+        Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>? PairEmpleado_FechaAsistenciaOriginal = null;
+
+        internal Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> CurrentCastingResults =>
+            PairEmpleado_FechaAsistencia is null
+                ? new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>()
+                : CloneCastingResults(PairEmpleado_FechaAsistencia);
+
+        internal Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> OriginalCastingResults =>
+            PairEmpleado_FechaAsistenciaOriginal is null
+                ? new Dictionary<string, Dictionary<DateOnly, TipoAsistencia>>()
+                : CloneCastingResults(PairEmpleado_FechaAsistenciaOriginal);
+
+        static Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> CloneCastingResults(
+            Dictionary<string, Dictionary<DateOnly, TipoAsistencia>> source) => source.ToDictionary(
+                employee => employee.Key,
+                employee => new Dictionary<DateOnly, TipoAsistencia>(employee.Value));
 
         /// <summary>
         /// Ruta en la que se generara (guardara el pdf)
@@ -862,16 +939,10 @@ namespace Checador_FXE.MdiForms
             /* 
              * MOSTRAMOS LOS REGISTROS DEL EMPLEADO SELECCIONADO
              * */
-            this.calendarEmpleadoCasteado.ClearEvents();
-
-            Dictionary<DateOnly, TipoAsistencia> registros = e.Object.GenericObject as Dictionary<DateOnly, TipoAsistencia>;
-
             try
             {
-                foreach (DateOnly dia in registros.Keys)
-                    this.calendarEmpleadoCasteado.AddEvent(dia, (registros[dia] is TipoAsistencia.NINGUNO ? "" : registros[dia].GetText()), setColorOfAsistencia(registros[dia]));
-
                 ACTUAL_EMPLEADO_SELECCIONADO = e.Node.Text;
+                RefreshSelectedEmployeeCalendar();
 
                 Program.WriteStatus(true, "Registros el empleado cargados!");
             }
@@ -901,68 +972,22 @@ namespace Checador_FXE.MdiForms
         {
             /* 
              * Mostramos las propiedades de ese dia seleccionado
-             * */
-            if (e.Events is null || e.Events.Length == 0)
-            {
-                Program.WriteStatus(false, $"Debes seleccionar un empleado para continuar!");
-                return;
-            }
-
-            List<string> optionLists = new List<string>();
-            foreach (var i in Enum.GetValues<TipoAsistencia>())
-            {
-                optionLists.Add(i.GetText());
-            }
-
-            var frmPopUp = flComboBoxInput.Show($"Propiedad del dia '{e.Date:dd/MM/yyyy}'", "Estatus:", optionLists.ToArray(), Program.StandardFormStyle);
-            //var frmPopUp = flListItemExplorerBox.Show("Propiedades", optionLists.ToArray(), Program.StandardFormStyle);
+             */
+            var frmPopUp = flComboBoxInput.Show($"Propiedad del dia '{e.Date:dd/MM/yyyy}'",
+                                                "Estatus:",
+                                                Enum.GetValues<TipoAsistencia>().Select(i => i.GetText()).ToArray(),
+                                                Program.StandardFormStyle);
 
             if (frmPopUp.DialogResult == DialogResult.Cancel)
                 return;
 
-            if (ACTUAL_EMPLEADO_SELECCIONADO == "-1")
-                return;
-
-            // Indicamos el nuevo estatus seleccionado
-            try
-            {
-                // Actualizamos los eventos registrados
-                for (int i = 0; i < CASTING_RESULT.Count; i++)
-                {
-                    if (CASTING_RESULT[i].ObjectTitle == ACTUAL_EMPLEADO_SELECCIONADO)
-                    {
-                        Dictionary<DateOnly, TipoAsistencia> registros = CASTING_RESULT[i].GenericObject as Dictionary<DateOnly, TipoAsistencia>;
-                        registros[e.Date] = TipoAsistenciaExtensions.Parse(frmPopUp.Response);
-
-                        CASTING_RESULT[i].GenericObject = registros;
-                        break;
-                    }
-                }
-
-                // Recargamos los registros del empleado seleccionado
-                this.treePagingResultadosCasting.Items = CASTING_RESULT;
-
-                // Recargamos los eventos
-                this.calendarEmpleadoCasteado.ClearEvents();
-                InteropGenericObject? iop = CASTING_RESULT.Cast<InteropGenericObject>()
-                                                                .Where(i => i.ObjectTitle == ACTUAL_EMPLEADO_SELECCIONADO)
-                                                                .FirstOrDefault();
-                if (iop == null)
-                    return;
-
-                Dictionary<DateOnly, TipoAsistencia> _registros = iop.GenericObject as Dictionary<DateOnly, TipoAsistencia>;
-
-                foreach (DateOnly dia in _registros.Keys)
-                    this.calendarEmpleadoCasteado.AddEvent(dia, (_registros[dia] is TipoAsistencia.NINGUNO ? "" : _registros[dia].GetText()), setColorOfAsistencia(_registros[dia]));
-            }
-            catch (Exception ex)
-            {
-                Program.WriteStatus(false, "Error inesperado", $"{ex.Message}", $"{ex}");
-            }
+            SetCustomAsistencia(TipoAsistenciaExtensions.Parse(frmPopUp.Response), e.Date);
         }
 
         private void mdiQuincenaView_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (projByCafOpened)
+                ActualCafProject.CleanupTemporaryFiles();
             /* 
              * Eliminamos el nodo correspondiente en el arbol de quincenas abiertas
              * */
@@ -1085,5 +1110,81 @@ namespace Checador_FXE.MdiForms
         {
 
         }
+
+        private void restaurarAOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_contextMenuEvArgs is null || PairEmpleado_FechaAsistenciaOriginal is null ||
+                !PairEmpleado_FechaAsistenciaOriginal.TryGetValue(ACTUAL_EMPLEADO_SELECCIONADO, out var originalResults) ||
+                !originalResults.TryGetValue(_contextMenuEvArgs.Date, out TipoAsistencia original))
+            {
+                Program.WriteStatus(false, "No existe un resultado original para restaurar.");
+                return;
+            }
+
+            SetCustomAsistencia(original, _contextMenuEvArgs.Date);
+        }
+
+        void SetCustomAsistencia(TipoAsistencia asistencia, DateOnly date)
+        {
+            if (ACTUAL_EMPLEADO_SELECCIONADO == "-1" || PairEmpleado_FechaAsistencia is null ||
+                !PairEmpleado_FechaAsistencia.TryGetValue(ACTUAL_EMPLEADO_SELECCIONADO, out Dictionary<DateOnly, TipoAsistencia>? records) ||
+                !records.ContainsKey(date))
+            {
+                Program.WriteStatus(false, "Debes seleccionar un empleado y un día válido para continuar.");
+                return;
+            }
+
+            try
+            {
+                records[date] = asistencia;
+                InteropGenericObject? employeeItem = CASTING_RESULT
+                    .FirstOrDefault(item => item.ObjectTitle == ACTUAL_EMPLEADO_SELECCIONADO);
+                if (employeeItem is not null)
+                    employeeItem.GenericObject = records;
+
+                this.treePagingResultadosCasting.Items = CASTING_RESULT;
+                RefreshSelectedEmployeeCalendar();
+                Program.WriteStatus(true, $"Asistencia de '{ACTUAL_EMPLEADO_SELECCIONADO}' actualizada para {date:dd/MM/yyyy}.");
+            }
+            catch (Exception ex)
+            {
+                Program.WriteStatus(false, "Error inesperado", ex.Message, ex.ToString());
+            }
+        }
+
+        void RefreshSelectedEmployeeCalendar()
+        {
+            this.calendarEmpleadoCasteado.ClearEvents();
+            if (PairEmpleado_FechaAsistencia is null ||
+                !PairEmpleado_FechaAsistencia.TryGetValue(ACTUAL_EMPLEADO_SELECCIONADO, out Dictionary<DateOnly, TipoAsistencia>? records))
+                return;
+
+            foreach (DateOnly day in records.Keys)
+                this.calendarEmpleadoCasteado.AddEvent(day,
+                    records[day] is TipoAsistencia.NINGUNO ? "" : records[day].GetText(),
+                    setColorOfAsistencia(records[day]));
+        }
+
+        DayContextMenuEventArgs? _contextMenuEvArgs;
+
+        private void calendarEmpleadoCasteado_OnDayContextMenuOpening(object sender, DayContextMenuEventArgs e)
+        {
+            _contextMenuEvArgs = e;
+            bool canRestore = PairEmpleado_FechaAsistencia is not null &&
+                PairEmpleado_FechaAsistenciaOriginal is not null &&
+                PairEmpleado_FechaAsistencia.TryGetValue(ACTUAL_EMPLEADO_SELECCIONADO, out var currentResults) &&
+                PairEmpleado_FechaAsistenciaOriginal.TryGetValue(ACTUAL_EMPLEADO_SELECCIONADO, out var originalResults) &&
+                currentResults.TryGetValue(e.Date, out TipoAsistencia current) &&
+                originalResults.TryGetValue(e.Date, out TipoAsistencia original) &&
+                current != original;
+            restaurarAOriginalToolStripMenuItem.Enabled = canRestore;
+        }
+
+        private void asignarAsistenciaToolStripMenuItem_Click(object sender, EventArgs e) { if (_contextMenuEvArgs is not null) SetCustomAsistencia(TipoAsistencia.ASISTENCIA, _contextMenuEvArgs.Date); }
+        private void asignarFaltaToolStripMenuItem_Click(object sender, EventArgs e) { if (_contextMenuEvArgs is not null) SetCustomAsistencia(TipoAsistencia.FALTA, _contextMenuEvArgs.Date); }
+        private void asignarDescansoToolStripMenuItem_Click(object sender, EventArgs e) { if (_contextMenuEvArgs is not null) SetCustomAsistencia(TipoAsistencia.DESCANSO_LABORADO, _contextMenuEvArgs.Date); }
+        private void asignarDescansoSemanalToolStripMenuItem_Click(object sender, EventArgs e) { if (_contextMenuEvArgs is not null) SetCustomAsistencia(TipoAsistencia.DESCANSO_SEM, _contextMenuEvArgs.Date); }
+        private void asignarVacacionesToolStripMenuItem_Click(object sender, EventArgs e) { if (_contextMenuEvArgs is not null) SetCustomAsistencia(TipoAsistencia.VACACIONES, _contextMenuEvArgs.Date); }
+
     }
 }

@@ -193,12 +193,12 @@ namespace Checador_FXE
 
                     Action<int, Turno> writeTurn = (row, turn) =>
                     {
-                        ws.Cell(row, COLS.PH_IN).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Entrada);
-                        ws.Cell(row, COLS.PH_OUT).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Salida);
-                        ws.Cell(row, COLS.SH_IN).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Entrada);
-                        ws.Cell(row, COLS.SH_OUT).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Salida);
-                        ws.Cell(row, COLS.TE_IN).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Entrada);
-                        ws.Cell(row, COLS.TE_OUT).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Salida);
+                        ws.Cell(row, COLS.PH_IN).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Entrada, turn.PrimerHorario.EntradaEstablecida);
+                        ws.Cell(row, COLS.PH_OUT).Value = Utils.WriteNotEmptyTimes(turn.PrimerHorario.Salida, turn.PrimerHorario.SalidaEstablecida);
+                        ws.Cell(row, COLS.SH_IN).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Entrada, turn.SegundoHorario.EntradaEstablecida);
+                        ws.Cell(row, COLS.SH_OUT).Value = Utils.WriteNotEmptyTimes(turn.SegundoHorario.Salida, turn.SegundoHorario.SalidaEstablecida);
+                        ws.Cell(row, COLS.TE_IN).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Entrada, turn.TiempoExtra.EntradaEstablecida);
+                        ws.Cell(row, COLS.TE_OUT).Value = Utils.WriteNotEmptyTimes(turn.TiempoExtra.Salida, turn.TiempoExtra.SalidaEstablecida);
                     };
                     Action<int> clearTurn = row =>
                     {

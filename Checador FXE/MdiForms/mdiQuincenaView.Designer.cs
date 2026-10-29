@@ -95,6 +95,16 @@ namespace Checador_FXE.MdiForms
             treePagingResultadosCasting = new flTreeViewPaging();
             panel2 = new Panel();
             calendarEmpleadoCasteado = new flEventCalendar();
+            contextMenuStrip_CastingCalendar = new ContextMenuStrip(components);
+            restaurarAOriginalToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            asignarAsistenciaToolStripMenuItem = new ToolStripMenuItem();
+            asignarFaltaToolStripMenuItem = new ToolStripMenuItem();
+            asignarDescansoToolStripMenuItem = new ToolStripMenuItem();
+            asignarDescansoSemanalToolStripMenuItem = new ToolStripMenuItem();
+            asignarVacacionesToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            verRutaToolStripMenuItem = new ToolStripMenuItem();
             tableLayoutPanel2 = new TableLayoutPanel();
             flQuickAccessPanel1 = new flQuickAccessPanel();
             flExtendedTabControl1.SuspendLayout();
@@ -126,6 +136,7 @@ namespace Checador_FXE.MdiForms
             splitResultadosCasting_Background.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             panel2.SuspendLayout();
+            contextMenuStrip_CastingCalendar.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -306,7 +317,6 @@ namespace Checador_FXE.MdiForms
             // splitContainer1
             // 
             splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.FixedPanel = FixedPanel.Panel2;
             splitContainer1.Location = new Point(0, 0);
             splitContainer1.Name = "splitContainer1";
             splitContainer1.Orientation = Orientation.Horizontal;
@@ -319,14 +329,13 @@ namespace Checador_FXE.MdiForms
             // 
             splitContainer1.Panel2.Controls.Add(lviewRegistros);
             splitContainer1.Size = new Size(190, 65);
-            splitContainer1.SplitterDistance = 36;
+            splitContainer1.SplitterDistance = 35;
             splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
             // 
             splitContainer2.BorderStyle = BorderStyle.FixedSingle;
             splitContainer2.Dock = DockStyle.Fill;
-            splitContainer2.FixedPanel = FixedPanel.Panel2;
             splitContainer2.Location = new Point(0, 0);
             splitContainer2.Name = "splitContainer2";
             // 
@@ -339,7 +348,7 @@ namespace Checador_FXE.MdiForms
             splitContainer2.Panel2.BackColor = SystemColors.GradientInactiveCaption;
             splitContainer2.Panel2.Controls.Add(tableLayoutPanel1);
             splitContainer2.Panel2MinSize = 100;
-            splitContainer2.Size = new Size(190, 36);
+            splitContainer2.Size = new Size(190, 35);
             splitContainer2.SplitterDistance = 25;
             splitContainer2.SplitterWidth = 8;
             splitContainer2.TabIndex = 2;
@@ -348,21 +357,25 @@ namespace Checador_FXE.MdiForms
             // 
             calendarAsistencias.CalendarCulture = new System.Globalization.CultureInfo("es-MX");
             calendarAsistencias.ColorBorde = Color.Gray;
+            calendarAsistencias.ColorBordeSeleccionado = Color.DodgerBlue;
             calendarAsistencias.ColorDiasSemana = Color.White;
             calendarAsistencias.ColorDomingos = Color.LightCoral;
             calendarAsistencias.ColorEncabezado = Color.SteelBlue;
             calendarAsistencias.ColorEventoPredeterminado = Color.Blue;
             calendarAsistencias.ColorTextoEncabezado = Color.White;
+            calendarAsistencias.DayContextStrip = null;
             calendarAsistencias.DayNameSize = DayNameDisplaySize.SHORT;
             calendarAsistencias.Dock = DockStyle.Fill;
-            calendarAsistencias.FechaActual = new DateOnly(2026, 2, 4);
+            calendarAsistencias.FechaActual = new DateOnly(2026, 10, 28);
+            calendarAsistencias.FechaSeleccionada = new DateOnly(2026, 10, 28);
             calendarAsistencias.FuenteEventos = new Font("Segoe UI", 8F);
+            calendarAsistencias.GrosorBordeSeleccionado = 2;
             calendarAsistencias.Location = new Point(0, 0);
             calendarAsistencias.MonthNavigation = true;
             calendarAsistencias.Name = "calendarAsistencias";
             calendarAsistencias.ShowHolidays = true;
             calendarAsistencias.ShowMonthHeader = true;
-            calendarAsistencias.Size = new Size(23, 34);
+            calendarAsistencias.Size = new Size(23, 33);
             calendarAsistencias.TabIndex = 0;
             calendarAsistencias.Text = "flEventCalendar1";
             calendarAsistencias.OnDayDoubleClick += calendarAsistencias_OnDayDoubleClick;
@@ -383,7 +396,7 @@ namespace Checador_FXE.MdiForms
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(159, 34);
+            tableLayoutPanel1.Size = new Size(155, 33);
             tableLayoutPanel1.TabIndex = 1;
             // 
             // lviewDayEvents
@@ -407,7 +420,7 @@ namespace Checador_FXE.MdiForms
             lviewDayEvents.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewDayEvents.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewDayEvents.ShowGridLines = true;
-            lviewDayEvents.Size = new Size(159, 1);
+            lviewDayEvents.Size = new Size(155, 1);
             lviewDayEvents.SmallImageList = imageList1;
             lviewDayEvents.TabIndex = 3;
             lviewDayEvents.UseAlternatingRowColors = true;
@@ -448,7 +461,7 @@ namespace Checador_FXE.MdiForms
             dateFechaSeleccionada.MinimumSize = new Size(100, 30);
             dateFechaSeleccionada.Name = "dateFechaSeleccionada";
             dateFechaSeleccionada.RootLineColor = Color.Gray;
-            dateFechaSeleccionada.Size = new Size(159, 30);
+            dateFechaSeleccionada.Size = new Size(155, 30);
             dateFechaSeleccionada.TabIndex = 1;
             dateFechaSeleccionada.TextBoxBackColor = SystemColors.GradientActiveCaption;
             dateFechaSeleccionada.TextBoxWidth = 120;
@@ -467,7 +480,7 @@ namespace Checador_FXE.MdiForms
             txtEmpleadoSeleccionado.Name = "txtEmpleadoSeleccionado";
             txtEmpleadoSeleccionado.Placeholder = "";
             txtEmpleadoSeleccionado.RootLineColor = Color.Gray;
-            txtEmpleadoSeleccionado.Size = new Size(153, 30);
+            txtEmpleadoSeleccionado.Size = new Size(149, 30);
             txtEmpleadoSeleccionado.TabIndex = 2;
             txtEmpleadoSeleccionado.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtEmpleadoSeleccionado.Value = "";
@@ -493,7 +506,7 @@ namespace Checador_FXE.MdiForms
             lviewRegistros.SelectedItemColor = Color.FromArgb(0, 120, 215);
             lviewRegistros.SelectedItemForeColor = SystemColors.ActiveCaptionText;
             lviewRegistros.ShowGridLines = true;
-            lviewRegistros.Size = new Size(190, 25);
+            lviewRegistros.Size = new Size(190, 26);
             lviewRegistros.SmallImageList = imageList1;
             lviewRegistros.TabIndex = 1;
             lviewRegistros.UseAlternatingRowColors = false;
@@ -930,7 +943,6 @@ namespace Checador_FXE.MdiForms
             // splitResultadosCasting_Background
             // 
             splitResultadosCasting_Background.Dock = DockStyle.Fill;
-            splitResultadosCasting_Background.FixedPanel = FixedPanel.Panel1;
             splitResultadosCasting_Background.Location = new Point(0, 0);
             splitResultadosCasting_Background.Name = "splitResultadosCasting_Background";
             // 
@@ -942,7 +954,7 @@ namespace Checador_FXE.MdiForms
             // 
             splitResultadosCasting_Background.Panel2.Controls.Add(panel2);
             splitResultadosCasting_Background.Size = new Size(190, 65);
-            splitResultadosCasting_Background.SplitterDistance = 161;
+            splitResultadosCasting_Background.SplitterDistance = 160;
             splitResultadosCasting_Background.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -961,7 +973,7 @@ namespace Checador_FXE.MdiForms
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
-            tableLayoutPanel3.Size = new Size(161, 65);
+            tableLayoutPanel3.Size = new Size(160, 65);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // txtBusqueda
@@ -976,7 +988,7 @@ namespace Checador_FXE.MdiForms
             txtBusqueda.Name = "txtBusqueda";
             txtBusqueda.Placeholder = "";
             txtBusqueda.RootLineColor = Color.Gray;
-            txtBusqueda.Size = new Size(153, 30);
+            txtBusqueda.Size = new Size(152, 30);
             txtBusqueda.TabIndex = 0;
             txtBusqueda.TextBoxBackColor = SystemColors.GradientActiveCaption;
             txtBusqueda.TextBoxWidth = 175;
@@ -995,7 +1007,7 @@ namespace Checador_FXE.MdiForms
             lblTotalDeEmpleados.MinimumSize = new Size(150, 30);
             lblTotalDeEmpleados.Name = "lblTotalDeEmpleados";
             lblTotalDeEmpleados.RootLineColor = Color.Gray;
-            lblTotalDeEmpleados.Size = new Size(153, 30);
+            lblTotalDeEmpleados.Size = new Size(152, 30);
             lblTotalDeEmpleados.TabIndex = 1;
             // 
             // treePagingResultadosCasting
@@ -1016,7 +1028,7 @@ namespace Checador_FXE.MdiForms
             treePagingResultadosCasting.SelectedItem = null;
             treePagingResultadosCasting.SelectedNode = null;
             treePagingResultadosCasting.ShowLines = false;
-            treePagingResultadosCasting.Size = new Size(153, 140);
+            treePagingResultadosCasting.Size = new Size(152, 140);
             treePagingResultadosCasting.TabIndex = 2;
             treePagingResultadosCasting.TreeViewBackColor = SystemColors.GradientActiveCaption;
             treePagingResultadosCasting.VisualizationImageList = imageList1;
@@ -1029,31 +1041,103 @@ namespace Checador_FXE.MdiForms
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(25, 65);
+            panel2.Size = new Size(26, 65);
             panel2.TabIndex = 0;
             // 
             // calendarEmpleadoCasteado
             // 
             calendarEmpleadoCasteado.CalendarCulture = new System.Globalization.CultureInfo("es-MX");
             calendarEmpleadoCasteado.ColorBorde = Color.Gray;
+            calendarEmpleadoCasteado.ColorBordeSeleccionado = Color.DodgerBlue;
             calendarEmpleadoCasteado.ColorDiasSemana = Color.White;
             calendarEmpleadoCasteado.ColorDomingos = Color.LightCoral;
             calendarEmpleadoCasteado.ColorEncabezado = Color.SteelBlue;
             calendarEmpleadoCasteado.ColorEventoPredeterminado = Color.Blue;
             calendarEmpleadoCasteado.ColorTextoEncabezado = Color.White;
+            calendarEmpleadoCasteado.DayContextStrip = contextMenuStrip_CastingCalendar;
             calendarEmpleadoCasteado.DayNameSize = DayNameDisplaySize.SHORT;
             calendarEmpleadoCasteado.Dock = DockStyle.Fill;
-            calendarEmpleadoCasteado.FechaActual = new DateOnly(2026, 2, 4);
+            calendarEmpleadoCasteado.FechaActual = new DateOnly(2026, 10, 28);
+            calendarEmpleadoCasteado.FechaSeleccionada = new DateOnly(2026, 10, 28);
             calendarEmpleadoCasteado.FuenteEventos = new Font("Segoe UI", 8F);
+            calendarEmpleadoCasteado.GrosorBordeSeleccionado = 2;
             calendarEmpleadoCasteado.Location = new Point(0, 0);
             calendarEmpleadoCasteado.MonthNavigation = true;
             calendarEmpleadoCasteado.Name = "calendarEmpleadoCasteado";
             calendarEmpleadoCasteado.ShowHolidays = true;
             calendarEmpleadoCasteado.ShowMonthHeader = true;
-            calendarEmpleadoCasteado.Size = new Size(23, 63);
+            calendarEmpleadoCasteado.Size = new Size(24, 63);
             calendarEmpleadoCasteado.TabIndex = 3;
             calendarEmpleadoCasteado.Text = "flEventCalendar1";
             calendarEmpleadoCasteado.OnDayDoubleClick += calendarEmpleadoCasteado_OnDayDoubleClick;
+            calendarEmpleadoCasteado.OnDayContextMenuOpening += calendarEmpleadoCasteado_OnDayContextMenuOpening;
+            // 
+            // contextMenuStrip_CastingCalendar
+            // 
+            contextMenuStrip_CastingCalendar.ImageScalingSize = new Size(20, 20);
+            contextMenuStrip_CastingCalendar.Items.AddRange(new ToolStripItem[] { restaurarAOriginalToolStripMenuItem, toolStripSeparator1, asignarAsistenciaToolStripMenuItem, asignarFaltaToolStripMenuItem, asignarDescansoToolStripMenuItem, asignarDescansoSemanalToolStripMenuItem, asignarVacacionesToolStripMenuItem, toolStripSeparator2, verRutaToolStripMenuItem });
+            contextMenuStrip_CastingCalendar.Name = "contextMenuStrip_CastingCalendar";
+            contextMenuStrip_CastingCalendar.Size = new Size(264, 184);
+            // 
+            // restaurarAOriginalToolStripMenuItem
+            // 
+            restaurarAOriginalToolStripMenuItem.Enabled = false;
+            restaurarAOriginalToolStripMenuItem.Name = "restaurarAOriginalToolStripMenuItem";
+            restaurarAOriginalToolStripMenuItem.Size = new Size(263, 24);
+            restaurarAOriginalToolStripMenuItem.Text = "Restaurar a original";
+            restaurarAOriginalToolStripMenuItem.Click += restaurarAOriginalToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(260, 6);
+            // 
+            // asignarAsistenciaToolStripMenuItem
+            // 
+            asignarAsistenciaToolStripMenuItem.Name = "asignarAsistenciaToolStripMenuItem";
+            asignarAsistenciaToolStripMenuItem.Size = new Size(263, 24);
+            asignarAsistenciaToolStripMenuItem.Text = "Asignar Asistencia";
+            asignarAsistenciaToolStripMenuItem.Click += asignarAsistenciaToolStripMenuItem_Click;
+            // 
+            // asignarFaltaToolStripMenuItem
+            // 
+            asignarFaltaToolStripMenuItem.Name = "asignarFaltaToolStripMenuItem";
+            asignarFaltaToolStripMenuItem.Size = new Size(263, 24);
+            asignarFaltaToolStripMenuItem.Text = "Asignar Falta";
+            asignarFaltaToolStripMenuItem.Click += asignarFaltaToolStripMenuItem_Click;
+            // 
+            // asignarDescansoToolStripMenuItem
+            // 
+            asignarDescansoToolStripMenuItem.Name = "asignarDescansoToolStripMenuItem";
+            asignarDescansoToolStripMenuItem.Size = new Size(263, 24);
+            asignarDescansoToolStripMenuItem.Text = "Asignar Descanso Laborado";
+            asignarDescansoToolStripMenuItem.Click += asignarDescansoToolStripMenuItem_Click;
+            // 
+            // asignarDescansoSemanalToolStripMenuItem
+            // 
+            asignarDescansoSemanalToolStripMenuItem.Name = "asignarDescansoSemanalToolStripMenuItem";
+            asignarDescansoSemanalToolStripMenuItem.Size = new Size(263, 24);
+            asignarDescansoSemanalToolStripMenuItem.Text = "Asignar Descanso Semanal";
+            asignarDescansoSemanalToolStripMenuItem.Click += asignarDescansoSemanalToolStripMenuItem_Click;
+            // 
+            // asignarVacacionesToolStripMenuItem
+            // 
+            asignarVacacionesToolStripMenuItem.Name = "asignarVacacionesToolStripMenuItem";
+            asignarVacacionesToolStripMenuItem.Size = new Size(263, 24);
+            asignarVacacionesToolStripMenuItem.Text = "Asignar Vacaciones";
+            asignarVacacionesToolStripMenuItem.Click += asignarVacacionesToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(260, 6);
+            // 
+            // verRutaToolStripMenuItem
+            // 
+            verRutaToolStripMenuItem.Enabled = false;
+            verRutaToolStripMenuItem.Name = "verRutaToolStripMenuItem";
+            verRutaToolStripMenuItem.Size = new Size(263, 24);
+            verRutaToolStripMenuItem.Text = "Ver criterios de casting";
             // 
             // tableLayoutPanel2
             // 
@@ -1077,7 +1161,7 @@ namespace Checador_FXE.MdiForms
             quickAccessButton1.BackColor = SystemColors.ActiveCaption;
             quickAccessButton1.BorderLineColor = Color.Silver;
             quickAccessButton1.BorderLineThickness = 1;
-            quickAccessButton1.Enabled = false;
+            quickAccessButton1.Enabled = true;
             quickAccessButton1.FlatStyle = FlatStyle.Flat;
             quickAccessButton1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             quickAccessButton1.ForeColor = SystemColors.ControlText;
@@ -1186,6 +1270,7 @@ namespace Checador_FXE.MdiForms
             splitResultadosCasting_Background.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             panel2.ResumeLayout(false);
+            contextMenuStrip_CastingCalendar.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -1252,5 +1337,15 @@ namespace Checador_FXE.MdiForms
         private ColumnHeader colNumEmp;
         private ColumnHeader colNombreEmpleado;
         private ColumnHeader colTotalRegistros;
+        private ContextMenuStrip contextMenuStrip_CastingCalendar;
+        private ToolStripMenuItem restaurarAOriginalToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem asignarAsistenciaToolStripMenuItem;
+        private ToolStripMenuItem asignarFaltaToolStripMenuItem;
+        private ToolStripMenuItem asignarDescansoToolStripMenuItem;
+        private ToolStripMenuItem asignarVacacionesToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem verRutaToolStripMenuItem;
+        private ToolStripMenuItem asignarDescansoSemanalToolStripMenuItem;
     }
 }

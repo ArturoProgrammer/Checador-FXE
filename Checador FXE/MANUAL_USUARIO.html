@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manual de usuario de Checador FXE">
+  <title>Manual de usuario | Checador FXE</title>
+  <style>
+    :root { --navy:#062c4d; --blue:#0877bd; --sky:#eaf5fc; --ink:#1c2933; --muted:#5c6b76; --line:#d7e1e8; --warn:#fff7df; --warn-line:#d29b22; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:#f4f7f9; font:16px/1.62 "Segoe UI", Arial, sans-serif; }
+    header { color:#fff; background:linear-gradient(120deg, var(--navy), var(--blue)); padding:56px 24px 44px; }
+    .wrap { width:min(1080px, calc(100% - 40px)); margin:auto; }
+    h1 { margin:0; font-size:clamp(2rem, 5vw, 3.5rem); line-height:1.15; }
+    header p { margin:10px 0 0; font-size:1.1rem; opacity:.92; }
+    main { display:grid; grid-template-columns:250px minmax(0, 1fr); gap:30px; padding:32px 0 56px; }
+    nav { position:sticky; top:18px; align-self:start; padding:18px; background:#fff; border:1px solid var(--line); border-radius:10px; }
+    nav strong { display:block; margin-bottom:7px; color:var(--navy); }
+    nav a { display:block; padding:4px 0; color:#276b9d; font-size:.92rem; text-decoration:none; }
+    nav a:hover { text-decoration:underline; }
+    article { padding:clamp(24px, 5vw, 48px); background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 6px 20px rgb(12 42 62 / 5%); }
+    h2 { margin:42px 0 12px; padding-bottom:8px; color:var(--navy); border-bottom:2px solid #cfe5f4; font-size:1.7rem; }
+    h2:first-child { margin-top:0; }
+    h3 { margin:27px 0 7px; color:#075f99; font-size:1.18rem; }
+    p, ul, ol { margin:10px 0 16px; }
+    li + li { margin-top:4px; }
+    table { width:100%; margin:16px 0 22px; border-collapse:collapse; overflow:hidden; border:1px solid var(--line); border-radius:7px; }
+    th, td { padding:10px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { color:var(--navy); background:var(--sky); }
+    tr:last-child td { border-bottom:0; }
+    code { padding:2px 5px; color:#7b3028; background:#f3f5f6; border-radius:4px; font: .9em Consolas, monospace; }
+    .note { margin:18px 0; padding:14px 16px; background:var(--warn); border-left:4px solid var(--warn-line); border-radius:4px; }
+    .tag { display:inline-block; margin:13px 8px 0 0; padding:3px 9px; color:#e8f5ff; border:1px solid rgb(255 255 255 / 40%); border-radius:999px; font-size:.85rem; }
+    footer { padding:24px; color:var(--muted); background:#e8eef2; text-align:center; font-size:.9rem; }
+    @media print { body { background:#fff; font-size:11pt; } header { padding:20px; background:#fff; color:#000; } main { display:block; padding:0; } nav { display:none; } article { border:0; box-shadow:none; padding:0; } h2 { break-after:avoid; } table, .note { break-inside:avoid; } }
+    @media (max-width:760px) { main { display:block; } nav { position:static; margin-bottom:20px; } header { padding:36px 20px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Manual de usuario<br>Checador FXE</h1>
+      <p>Generador y gestor de asistencias de personal sindicalizado FXE.</p>
+      <span class="tag">Versión manual 1.0.4</span><span class="tag">Windows x64</span><span class="tag">Español (México)</span>
+    </div>
+  </header>
+  <main class="wrap">
+    <nav aria-label="Índice">
+      <strong>Contenido</strong>
+      <a href="#ficha">Ficha del software</a><a href="#proposito">Propósito</a><a href="#inicio">Antes de comenzar</a><a href="#flujo">Flujo de trabajo</a><a href="#configuracion">Configuración</a><a href="#personal">Personal</a><a href="#horarios">Relación de horarios</a><a href="#proyecto">Proyecto de asistencia</a><a href="#operacion">Trabajo en proyecto</a><a href="#archivos">Proyectos y reportes</a><a href="#exportacion">Exportación a Excel</a><a href="#problemas">Solución de problemas</a><a href="#limitaciones">Limitaciones</a>
+    </nav>
+    <article>
+      <section id="ficha"><h2>Ficha del software</h2>
+        <table><tbody>
+          <tr><th>Producto</th><td>Checador FXE</td></tr><tr><th>Versión manual</th><td>1.0.4</td></tr>
+          <tr><th>Versión de ensamblado</th><td><code>1.0.4.AAMM</code>; el sufijo AAMM se genera al compilar. Ejemplo: <code>1.0.4.2610</code>.</td></tr>
+          <tr><th>Versión informativa</th><td><code>1.0.4.AAMM-beta-dev</code></td></tr>
+          <tr><th>Descripción</th><td>Generador y gestor de asistencias de personal sindicalizado FXE con hardware ZKTeco.</td></tr>
+          <tr><th>Plataforma</th><td>Aplicación de escritorio Windows x64, .NET 8 para Windows 7 o posterior.</td></tr>
+          <tr><th>Autor / copyright</th><td>Arturo Venegas IDC</td></tr><tr><th>Compañía</th><td>Grupo México Transportes</td></tr>
+          <tr><th>Idioma</th><td>Español (México)</td></tr><tr><th>Repositorio</th><td><a href="https://github.com/ArturoProgrammer/Checador-FXE">github.com/ArturoProgrammer/Checador-FXE</a></td></tr>
+        </tbody></table>
+        <div class="note">La versión exacta de una instalación se consulta en <strong>Ayuda &gt; Acerca de</strong>.</div>
+      </section>
+      <section id="proposito"><h2>Propósito</h2><p>Checador FXE procesa un archivo de checadas exportado desde un dispositivo compatible, lo cruza con el catálogo de personal y la relación mensual de turnos, permite revisar o corregir el resultado y genera el informe final en PDF.</p><p>El trabajo puede guardarse en un proyecto CAF (<code>.caf</code>) y las plantillas de Excel pueden actualizarse con datos de personal, horarios o relaciones de turnos.</p></section>
+      <section id="inicio"><h2>Antes de comenzar</h2><ol><li>Cuente con un reporte de asistencias <strong>.xlsx</strong>.</li><li>Seleccione el modelo correcto: <strong>ZKTeco K40 KIT</strong> o <strong>ZKTeco K40</strong>.</li><li>Registre empleados en la localidad que se procesará.</li><li>Verifique la relación de horarios del mes y año del periodo.</li></ol><div class="note"><strong>Importante:</strong> los archivos <code>.xls</code> no se procesan directamente. Ábralos en Excel y conviértalos a <code>.xlsx</code>. El modelo del dispositivo determina cómo se interpreta el archivo.</div></section>
+      <section id="flujo"><h2>Flujo recomendado</h2><ol><li>Revise configuración, turnos y localidad.</li><li>Registre o actualice el personal.</li><li>Verifique la relación mensual de horarios.</li><li>Cree el proyecto desde el Excel de checadas.</li><li>Revise registros y resultados del cálculo.</li><li>Corrija asistencias si es necesario y ejecute de nuevo el cálculo.</li><li>Guarde el proyecto CAF.</li><li>Genere o imprima el PDF final.</li></ol></section>
+      <section id="configuracion"><h2>Configuración</h2><p>Abra <strong>Archivo &gt; Propiedades</strong>.</p><h3>General</h3><p>Configure tolerancia de retraso, dispositivo predeterminado, color de pincel, nombre de archivo predeterminado y localidad predeterminada.</p><h3>Ajustes de horario</h3><p>Administre los turnos: número, nombre, primera entrada/salida y, cuando aplique, segundo horario. Use el botón Agregar de la cuadrícula y guarde. Solo se pueden asignar turnos existentes.</p><h3>Base de datos</h3><p>Use <strong>Testear conexión</strong> para validar la comunicación con MySQL. Los cambios de servidor requieren reiniciar la aplicación y deben ser realizados por personal autorizado.</p></section>
+      <section id="personal"><h2>Registro de personal</h2><p>Abra <strong>Herramientas &gt; Registro de Personal</strong>, seleccione una localidad y revise la tabla. Para agregar, use el botón de alta y complete número de empleado, nombres, apellidos, puesto, región, división, localidad y turno predeterminado. Finalice con <strong>Guardar cambios</strong>.</p><p>El número de empleado no puede repetirse; la localidad y turno deben ser valores válidos. <strong>Establecer como default</strong> hace predeterminada la localidad seleccionada.</p><div class="note">El botón <strong>Revertir cambios</strong> está visible pero no está implementado. Para descartar cambios no guardados, cierre y abra nuevamente la pantalla.</div></section>
+      <section id="horarios"><h2>Relación mensual de horarios</h2><p>Abra <strong>Herramientas &gt; Relación de Horarios</strong>. Seleccione mes y año, pulse <strong>Ir a mes indicado</strong>, cambie la localidad si hace falta y asigne el número de turno de cada día. Use <strong>Guardar cambios</strong> para persistir la relación.</p><ul><li><strong>Limitar a:</strong> filtra por número de empleado o nombre.</li><li><strong>Nuevo turno:</strong> abre los ajustes de horario.</li><li><strong>Establecer turnos por defecto:</strong> aplica el turno del empleado a sus días laborables, sin alterar domingos.</li><li><strong>Exportar ajustes de turnos:</strong> llena una plantilla de Excel.</li></ul><div class="note">No use Revertir, alta desde la cuadrícula ni eliminación de relación como parte del flujo: esas acciones aún están incompletas.</div></section>
+      <section id="proyecto"><h2>Crear un proyecto de asistencia</h2><ol><li>Seleccione <strong>Archivo &gt; Nuevo</strong>.</li><li>Escriba un título.</li><li>Examine y seleccione el Excel <code>.xlsx</code>.</li><li>Elija modelo del dispositivo y localidad remitente.</li><li>Pulse <strong>Aceptar</strong>.</li></ol><p>La aplicación valida que existan empleados para la localidad, analiza el archivo y calcula inicialmente la asistencia usando la relación mensual correspondiente.</p></section>
+      <section id="operacion"><h2>Trabajo dentro de un proyecto</h2><table><thead><tr><th>Acción</th><th>Atajo</th><th>Uso</th></tr></thead><tbody><tr><td>Guardar</td><td>Ctrl+G</td><td>Guarda el proyecto CAF.</td></tr><tr><td>Imprimir</td><td>Ctrl+P</td><td>Genera temporalmente el PDF y lo envía a la impresora.</td></tr><tr><td>Generar</td><td>F5</td><td>Genera el PDF final.</td></tr><tr><td>Ejecutar</td><td>Ctrl+E</td><td>Recalcula la asistencia con la configuración actual.</td></tr></tbody></table><h3>General y resultados del parsing</h3><p>Complete los datos del reporte (área, lugar, fecha, elaborador y autorizador). En Resultados del Parsing, haga doble clic en un empleado y después en un día del calendario para consultar sus checadas y tipos de registro.</p><h3>Configuración y resultados del casting</h3><p>Revise turnos, tolerancia y relación mensual. <strong>Sincronizar parámetros</strong> restaura horarios globales y descarta modificaciones locales. <strong>Definir relación mensual</strong> toma las ediciones de la cuadrícula para el cálculo actual. Después, pulse <strong>Ejecutar</strong>.</p><p>En el calendario de resultados puede asignar manualmente Asistencia, Falta, Descanso laborado, Descanso semanal o Vacaciones; también puede restaurar un valor original. Genere de nuevo el PDF después de una corrección.</p></section>
+      <section id="archivos"><h2>Guardar, abrir, generar e imprimir</h2><p><strong>Archivo &gt; Guardar</strong> crea o actualiza un archivo <code>.caf</code>; <strong>Guardar como...</strong> crea una copia. Para retomar trabajo, use <strong>Archivo &gt; Abrir</strong>. El CAF conserva configuración y resultados del proyecto.</p><p>Antes de generar, ejecute el cálculo y compruebe los datos generales. <strong>Generar</strong> produce el PDF; <strong>Imprimir</strong> permite escoger la impresora. El informe usa los formatos correspondientes a los periodos 1–15 y 16–31 cuando aplica.</p></section>
+      <section id="exportacion"><h2>Exportar a una plantilla de Excel</h2><ol><li>Abra el exportador desde Personal o Relación de Horarios.</li><li>Elija plantilla de entrada y destino <code>.xlsx</code>.</li><li>Seleccione un modo de escritura.</li><li>Pulse <strong>Aceptar</strong>.</li></ol><ul><li><strong>Sobrescribir todo:</strong> limpia el área destino y escribe la información actual; recomendado para primera carga.</li><li><strong>Actualizar y añadir:</strong> actualiza registros presentes y agrega los nuevos.</li><li><strong>Añadir solamente inexistentes:</strong> conserva datos y agrega los faltantes.</li></ul><p>La aplicación crea un respaldo antes de modificar el archivo. Mantenga la plantilla cerrada en Excel.</p></section>
+      <section id="problemas"><h2>Solución de problemas</h2><table><thead><tr><th>Situación</th><th>Qué revisar</th></tr></thead><tbody><tr><td>No se crea el proyecto</td><td>Confirme archivo .xlsx, modelo correcto y empleados para la localidad.</td></tr><tr><td>El reporte se interpreta mal</td><td>Revise el modelo de dispositivo seleccionado.</td></tr><tr><td>No se asigna un turno</td><td>Confirme que existe en Propiedades &gt; Ajustes de Horario.</td></tr><tr><td>No hay datos para calcular</td><td>Revise empleados, relación mensual y registros del periodo.</td></tr><tr><td>Falla la exportación</td><td>Cierre Excel y revise rutas de origen y destino.</td></tr><tr><td>Falla la conexión</td><td>Use Testear conexión y solicite apoyo al administrador.</td></tr></tbody></table></section>
+      <section id="limitaciones"><h2>Limitaciones conocidas</h2><ul><li>Feriados e Inhábiles no está implementado.</li><li>Algunas acciones de reversión, alta/eliminación de la relación mensual no están finalizadas.</li><li>Los archivos <code>.xls</code> deben convertirse a <code>.xlsx</code>.</li></ul></section>
+    </article>
+  </main>
+  <footer>Checador FXE · Manual de usuario · Grupo México Transportes</footer>
+</body>
+</html>

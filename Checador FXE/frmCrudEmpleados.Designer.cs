@@ -74,7 +74,7 @@
             toolStripButton1.Image = (Image)resources.GetObject("toolStripButton1.Image");
             toolStripButton1.ImageTransparentColor = Color.Magenta;
             toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(23, 27);
+            toolStripButton1.Size = new Size(29, 27);
             toolStripButton1.Text = "Guardar cambios";
             toolStripButton1.Click += toolStripButton1_Click;
             // 
@@ -85,7 +85,7 @@
             toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
             toolStripButton2.ImageTransparentColor = Color.Magenta;
             toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(23, 27);
+            toolStripButton2.Size = new Size(29, 27);
             toolStripButton2.Text = "Revertir cambios";
             toolStripButton2.Click += toolStripButton2_Click;
             // 
@@ -114,7 +114,7 @@
             btnEstablecerSeleccion.Image = (Image)resources.GetObject("btnEstablecerSeleccion.Image");
             btnEstablecerSeleccion.ImageTransparentColor = Color.Magenta;
             btnEstablecerSeleccion.Name = "btnEstablecerSeleccion";
-            btnEstablecerSeleccion.Size = new Size(23, 27);
+            btnEstablecerSeleccion.Size = new Size(29, 27);
             btnEstablecerSeleccion.Text = "Establecer como default";
             btnEstablecerSeleccion.Click += btnEstablecerSeleccion_Click;
             // 
@@ -134,14 +134,14 @@
             lblLocalidadDefaultActualmente.Font = new Font("Segoe UI", 8.830189F, FontStyle.Bold);
             lblLocalidadDefaultActualmente.ForeColor = SystemColors.HotTrack;
             lblLocalidadDefaultActualmente.Name = "lblLocalidadDefaultActualmente";
-            lblLocalidadDefaultActualmente.Size = new Size(93, 27);
+            lblLocalidadDefaultActualmente.Size = new Size(120, 27);
             lblLocalidadDefaultActualmente.Text = "%LOCALIDAD%";
             // 
             // toolStripLabel2
             // 
             toolStripLabel2.Alignment = ToolStripItemAlignment.Right;
             toolStripLabel2.Name = "toolStripLabel2";
-            toolStripLabel2.Size = new Size(102, 27);
+            toolStripLabel2.Size = new Size(130, 27);
             toolStripLabel2.Text = "Localidad Default:";
             // 
             // toolStripDropDownButton1
@@ -151,14 +151,14 @@
             toolStripDropDownButton1.Image = Properties.Resources.toolbox;
             toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
             toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(31, 27);
+            toolStripDropDownButton1.Size = new Size(32, 27);
             toolStripDropDownButton1.Text = "Herramientas";
             // 
             // exportarParaConfiguracionToolStripMenuItem
             // 
             exportarParaConfiguracionToolStripMenuItem.Image = Properties.Resources.exportar_16;
             exportarParaConfiguracionToolStripMenuItem.Name = "exportarParaConfiguracionToolStripMenuItem";
-            exportarParaConfiguracionToolStripMenuItem.Size = new Size(229, 22);
+            exportarParaConfiguracionToolStripMenuItem.Size = new Size(286, 26);
             exportarParaConfiguracionToolStripMenuItem.Text = "Exportar para configuracion...";
             exportarParaConfiguracionToolStripMenuItem.Click += exportarParaConfiguracionToolStripMenuItem_Click;
             // 
@@ -191,7 +191,7 @@
             dgvAjustesEmpleados.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Orange;
             dgvAjustesEmpleados.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
             dgvAjustesEmpleados.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgvAjustesEmpleados.ColumnHeadersHeight = 23;
+            dgvAjustesEmpleados.ColumnHeadersHeight = 27;
             dgvAjustesEmpleados.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAjustesEmpleados.Columns.AddRange(new DataGridViewColumn[] { colImageIcon, colNumEmpleado, colNombres, colApellidos, colPuesto, colRegion, colDivision, colLocalidad, colTurnoDefault });
             dgvAjustesEmpleados.CurrentCell = null;
@@ -247,7 +247,7 @@
             colImageIcon.MinimumWidth = 6;
             colImageIcon.Name = "colImageIcon";
             colImageIcon.Resizable = DataGridViewTriState.False;
-            colImageIcon.Width = 24;
+            colImageIcon.Width = 28;
             // 
             // colNumEmpleado
             // 
@@ -256,7 +256,7 @@
             colNumEmpleado.HeaderText = "No. Emp.";
             colNumEmpleado.MinimumWidth = 6;
             colNumEmpleado.Name = "colNumEmpleado";
-            colNumEmpleado.Width = 94;
+            colNumEmpleado.Width = 114;
             // 
             // colNombres
             // 
@@ -265,7 +265,7 @@
             colNombres.HeaderText = "Nombres";
             colNombres.MinimumWidth = 6;
             colNombres.Name = "colNombres";
-            colNombres.Width = 95;
+            colNombres.Width = 114;
             // 
             // colApellidos
             // 
@@ -274,7 +274,7 @@
             colApellidos.HeaderText = "Apellidos";
             colApellidos.MinimumWidth = 6;
             colApellidos.Name = "colApellidos";
-            colApellidos.Width = 94;
+            colApellidos.Width = 113;
             // 
             // colPuesto
             // 
@@ -283,7 +283,7 @@
             colPuesto.HeaderText = "Puesto";
             colPuesto.MinimumWidth = 6;
             colPuesto.Name = "colPuesto";
-            colPuesto.Width = 81;
+            colPuesto.Width = 96;
             // 
             // colRegion
             // 
@@ -292,7 +292,7 @@
             colRegion.HeaderText = "Region";
             colRegion.MinimumWidth = 6;
             colRegion.Name = "colRegion";
-            colRegion.Width = 81;
+            colRegion.Width = 97;
             // 
             // colDivision
             // 
@@ -301,7 +301,7 @@
             colDivision.HeaderText = "Division";
             colDivision.MinimumWidth = 6;
             colDivision.Name = "colDivision";
-            colDivision.Width = 87;
+            colDivision.Width = 103;
             // 
             // colLocalidad
             // 
@@ -310,7 +310,7 @@
             colLocalidad.HeaderText = "Localidad";
             colLocalidad.MinimumWidth = 6;
             colLocalidad.Name = "colLocalidad";
-            colLocalidad.Width = 96;
+            colLocalidad.Width = 116;
             // 
             // colTurnoDefault
             // 
@@ -318,7 +318,7 @@
             colTurnoDefault.HeaderText = "Turno Def.";
             colTurnoDefault.MinimumWidth = 6;
             colTurnoDefault.Name = "colTurnoDefault";
-            colTurnoDefault.Width = 103;
+            colTurnoDefault.Width = 124;
             // 
             // imageList1
             // 
@@ -329,11 +329,11 @@
             // 
             // frmCrudEmpleados
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(852, 392);
             Controls.Add(dgvAjustesEmpleados);
             Controls.Add(flCustomToolStrip1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(675, 333);
             Name = "frmCrudEmpleados";
             StartPosition = FormStartPosition.CenterParent;

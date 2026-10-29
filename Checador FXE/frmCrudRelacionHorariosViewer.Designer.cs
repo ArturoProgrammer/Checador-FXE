@@ -56,7 +56,7 @@
             flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStrpBtn_Guardar, flCustomToolStripSeparator1, toolStripLabel1, cboxParametroLimitacion, txtValorLimitacion, btnLimitarAmbito });
             flCustomToolStrip1.Location = new Point(0, 0);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(823, 25);
+            flCustomToolStrip1.Size = new Size(823, 28);
             flCustomToolStrip1.TabIndex = 1;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
@@ -66,7 +66,7 @@
             toolStrpBtn_Guardar.Image = (Image)resources.GetObject("toolStrpBtn_Guardar.Image");
             toolStrpBtn_Guardar.ImageTransparentColor = Color.Magenta;
             toolStrpBtn_Guardar.Name = "toolStrpBtn_Guardar";
-            toolStrpBtn_Guardar.Size = new Size(23, 22);
+            toolStrpBtn_Guardar.Size = new Size(29, 25);
             toolStrpBtn_Guardar.Text = "Guardar cambios";
             toolStrpBtn_Guardar.Click += toolStripButton1_Click;
             // 
@@ -83,7 +83,7 @@
             // toolStripLabel1
             // 
             toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new Size(62, 22);
+            toolStripLabel1.Size = new Size(76, 25);
             toolStripLabel1.Text = "Limitar a...";
             // 
             // cboxParametroLimitacion
@@ -91,7 +91,7 @@
             cboxParametroLimitacion.BackColor = SystemColors.GradientActiveCaption;
             cboxParametroLimitacion.DropDownStyle = ComboBoxStyle.DropDownList;
             cboxParametroLimitacion.Name = "cboxParametroLimitacion";
-            cboxParametroLimitacion.Size = new Size(121, 25);
+            cboxParametroLimitacion.Size = new Size(121, 28);
             cboxParametroLimitacion.SelectedIndexChanged += cboxParametroLimitacion_SelectedIndexChanged;
             // 
             // txtValorLimitacion
@@ -99,7 +99,7 @@
             txtValorLimitacion.BackColor = SystemColors.GradientActiveCaption;
             txtValorLimitacion.BorderStyle = BorderStyle.FixedSingle;
             txtValorLimitacion.Name = "txtValorLimitacion";
-            txtValorLimitacion.Size = new Size(160, 25);
+            txtValorLimitacion.Size = new Size(160, 28);
             txtValorLimitacion.KeyDown += txtValorLimitacion_KeyDown;
             // 
             // btnLimitarAmbito
@@ -108,7 +108,7 @@
             btnLimitarAmbito.Image = Properties.Resources.filter_24;
             btnLimitarAmbito.ImageTransparentColor = Color.Magenta;
             btnLimitarAmbito.Name = "btnLimitarAmbito";
-            btnLimitarAmbito.Size = new Size(23, 22);
+            btnLimitarAmbito.Size = new Size(29, 25);
             btnLimitarAmbito.Text = "Limitar ambito";
             btnLimitarAmbito.Click += toolStripButton3_Click;
             // 
@@ -169,7 +169,7 @@
             dgvRelacionDeHorarios.GridColor = Color.FromArgb(210, 210, 210);
             dgvRelacionDeHorarios.HoverRowBackColor = Color.AntiqueWhite;
             dgvRelacionDeHorarios.LabelCounterForeColor = SystemColors.ButtonFace;
-            dgvRelacionDeHorarios.Location = new Point(0, 25);
+            dgvRelacionDeHorarios.Location = new Point(0, 28);
             dgvRelacionDeHorarios.Margin = new Padding(0);
             dgvRelacionDeHorarios.MouseHoverEffectEnabled = false;
             dgvRelacionDeHorarios.MultiSelect = false;
@@ -185,7 +185,7 @@
             dgvRelacionDeHorarios.SelectionForeColor = Color.Black;
             dgvRelacionDeHorarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRelacionDeHorarios.ShowContextMenu = true;
-            dgvRelacionDeHorarios.Size = new Size(823, 377);
+            dgvRelacionDeHorarios.Size = new Size(823, 361);
             dgvRelacionDeHorarios.TabIndex = 4;
             dgvRelacionDeHorarios.OnAddClick += dgvAjustesHorarios_OnAddClick;
             dgvRelacionDeHorarios.RowValidating += dgvAjustesHorarios_RowValidating;
@@ -199,9 +199,9 @@
             statusStrip1.BackColor = SystemColors.ActiveCaption;
             statusStrip1.ImageScalingSize = new Size(18, 18);
             statusStrip1.Items.AddRange(new ToolStripItem[] { lblStatus, toolStripStatusLabel1, lblMessage });
-            statusStrip1.Location = new Point(0, 402);
+            statusStrip1.Location = new Point(0, 398);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(823, 22);
+            statusStrip1.Size = new Size(823, 26);
             statusStrip1.SizingGrip = false;
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
@@ -209,30 +209,30 @@
             // lblStatus
             // 
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(59, 17);
+            lblStatus.Size = new Size(73, 20);
             lblStatus.Text = "%Status%";
             // 
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(10, 17);
+            toolStripStatusLabel1.Size = new Size(13, 20);
             toolStripStatusLabel1.Text = " ";
             // 
             // lblMessage
             // 
             lblMessage.Name = "lblMessage";
-            lblMessage.Size = new Size(73, 17);
+            lblMessage.Size = new Size(91, 20);
             lblMessage.Text = "%Message%";
             // 
             // frmCrudRelacionHorariosViewer
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(823, 424);
             Controls.Add(statusStrip1);
             Controls.Add(dgvRelacionDeHorarios);
             Controls.Add(flCustomToolStrip1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(675, 333);
             Name = "frmCrudRelacionHorariosViewer";
             StartPosition = FormStartPosition.CenterParent;

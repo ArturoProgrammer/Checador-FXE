@@ -1,6 +1,8 @@
 using Checador_FXE.MdiForms;
 using Checador_FXE.Plantillas;
 using FlowCommonWorkcore;
+using FlowControls;
+using System.Diagnostics;
 
 namespace Checador_FXE
 {
@@ -15,8 +17,13 @@ namespace Checador_FXE
             Program.lblStatus = this.lblStatusText;
             Program.lblOperation = this.lblOperationText;
 
-#if DEV_MODE
+#if DEV_R1
             // Agregamos un boton para creacion rapida del proyecto
+            var sep = new flCustomToolStripSeparator()
+            {
+                LineMargin = 2,
+                SeparatorHeight = 35
+            };
             var btn = new ToolStripButton()
             {
                 Text = "CREACION DE PROYECTO RAPIDO",
@@ -36,6 +43,12 @@ namespace Checador_FXE
                 ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path,
                                                                    frm_n.Response.Device,
                                                                    frm_n.Response.LocalidadRemitente);
+
+                if (!report.IsValid)
+                {
+                    MessageBox.Show(report.ParseError, "Nuevo proyecto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Early Return para validar que no este abierto actualmente
                 string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
@@ -65,6 +78,7 @@ namespace Checador_FXE
                 this.actualView = frm;
             };
 
+            this.flCustomToolStrip1.Items.Add(sep);
             this.flCustomToolStrip1.Items.Add(btn);
 #endif
         }
@@ -86,6 +100,12 @@ namespace Checador_FXE
             ReporteAsistencias report = new ReporteAsistencias(frm_n.Response.Path,
                                                                frm_n.Response.Device,
                                                                frm_n.Response.LocalidadRemitente);
+
+            if (!report.IsValid)
+            {
+                MessageBox.Show(report.ParseError, "Nuevo proyecto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             // Early Return para validar que no este abierto actualmente
             string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
@@ -222,6 +242,12 @@ namespace Checador_FXE
                     // El primer argumento es la ubicacion del archivo .xls a cargar en el reporte
                     ReporteAsistencias report = new ReporteAsistencias(_proj);
 
+                    if (!report.IsValid)
+                    {
+                        MessageBox.Show(report.ParseError, "Abrir proyecto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     // Early Return para validar que no este abierto actualmente
                     string targetName = $"{report.ReportPeriod.Start:d} - {report.ReportPeriod.End:d}";
                     string[] nodesTexts = this.treeViewProyectosQuincenas.Nodes.Cast<TreeNode>().Select(n => n.Text.Trim()).ToArray();
@@ -295,7 +321,49 @@ namespace Checador_FXE
         private void acercaDeToolStripMenuItem1_Click(object sender, EventArgs e)
             => new AboutBox1().ShowDialog();
 
+        private void ayudaToolStripMenuItem_Click(object sender, EventArgs e)
+            => new frmManualUsuario().ShowDialog(this);
+
         private void feriadosEInhabilesToolStripMenuItem_Click(object sender, EventArgs e)
             => throw new NotImplementedException("Falta de implementar que el usuario pueda definir los dias festivos, tal ves sea una buena idea. Hay que pensarlo");
+
+        void ViewTemporalLog()
+        {
+            if (Program.LastBoolStatus is not false)
+                return; // Este guard clause no es 100% necesario, pero por si acaso
+
+            if (!Directory.Exists(Program.logsDir))
+                return;
+
+            if (!File.Exists(Program.logFilePath))
+                return;
+
+            string memoryCont = File.ReadAllText(Program.logFilePath);
+            string tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), new FileInfo(Program.logFilePath).Name);
+
+            if (File.Exists(tempPath))
+                File.SetAttributes(tempPath, FileAttributes.Normal);
+
+            if (File.Exists(tempPath))
+                File.Delete(tempPath);
+
+            File.WriteAllText(tempPath, memoryCont);
+
+            FileInfo fi = new FileInfo(tempPath);
+            fi.Attributes = fi.Attributes | FileAttributes.Hidden | FileAttributes.ReadOnly;
+
+            ProcessStartInfo psi = new ProcessStartInfo()
+            {
+                FileName = "notepad.exe",
+                Arguments = tempPath,
+            };
+            Process.Start(psi);
+        }
+
+        private void lblOperationText_Click(object sender, EventArgs e) => ViewTemporalLog();
+
+        private void toolStrpBtnPersonal_Click(object sender, EventArgs e) => this.registroDePersonalToolStripMenuItem.PerformClick();
+        private void toolStrpBtnRelaciones_Click(object sender, EventArgs e) => this.relacionDeHorariosToolStripMenuItem.PerformClick();
+        private void toolStrpBtnFeriados_Click(object sender, EventArgs e) => this.feriadosEInhabilesToolStripMenuItem.PerformClick();
     }
 }

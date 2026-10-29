@@ -1,4 +1,4 @@
-﻿namespace Checador_FXE
+namespace Checador_FXE
 {
     partial class MainDesktop
     {
@@ -45,6 +45,7 @@
             relacionDeHorariosToolStripMenuItem = new ToolStripMenuItem();
             feriadosEInhabilesToolStripMenuItem = new ToolStripMenuItem();
             acercaDeToolStripMenuItem = new ToolStripMenuItem();
+            ayudaToolStripMenuItem = new ToolStripMenuItem();
             acercaDeToolStripMenuItem1 = new ToolStripMenuItem();
             STATUS_BAR = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
@@ -54,6 +55,10 @@
             toolStripLabel1 = new ToolStripLabel();
             toolStrpBtnNuevo = new ToolStripButton();
             toolStrpBtnAbrir = new ToolStripButton();
+            flCustomToolStripSeparator1 = new FlowControls.flCustomToolStripSeparator();
+            toolStrpBtnPersonal = new ToolStripButton();
+            toolStrpBtnRelaciones = new ToolStripButton();
+            toolStrpBtnFeriados = new ToolStripButton();
             splitContainer_ProyectosVisualizacion = new SplitContainer();
             treeViewProyectosQuincenas = new FlowControls.flTreeView();
             imageList1 = new ImageList(components);
@@ -90,18 +95,19 @@
             // 
             // abrirToolStripMenuItem
             // 
-            abrirToolStripMenuItem.Enabled = false;
+            abrirToolStripMenuItem.Image = Properties.Resources.open;
             abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             abrirToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.A;
-            abrirToolStripMenuItem.Size = new Size(216, 28);
+            abrirToolStripMenuItem.Size = new Size(224, 28);
             abrirToolStripMenuItem.Text = "Abrir";
             abrirToolStripMenuItem.Click += abrirToolStripMenuItem_Click;
             // 
             // nuevoToolStripMenuItem
             // 
+            nuevoToolStripMenuItem.Image = Properties.Resources.nuevo_documento;
             nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
             nuevoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            nuevoToolStripMenuItem.Size = new Size(216, 28);
+            nuevoToolStripMenuItem.Size = new Size(224, 28);
             nuevoToolStripMenuItem.Text = "Nuevo";
             nuevoToolStripMenuItem.Click += nuevoToolStripMenuItem_Click;
             // 
@@ -113,8 +119,9 @@
             // guardarToolStripMenuItem
             // 
             guardarToolStripMenuItem.Enabled = false;
+            guardarToolStripMenuItem.Image = Properties.Resources.save2_16;
             guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            guardarToolStripMenuItem.Size = new Size(216, 28);
+            guardarToolStripMenuItem.Size = new Size(224, 28);
             guardarToolStripMenuItem.Text = "Guardar";
             guardarToolStripMenuItem.Click += guardarToolStripMenuItem_Click;
             // 
@@ -155,6 +162,7 @@
             // 
             // registroDePersonalToolStripMenuItem
             // 
+            registroDePersonalToolStripMenuItem.Image = Properties.Resources.employee_grid_256;
             registroDePersonalToolStripMenuItem.Name = "registroDePersonalToolStripMenuItem";
             registroDePersonalToolStripMenuItem.Size = new Size(251, 28);
             registroDePersonalToolStripMenuItem.Text = "Registro de Personal";
@@ -162,6 +170,7 @@
             // 
             // relacionDeHorariosToolStripMenuItem
             // 
+            relacionDeHorariosToolStripMenuItem.Image = Properties.Resources.schedule_grid_256;
             relacionDeHorariosToolStripMenuItem.Name = "relacionDeHorariosToolStripMenuItem";
             relacionDeHorariosToolStripMenuItem.Size = new Size(251, 28);
             relacionDeHorariosToolStripMenuItem.Text = "Relacion de Horarios";
@@ -169,6 +178,8 @@
             // 
             // feriadosEInhabilesToolStripMenuItem
             // 
+            feriadosEInhabilesToolStripMenuItem.Enabled = false;
+            feriadosEInhabilesToolStripMenuItem.Image = Properties.Resources.holidays_grid_256;
             feriadosEInhabilesToolStripMenuItem.Name = "feriadosEInhabilesToolStripMenuItem";
             feriadosEInhabilesToolStripMenuItem.Size = new Size(251, 28);
             feriadosEInhabilesToolStripMenuItem.Text = "Feriados e Inhabiles";
@@ -176,15 +187,24 @@
             // 
             // acercaDeToolStripMenuItem
             // 
-            acercaDeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { acercaDeToolStripMenuItem1 });
+            acercaDeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ayudaToolStripMenuItem, acercaDeToolStripMenuItem1 });
             acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
             acercaDeToolStripMenuItem.Size = new Size(72, 27);
             acercaDeToolStripMenuItem.Text = "Ayuda";
             // 
+            // ayudaToolStripMenuItem
+            // 
+            ayudaToolStripMenuItem.Name = "ayudaToolStripMenuItem";
+            ayudaToolStripMenuItem.Size = new Size(224, 28);
+            ayudaToolStripMenuItem.Text = "Ayuda";
+            ayudaToolStripMenuItem.ToolTipText = "Abrir el manual de usuario";
+            ayudaToolStripMenuItem.Click += ayudaToolStripMenuItem_Click;
+            // 
             // acercaDeToolStripMenuItem1
             // 
+            acercaDeToolStripMenuItem1.Image = Properties.Resources.information1_64;
             acercaDeToolStripMenuItem1.Name = "acercaDeToolStripMenuItem1";
-            acercaDeToolStripMenuItem1.Size = new Size(169, 28);
+            acercaDeToolStripMenuItem1.Size = new Size(224, 28);
             acercaDeToolStripMenuItem1.Text = "Acerca de";
             acercaDeToolStripMenuItem1.Click += acercaDeToolStripMenuItem1_Click;
             // 
@@ -213,9 +233,13 @@
             // 
             // lblOperationText
             // 
+            lblOperationText.ActiveLinkColor = SystemColors.ActiveCaptionText;
+            lblOperationText.LinkColor = SystemColors.ActiveCaptionText;
             lblOperationText.Name = "lblOperationText";
             lblOperationText.Size = new Size(156, 20);
             lblOperationText.Text = "Preparado para iniciar";
+            lblOperationText.VisitedLinkColor = SystemColors.ActiveCaptionText;
+            lblOperationText.Click += lblOperationText_Click;
             // 
             // flCustomToolStrip1
             // 
@@ -223,45 +247,85 @@
             flCustomToolStrip1.Font = new Font("Segoe UI", 10F);
             flCustomToolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             flCustomToolStrip1.ImageScalingSize = new Size(18, 18);
-            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel1, toolStrpBtnNuevo, toolStrpBtnAbrir });
+            flCustomToolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel1, toolStrpBtnNuevo, toolStrpBtnAbrir, flCustomToolStripSeparator1, toolStrpBtnPersonal, toolStrpBtnRelaciones, toolStrpBtnFeriados });
             flCustomToolStrip1.Location = new Point(0, 31);
             flCustomToolStrip1.Name = "flCustomToolStrip1";
-            flCustomToolStrip1.Size = new Size(1107, 26);
+            flCustomToolStrip1.Size = new Size(1107, 48);
             flCustomToolStrip1.TabIndex = 3;
             flCustomToolStrip1.Text = "flCustomToolStrip1";
             // 
             // toolStripLabel1
             // 
             toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new Size(15, 23);
+            toolStripLabel1.Size = new Size(15, 45);
             toolStripLabel1.Text = " ";
             // 
             // toolStrpBtnNuevo
             // 
-            toolStrpBtnNuevo.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStrpBtnNuevo.Image = Properties.Resources.nuevo_documento;
             toolStrpBtnNuevo.ImageTransparentColor = Color.Magenta;
             toolStrpBtnNuevo.Name = "toolStrpBtnNuevo";
-            toolStrpBtnNuevo.Size = new Size(29, 23);
+            toolStrpBtnNuevo.Size = new Size(64, 45);
             toolStrpBtnNuevo.Text = "Nuevo";
+            toolStrpBtnNuevo.TextImageRelation = TextImageRelation.ImageAboveText;
             toolStrpBtnNuevo.Click += toolStrpBtnNuevo_Click;
             // 
             // toolStrpBtnAbrir
             // 
-            toolStrpBtnAbrir.DisplayStyle = ToolStripItemDisplayStyle.Image;
             toolStrpBtnAbrir.Enabled = false;
             toolStrpBtnAbrir.Image = Properties.Resources.open;
             toolStrpBtnAbrir.ImageTransparentColor = Color.Magenta;
             toolStrpBtnAbrir.Name = "toolStrpBtnAbrir";
-            toolStrpBtnAbrir.Size = new Size(29, 23);
+            toolStrpBtnAbrir.Size = new Size(51, 45);
             toolStrpBtnAbrir.Text = "Abrir";
+            toolStrpBtnAbrir.TextImageRelation = TextImageRelation.ImageAboveText;
             toolStrpBtnAbrir.Click += toolStrpBtnAbrir_Click;
+            // 
+            // flCustomToolStripSeparator1
+            // 
+            flCustomToolStripSeparator1.AutoSize = false;
+            flCustomToolStripSeparator1.LineColor = Color.DimGray;
+            flCustomToolStripSeparator1.LineMargin = 2;
+            flCustomToolStripSeparator1.Name = "flCustomToolStripSeparator1";
+            flCustomToolStripSeparator1.SeparatorHeight = 35;
+            flCustomToolStripSeparator1.Size = new Size(6, 35);
+            // 
+            // toolStrpBtnPersonal
+            // 
+            toolStrpBtnPersonal.Image = Properties.Resources.employee_grid_256;
+            toolStrpBtnPersonal.ImageTransparentColor = Color.Magenta;
+            toolStrpBtnPersonal.Name = "toolStrpBtnPersonal";
+            toolStrpBtnPersonal.Size = new Size(78, 45);
+            toolStrpBtnPersonal.Text = "Personal";
+            toolStrpBtnPersonal.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStrpBtnPersonal.Click += toolStrpBtnPersonal_Click;
+            // 
+            // toolStrpBtnRelaciones
+            // 
+            toolStrpBtnRelaciones.Image = Properties.Resources.schedule_grid_256;
+            toolStrpBtnRelaciones.ImageTransparentColor = Color.Magenta;
+            toolStrpBtnRelaciones.Name = "toolStrpBtnRelaciones";
+            toolStrpBtnRelaciones.Size = new Size(94, 45);
+            toolStrpBtnRelaciones.Text = "Relaciones";
+            toolStrpBtnRelaciones.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStrpBtnRelaciones.Click += toolStrpBtnRelaciones_Click;
+            // 
+            // toolStrpBtnFeriados
+            // 
+            toolStrpBtnFeriados.Enabled = false;
+            toolStrpBtnFeriados.Image = Properties.Resources.holidays_grid_256;
+            toolStrpBtnFeriados.ImageTransparentColor = Color.Magenta;
+            toolStrpBtnFeriados.Name = "toolStrpBtnFeriados";
+            toolStrpBtnFeriados.Size = new Size(77, 45);
+            toolStrpBtnFeriados.Text = "Feriados";
+            toolStrpBtnFeriados.TextImageRelation = TextImageRelation.ImageAboveText;
+            toolStrpBtnFeriados.Click += toolStrpBtnFeriados_Click;
             // 
             // splitContainer_ProyectosVisualizacion
             // 
             splitContainer_ProyectosVisualizacion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             splitContainer_ProyectosVisualizacion.FixedPanel = FixedPanel.Panel1;
-            splitContainer_ProyectosVisualizacion.Location = new Point(12, 62);
+            splitContainer_ProyectosVisualizacion.Location = new Point(12, 82);
             splitContainer_ProyectosVisualizacion.Name = "splitContainer_ProyectosVisualizacion";
             // 
             // splitContainer_ProyectosVisualizacion.Panel1
@@ -271,7 +335,7 @@
             // splitContainer_ProyectosVisualizacion.Panel2
             // 
             splitContainer_ProyectosVisualizacion.Panel2.Controls.Add(MDI_PANEL);
-            splitContainer_ProyectosVisualizacion.Size = new Size(1083, 568);
+            splitContainer_ProyectosVisualizacion.Size = new Size(1083, 548);
             splitContainer_ProyectosVisualizacion.SplitterDistance = 221;
             splitContainer_ProyectosVisualizacion.SplitterWidth = 6;
             splitContainer_ProyectosVisualizacion.TabIndex = 4;
@@ -290,7 +354,7 @@
             treeViewProyectosQuincenas.ScrollbarBackColor = SystemColors.Control;
             treeViewProyectosQuincenas.SelectedImageKey = "solicitud-32.png";
             treeViewProyectosQuincenas.ShowRootLines = false;
-            treeViewProyectosQuincenas.Size = new Size(221, 568);
+            treeViewProyectosQuincenas.Size = new Size(221, 548);
             treeViewProyectosQuincenas.TabIndex = 0;
             treeViewProyectosQuincenas.DoubleClick += treeViewProyectosQuincenas_DoubleClick;
             // 
@@ -309,7 +373,7 @@
             MDI_PANEL.Dock = DockStyle.Fill;
             MDI_PANEL.Location = new Point(0, 0);
             MDI_PANEL.Name = "MDI_PANEL";
-            MDI_PANEL.Size = new Size(856, 568);
+            MDI_PANEL.Size = new Size(856, 548);
             MDI_PANEL.TabIndex = 0;
             MDI_PANEL.ControlAdded += MDI_PANEL_ControlAdded;
             MDI_PANEL.ControlRemoved += MDI_PANEL_ControlRemoved;
@@ -320,7 +384,7 @@
             lblBienvenido.Font = new Font("Segoe UI", 20F);
             lblBienvenido.Location = new Point(0, 0);
             lblBienvenido.Name = "lblBienvenido";
-            lblBienvenido.Size = new Size(854, 566);
+            lblBienvenido.Size = new Size(854, 546);
             lblBienvenido.TabIndex = 0;
             lblBienvenido.Text = "Bienvenido";
             lblBienvenido.TextAlign = ContentAlignment.MiddleCenter;
@@ -384,7 +448,12 @@
         private ToolStripMenuItem registroDePersonalToolStripMenuItem;
         private ToolStripMenuItem relacionDeHorariosToolStripMenuItem;
         private ToolStripMenuItem acercaDeToolStripMenuItem;
+        private ToolStripMenuItem ayudaToolStripMenuItem;
         private ToolStripMenuItem acercaDeToolStripMenuItem1;
         private ToolStripMenuItem feriadosEInhabilesToolStripMenuItem;
+        private FlowControls.flCustomToolStripSeparator flCustomToolStripSeparator1;
+        private ToolStripButton toolStrpBtnPersonal;
+        private ToolStripButton toolStrpBtnFeriados;
+        private ToolStripButton toolStrpBtnRelaciones;
     }
 }

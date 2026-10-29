@@ -4,8 +4,13 @@ using DocumentFormat.OpenXml.Office2010.Word;
 using DocumentFormat.OpenXml.Office2016.Excel;
 using FlowCommonWorkcore;
 using FlowControls.Inputs;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.IO.Font.Constants;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 using System.ServiceModel.Channels;
@@ -60,6 +65,28 @@ namespace Checador_FXE
 
                 Dictionary<string, Checada[]>[] quincenas = { new Dictionary<string, Checada[]>(), new Dictionary<string, Checada[]>() };
                 #region CLASIFICAMOS LAS ASISTENCIAS POR QUINCENAS
+                Dictionary<int, Turno> turnosConfigurados = Turno.GetAll(Properties.Settings.Default.TURNOS_HORARIOS)
+                    .ToDictionary(turno => turno.ID);
+
+                DateOnly ObtenerFechaLaboral(Checada checada)
+                {
+                    DateOnly fechaFisica = DateOnly.FromDateTime(checada.Fecha);
+                    DateOnly fechaAnterior = fechaFisica.AddDays(-1);
+
+                    TurnoEmpleado? turnoDelDiaAnterior = rpt.Turnos.Items.FirstOrDefault(turno =>
+                        turno.NoEmp == checada.NumEmpleado && turno.Dia == fechaAnterior);
+
+                    if (turnoDelDiaAnterior is not null &&
+                        turnosConfigurados.TryGetValue(turnoDelDiaAnterior.Turno, out Turno turno) &&
+                        CalendarioTurnos.CruzaMedianoche(CalendarioTurnos.ObtenerHorarioLaboral(turno)) &&
+                        CalendarioTurnos.FechaLaboralDeChecada(checada.Fecha, turno) == fechaAnterior)
+                    {
+                        return fechaAnterior;
+                    }
+
+                    return fechaFisica;
+                }
+
                 Func<ReporteAsistencias, (int, int), Dictionary<string, Checada[]>> castAsistencias = delegate (ReporteAsistencias rpt, (int Start, int End) Dates)
                 {
                     Dictionary<string, Checada[]> a = new Dictionary<string, Checada[]>();
@@ -67,7 +94,12 @@ namespace Checador_FXE
                     {
                         a = rpt.Chequeos.Cast<KeyValuePair<string, Checada[]>>()
                             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value
-                            .Where(c => c.Fecha.Day >= Dates.Start && c.Fecha.Day <= Dates.End)
+                            .Where(c =>
+                            {
+                                DateOnly fechaLaboral = ObtenerFechaLaboral(c);
+                                return fechaLaboral.Month == rpt.ReportPeriod.Start.Month &&
+                                       fechaLaboral.Day >= Dates.Start && fechaLaboral.Day <= Dates.End;
+                            })
                             .OrderBy(c => c.Fecha)
                             .ToArray());
                     }
@@ -131,32 +163,37 @@ namespace Checador_FXE
                     #endregion
                     Program.WriteStatus(true, "Clasificacion de la asociacion de cada empleado con su numero de empleado realizada con exito", ReportOnGui: false);
 
-                    // Cacheamos la fuente y el color para evitar recrearlos en cada iteración
-                    BaseFont cachedBaseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    var cachedColor = Utils.GetBaseColorByName(Properties.Settings.Default.COLOR_PINCEL);
+                    PdfFont cachedFont = PdfFontFactory.CreateFont(Path.Combine(Application.StartupPath, "Helvetica.ttf"));
+                    System.Drawing.Color configuredColor = Utils.GetBaseColorByName(Properties.Settings.Default.COLOR_PINCEL);
+                    DeviceRgb cachedColor = new DeviceRgb(configuredColor.R, configuredColor.G, configuredColor.B);
 
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        Program.WriteStatus(true, $"MemoryStream para '{pdfTemplatePath}' iniciado", ReportOnGui: false);
+                        Program.WriteStatus(true, $"Inicializando documento iText 7 para '{pdfTemplatePath}'", ReportOnGui: false);
 
-                        using (PdfReader pdfReader = new PdfReader(pdfTemplatePath))
+                        using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(pdfTemplatePath), new PdfWriter(ms)))
                         {
-                            Program.WriteStatus(true, $"MemoryStream.PdfReader iniciado", ReportOnGui: false);
+                            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false)
+                                ?? throw new InvalidDataException($"La plantilla '{Path.GetFileName(pdfTemplatePath)}' no contiene campos AcroForm.");
+                            IDictionary<string, PdfFormField> formFields = form.GetFormFields();
+                            PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
 
-                            using (PdfStamper pdfStamper = new PdfStamper(pdfReader, ms))
+                            void SetField(string name, string value)
                             {
-                                Program.WriteStatus(true, "MemoryStream.PdfReader.PdfStamper para PdfReader iniciado", ReportOnGui: false);
+                                if (!formFields.TryGetValue(name, out PdfFormField? field))
+                                    throw new InvalidDataException($"La plantilla no contiene el campo '{name}'.");
+                                field.SetValue(value ?? string.Empty);
+                            }
 
-                                PdfContentByte cb = pdfStamper.GetOverContent(1);
-                                cb.BeginText();
+                            void WriteText(string text, float x, float y) => canvas.SetTextMatrix(x, y).ShowText(text);
 
-                                AcroFields frmFields = pdfStamper.AcroFields;
-                                int A_L = 1;
+                            canvas.BeginText().SetFontAndSize(cachedFont, 7).SetFillColor(cachedColor);
+                            int A_L = 1;
 
-                                frmFields.SetField("area_remitente", props.Area);
-                                frmFields.SetField("lugar_fecha_remitente", $"{props.Lugar} al {props.Fecha}");
-                                frmFields.SetField("elaboro_remitente", props.NombreElaboro);
-                                frmFields.SetField("nombre_autorizacion", props.NombreAutorizo);
+                            SetField("area_remitente", props.Area);
+                            SetField("lugar_fecha_remitente", $"{props.Lugar} al {props.Fecha}");
+                            SetField("elaboro_remitente", props.NombreElaboro);
+                            SetField("nombre_autorizacion", props.NombreAutorizo);
 
                                 foreach (string empName in i.Keys)
                                 {
@@ -164,12 +201,8 @@ namespace Checador_FXE
                                         throw new IndexOutOfRangeException("No se puede crear un archivo de más de 10 renglones (empleados)!");
 
                                     // Llenamos los campos de formulario
-                                    frmFields.SetField($"num_nomina_{A_L}", pairNombreEmpNo[empName].ToString());
-                                    frmFields.SetField($"nombre_trabajador_{A_L}", empName);
-
-                                    // Llenamos las asistencias
-                                    cb.SetFontAndSize(cachedBaseFont, 7);
-                                    cb.SetColorFill(cachedColor);
+                                    SetField($"num_nomina_{A_L}", pairNombreEmpNo[empName].ToString());
+                                    SetField($"nombre_trabajador_{A_L}", empName);
 
                                     (int X, int Y) INITIAL_COORDS = (319, 422);
                                     (int X, int Y) JUMP_ON_COORDS = (11, 7);
@@ -201,12 +234,10 @@ namespace Checador_FXE
                                         TipoAsistencia T_P = asistenciaPorFechas[j];
                                         T_P = T_P is TipoAsistencia.RETARDO ? TipoAsistencia.ASISTENCIA : T_P;
 
-                                        cb.ShowTextAligned(
-                                            PdfContentByte.ALIGN_LEFT,
+                                        WriteText(
                                             T_P.GetShort(),
                                             INITIAL_COORDS.X + ((JUMP_ON_COORDS.X * Utils.TranslateDayOnCell(j, quincenaNumber)) - JUMP_ON_COORDS.X + (dayIndex >= 6 ? 2 : 0)),
-                                            INITIAL_COORDS.Y - ((A_L > 1 ? (JUMP_ON_COORDS.Y * 4) * (A_L > 2 ? A_L - 1 : 1) : 0) + (A_L - 1)), 0
-                                        );
+                                            INITIAL_COORDS.Y - ((A_L > 1 ? (JUMP_ON_COORDS.Y * 4) * (A_L > 2 ? A_L - 1 : 1) : 0) + (A_L - 1)));
 
                                         if (j.Day == 15)
                                             dayIndex = 0;   // Restauramos por defecto al terminar de analizar la primer quincena
@@ -238,18 +269,16 @@ namespace Checador_FXE
                                     TimeSpan start = _GetWorkTimeSchedule(rpt.Turnos.Items.Cast<TurnoEmpleado>().Where(t => t.Nombre == empName).ToArray(), 0);
                                     TimeSpan end = _GetWorkTimeSchedule(rpt.Turnos.Items.Cast<TurnoEmpleado>().Where(t => t.Nombre == empName).ToArray(), 1);
 
-                                    cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"{start.Hours:00}:{start.Minutes:00}", IHC_S.X, (A_L > 1 ? IHC_S.Y - (IHC_JUMPS * (A_L - 1)) : IHC_S.Y), 0); // Horario de entrada
-                                    cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"{end.Hours:00}:{end.Minutes:00}", IHC_E.X, (A_L > 1 ? IHC_E.Y - (IHC_JUMPS * (A_L - 1)) : IHC_E.Y), 0);     // Horario de salida
+                                    WriteText($"{start.Hours:00}:{start.Minutes:00}", IHC_S.X, (A_L > 1 ? IHC_S.Y - (IHC_JUMPS * (A_L - 1)) : IHC_S.Y));
+                                    WriteText($"{end.Hours:00}:{end.Minutes:00}", IHC_E.X, (A_L > 1 ? IHC_E.Y - (IHC_JUMPS * (A_L - 1)) : IHC_E.Y));
 
                                     A_L++;
                                 }
 
-                                // Escribimos el total de registros del documento
-                                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"{A_L - 1}", 319, 123, 0);
-
-                                cb.EndText();
-                                Program.WriteStatus(true, $"--> Archivo de Reporte PDF '{pdfTemplatePath}' llenado con exito!", ReportOnGui: false);
-                            }
+                            // Escribimos el total de registros del documento
+                            WriteText($"{A_L - 1}", 319, 123);
+                            canvas.EndText();
+                            Program.WriteStatus(true, $"--> Archivo de Reporte PDF '{pdfTemplatePath}' llenado con éxito mediante iText 7!", ReportOnGui: false);
                         }
 
                         /*

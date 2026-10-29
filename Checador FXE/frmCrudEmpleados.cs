@@ -19,6 +19,8 @@ namespace Checador_FXE
 
         private void frmCrudEmpleados_Load(object sender, EventArgs e)
         {
+            this.dgvAjustesEmpleados.SetLockedColumns(0);
+
             LoadLocalidades();
         }
 

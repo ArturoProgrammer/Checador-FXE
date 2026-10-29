@@ -123,6 +123,26 @@ namespace Checador_FXE.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap employee_grid_256 {
+            get {
+                object obj = ResourceManager.GetObject("employee-grid-256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap employee_grid_32 {
+            get {
+                object obj = ResourceManager.GetObject("employee-grid-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap exportar_16 {
             get {
                 object obj = ResourceManager.GetObject("exportar-16", resourceCulture);
@@ -166,6 +186,46 @@ namespace Checador_FXE.Properties {
         internal static System.Drawing.Bitmap gmxt_logo {
             get {
                 object obj = ResourceManager.GetObject("gmxt_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap help_64 {
+            get {
+                object obj = ResourceManager.GetObject("help-64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap holidays_grid_256 {
+            get {
+                object obj = ResourceManager.GetObject("holidays-grid-256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap holidays_grid_32 {
+            get {
+                object obj = ResourceManager.GetObject("holidays-grid-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap information1_64 {
+            get {
+                object obj = ResourceManager.GetObject("information1-64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +326,26 @@ namespace Checador_FXE.Properties {
         internal static System.Drawing.Bitmap save2_16 {
             get {
                 object obj = ResourceManager.GetObject("save2-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap schedule_grid_256 {
+            get {
+                object obj = ResourceManager.GetObject("schedule-grid-256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap schedule_grid_32 {
+            get {
+                object obj = ResourceManager.GetObject("schedule-grid-32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
