@@ -5,9 +5,9 @@
 | Dato | Valor |
 | --- | --- |
 | Producto | Checador FXE |
-| Versión manual | 1.0.4 |
-| Versión de ensamblado | `1.0.4.AAMM` (se genera al compilar; por ejemplo, `1.0.4.2610` para una compilación de octubre de 2026) |
-| Versión informativa | `1.0.4.AAMM-beta-dev` |
+| Versión manual | 1.0.5 |
+| Versión de ensamblado | `1.0.5.AAMM` (se genera al compilar; por ejemplo, `1.0.5.2610` para una compilación de octubre de 2026) |
+| Versión informativa | `1.0.5.AAMM-beta-dev` |
 | Descripción | Generador y gestor de asistencias de personal sindicalizado FXE con hardware ZKTeco. |
 | Plataforma | Aplicación de escritorio Windows x64, .NET 8 para Windows 7 o posterior |
 | Autor / copyright | Arturo Venegas IDC |
